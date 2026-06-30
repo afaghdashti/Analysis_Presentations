@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Core AOV Decline — HFCA 2026 — Phase 1 Findings</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1f2e; --ink-2: #4a5060; --ink-3: #6b7280;
+    --paper: #fbfaf6; --line: #e6e3d8; --line-soft: #f0ede3;
+    --accent: #1f6f3b; --accent-2: #c44536; --accent-3: #d4a017;
+    --good: #2d8a47; --bad: #b8392a; --neutral: #6b7280;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    color: var(--ink); background: var(--paper);
+    margin: 0; padding: 0;
+    line-height: 1.55; font-size: 15px;
+  }
+  .doc { max-width: 1080px; margin: 0 auto; padding: 56px 64px 80px; }
+  header { border-bottom: 4px solid var(--accent); padding-bottom: 24px; margin-bottom: 36px; }
+  .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 8px; }
+  h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; margin: 0; }
+  .meta { display: flex; gap: 32px; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); margin-top: 16px; }
+  .meta strong { color: var(--ink); }
+  .scope-badge {
+    display: inline-block; margin-top: 16px;
+    padding: 6px 14px; background: var(--accent); color: white;
+    border-radius: 30px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+  }
+  nav.toc {
+    background: white; border: 1px solid var(--line); border-radius: 4px;
+    padding: 20px 24px; margin-bottom: 40px;
+  }
+  nav.toc h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); margin: 0 0 12px; }
+  nav.toc ol { margin: 0; padding-left: 22px; font-size: 14px; }
+  nav.toc li { margin-bottom: 4px; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 56px; }
+  h2 {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+    border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin: 0 0 20px;
+  }
+  h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; color: var(--ink); }
+  h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px; font-variant-numeric: tabular-nums;
+    margin: 12px 0 18px;
+  }
+  th {
+    text-align: left; padding: 8px 10px;
+    border-bottom: 2px solid var(--ink); background: var(--line-soft);
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2);
+  }
+  th.r, td.r { text-align: right; }
+  td {
+    padding: 7px 10px; border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  tr.highlight td { background: #fff8dc; font-weight: 600; }
+  .num-good { color: var(--good); font-weight: 600; }
+  .num-bad { color: var(--bad); font-weight: 600; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  .callout {
+    padding: 14px 18px; background: white;
+    border-left: 4px solid var(--accent);
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout.warning { border-left-color: var(--accent-3); }
+  .callout.alert { border-left-color: var(--bad); }
+  .callout.neutral { border-left-color: var(--neutral); }
+  .callout strong { color: var(--ink); }
+  .callout code { background: var(--line-soft); padding: 1px 5px; border-radius: 2px; font-size: 12px; }
+
+  .source-note {
+    font-size: 12px; color: var(--neutral);
+    font-style: italic; margin: 4px 0 16px;
+  }
+
+  /* Chart cards */
+  .chart-card {
+    background: white; border: 1px solid var(--line);
+    padding: 18px 20px; margin: 16px 0;
+    border-radius: 4px;
+  }
+  .chart-card .chart-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .chart-card .chart-subtitle { font-size: 11px; color: var(--ink-2); margin-bottom: 12px; }
+  .chart-canvas-wrap { position: relative; height: 320px; width: 100%; }
+  .chart-canvas-wrap.tall { height: 380px; }
+  .chart-hint { font-size: 11px; color: var(--ink-3); margin-top: 8px; font-style: italic; }
+
+  .formula {
+    font-family: 'Menlo', monospace; font-size: 12px;
+    background: white; border: 1px solid var(--line);
+    padding: 12px 16px; margin: 10px 0; border-radius: 4px;
+    color: var(--ink);
+    white-space: pre;
+  }
+
+  @media print {
+    body { background: white; }
+    .doc { max-width: none; padding: 0; }
+    section { page-break-inside: avoid; }
+    .chart-card, table { page-break-inside: avoid; }
+    nav.toc { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+<header>
+  <div class="eyebrow">POA · Meals Analysis · 2026 YTD</div>
+  <h1>Core AOV (meals) Decline — HFCA<br>Phase 1: Findings</h1>
+  <div class="meta">
+    <span><strong>Author:</strong> Afagh Dashti</span>
+    <span><strong>Window:</strong> 2026 W1–W24</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#metric">The metric and the AOV gap</a></li>
+    <li><a href="#framework">Phase 1 framework</a></li>
+    <li><a href="#dg">Mechanism 1 — Seamless downgrades</a></li>
+    <li><a href="#ug">Mechanism 2 — Seamless upgrades</a></li>
+    <li><a href="#net">Net seamless meal delta</a></li>
+    <li><a href="#mix">Mechanism 3 — Original plan mix shift</a></li>
+    <li><a href="#laspeyres">Plan-mix contribution to AOV — summary</a></li>
+    <li><a href="#mix-cohort">Plan mix shift by loyalty cohort</a></li>
+    <li><a href="#caveats">Data caveats</a></li>
+    <li><a href="#sources">Sources</a></li>
+    <li><a href="#appendix-laspeyres">Appendix — Laspeyres calculation detail</a></li>
+  </ol>
+</nav>
+
+<!-- 1. METRIC & GAP -->
+<section id="metric">
+  <h2>1. The metric and the AOV gap</h2>
+
+  <p>Core AOV (meals) is computed from <code>public_edw_business_mart_live.revenue_dashboard</code> as:</p>
+  <div class="formula">SUM(order_item_revenue_excl_sales_tax + shipping_revenue_excl_sales_tax) / SUM(orders_count)
+WHERE entity_code = 'HF-CA' AND order_item_type = 'Mealboxes'
+GROUP BY hellofresh_week</div>
+  <p>This formula reconciles to the tracker <code>AOV Core</code> row to the cent for W1–W18 and within $0.41 for W19–W25 (CSV freshness lag).</p>
+
+  <h3>Weekly Budget vs Actual</h3>
+
+  <div class="chart-card">
+    <div class="chart-title">Weekly Core AOV — Budget vs Actual, HF-CA 2026</div>
+    <div class="chart-subtitle">Tracker rows 42 (BUDGET) and 150 (ACTUAL). Deep-gap window (W19–W24) shaded.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartAov"></canvas></div>
+    <div class="chart-hint">Hover to inspect weekly values. Click a series name in the legend to toggle it.</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Weekly Gap (Actual − Budget) $/box</div>
+    <div class="chart-subtitle">Negative bars = AOV below budget. Red = below budget; green = above.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartGap"></canvas></div>
+  </div>
+
+  <h3>Full weekly table</h3>
+  <table>
+    <thead><tr><th>Week</th><th class="r">Budget</th><th class="r">Actual</th><th class="r">Gap</th><th>Week</th><th class="r">Budget</th><th class="r">Actual</th><th class="r">Gap</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td class="r">$115.93</td><td class="r">$116.04</td><td class="r num-good">+$0.11</td><td>W13</td><td class="r">$117.91</td><td class="r">$117.91</td><td class="r">$0.00</td></tr>
+      <tr><td>W2</td><td class="r">$117.71</td><td class="r">$117.72</td><td class="r num-good">+$0.01</td><td>W14</td><td class="r">$117.87</td><td class="r">$118.12</td><td class="r num-good">+$0.25</td></tr>
+      <tr><td>W3</td><td class="r">$118.38</td><td class="r">$118.74</td><td class="r num-good">+$0.36</td><td>W15</td><td class="r">$117.73</td><td class="r">$117.98</td><td class="r num-good">+$0.25</td></tr>
+      <tr><td>W4</td><td class="r">$118.71</td><td class="r">$118.38</td><td class="r num-bad">−$0.33</td><td>W16</td><td class="r">$117.94</td><td class="r">$117.40</td><td class="r num-bad">−$0.54</td></tr>
+      <tr><td>W5</td><td class="r">$118.74</td><td class="r">$118.49</td><td class="r num-bad">−$0.25</td><td>W17</td><td class="r">$117.94</td><td class="r">$117.22</td><td class="r num-bad">−$0.72</td></tr>
+      <tr><td>W6</td><td class="r">$118.98</td><td class="r">$118.43</td><td class="r num-bad">−$0.55</td><td>W18</td><td class="r">$117.97</td><td class="r">$117.78</td><td class="r num-bad">−$0.19</td></tr>
+      <tr><td>W7</td><td class="r">$118.89</td><td class="r">$117.81</td><td class="r num-bad">−$1.08</td><td>W19</td><td class="r">$118.02</td><td class="r">$117.21</td><td class="r num-bad">−$0.81</td></tr>
+      <tr><td>W8</td><td class="r">$118.55</td><td class="r">$117.75</td><td class="r num-bad">−$0.80</td><td>W20</td><td class="r">$117.89</td><td class="r">$116.94</td><td class="r num-bad">−$0.95</td></tr>
+      <tr><td>W9</td><td class="r">$118.49</td><td class="r">$118.03</td><td class="r num-bad">−$0.46</td><td>W21</td><td class="r">$117.90</td><td class="r">$116.65</td><td class="r num-bad">−$1.25</td></tr>
+      <tr><td>W10</td><td class="r">$118.31</td><td class="r">$117.73</td><td class="r num-bad">−$0.58</td><td>W22</td><td class="r">$117.92</td><td class="r">$116.98</td><td class="r num-bad">−$0.94</td></tr>
+      <tr><td>W11</td><td class="r">$118.04</td><td class="r">$117.77</td><td class="r num-bad">−$0.27</td><td>W23</td><td class="r">$117.75</td><td class="r">$117.22</td><td class="r num-bad">−$0.53</td></tr>
+      <tr><td>W12</td><td class="r">$117.97</td><td class="r">$117.87</td><td class="r num-bad">−$0.10</td><td>W24</td><td class="r">$117.73</td><td class="r">$117.18</td><td class="r num-bad">−$0.55</td></tr>
+    </tbody>
+  </table>
+
+  <p>The gap is negative every week from W4 onward except W13–W15. The deepest single week is W21 (−$1.25).</p>
+
+  <div class="source-note">Source: Weekly KPI 2026 Tracker - HF Rev.csv rows 42 (BUDGET) and 150 (ACTUAL); reconciled to public_edw_business_mart_live.revenue_dashboard.</div>
+</section>
+
+<!-- 2. FRAMEWORK -->
+<section id="framework">
+  <h2>2. Phase 1 framework</h2>
+
+  <p>Core recipe prices and shipping fees are fixed in 2026 YTD. Per-box Core AOV can only move via one or more of these three mechanisms:</p>
+
+  <ol>
+    <li><strong>Seamless downgrade share changes</strong> — the % of customers whose shipped box was auto-shrunk via the seamless flow.</li>
+    <li><strong>Seamless upgrade share changes</strong> — the % of customers whose shipped box was auto-grown via the seamless flow.</li>
+    <li><strong>Original plan mix changes</strong> — the distribution of plans (people × recipes) customers <em>originally</em> select.</li>
+  </ol>
+
+  <p>This document reports weekly trends and cohort breakdowns for each mechanism, plus a Laspeyres calculation quantifying how much of the AOV gap is mechanically attributable to plan-mix shift.</p>
+
+  <p><strong>Convention.</strong> Plan codes use <code>XxY = X recipes × Y people</code> in both the seamless table (<code>original_box_type</code>) and the KPI tracker (<code>PBxy</code>). Verified empirically against the SKU pattern <code>CA-{base}-{recipes}-{people}-0</code> in <code>facts_recipes_ordered_enriched</code>.</p>
+
+  <div class="callout neutral">
+    <strong>Direction reading for charts:</strong> a decline in <em>downgrade %</em> is favorable for AOV (good); a decline in <em>upgrade %</em> is unfavorable for AOV (bad).<br>
+    <strong>Phase 2 scope (out of this document):</strong> AOR analysis for seamless-downgraded customers, pause rate, cancellation rate, interpretation, and recommendations.
+  </div>
+</section>
+
+<!-- 3. SEAMLESS DOWNGRADES -->
+<section id="dg">
+  <h2>3. Mechanism 1 — Seamless downgrades</h2>
+
+  <div class="chart-card">
+    <div class="chart-title">Seamless downgrade % weekly, HF-CA 2026</div>
+    <div class="chart-subtitle">Validated to basis-point match against Seamless Dashboard NEW (G4 PASS). Lower is favorable for AOV.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartDgWeekly"></canvas></div>
+  </div>
+
+  <h3>Weekly downgrade % (W1–W24)</h3>
+  <table>
+    <thead><tr><th>Wk</th><th class="r">DG %</th><th>Wk</th><th class="r">DG %</th><th>Wk</th><th class="r">DG %</th><th>Wk</th><th class="r">DG %</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td class="r">9.61%</td><td>W7</td><td class="r">7.95%</td><td>W13</td><td class="r">7.26%</td><td>W19</td><td class="r">7.09%</td></tr>
+      <tr><td>W2</td><td class="r">8.13%</td><td>W8</td><td class="r">7.94%</td><td>W14</td><td class="r">7.63%</td><td>W20</td><td class="r">7.47%</td></tr>
+      <tr><td>W3</td><td class="r">7.66%</td><td>W9</td><td class="r">7.57%</td><td>W15</td><td class="r">7.37%</td><td>W21</td><td class="r">7.60%</td></tr>
+      <tr><td>W4</td><td class="r">7.83%</td><td>W10</td><td class="r">7.26%</td><td>W16</td><td class="r">7.42%</td><td>W22</td><td class="r">7.45%</td></tr>
+      <tr><td>W5</td><td class="r">7.51%</td><td>W11</td><td class="r">7.50%</td><td>W17</td><td class="r">7.26%</td><td>W23</td><td class="r">7.49%</td></tr>
+      <tr><td>W6</td><td class="r">7.61%</td><td>W12</td><td class="r">7.15%</td><td>W18</td><td class="r">6.94%</td><td>W24</td><td class="r">7.61%</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Observations:</strong></p>
+  <ul>
+    <li>W1 is an outlier (9.61%). From W2 onward, weekly DG % stays within a 1.2pp band (6.94% to 8.13%).</li>
+    <li>W1–W5 average: 8.15% (or 7.78% excluding W1). W19–W24 average: 7.45%.</li>
+    <li>The W19–W24 average is lower than the W1–W5 average — there are not more downgrades in the deep-gap window than at the start of the year.</li>
+  </ul>
+
+  <h3>Downgrade share by loyalty cohort, weekly</h3>
+  <div class="chart-card">
+    <div class="chart-title">Weekly downgrade % by loyalty cohort</div>
+    <div class="chart-subtitle">Click cohort names in the legend to isolate. Lower = favorable for AOV.</div>
+    <div class="chart-canvas-wrap tall"><canvas id="chartDgByCohort"></canvas></div>
+  </div>
+
+  <h3>Downgrade share by loyalty cohort (summary)</h3>
+  <table>
+    <thead><tr><th>Cohort</th><th class="r">Baseline (W1–W5)</th><th class="r">Deep gap (W19–W24)</th><th class="r">Δ pp</th></tr></thead>
+    <tbody>
+      <tr><td>0-1 (newest)</td><td class="r">2.72%</td><td class="r">2.44%</td><td class="r num-good">−0.28</td></tr>
+      <tr><td>2-5</td><td class="r">6.91%</td><td class="r">6.22%</td><td class="r num-good">−0.69</td></tr>
+      <tr class="highlight"><td>6-10</td><td class="r">9.75%</td><td class="r">7.63%</td><td class="r num-good">−2.12</td></tr>
+      <tr class="highlight"><td>11-25</td><td class="r">11.42%</td><td class="r">9.27%</td><td class="r num-good">−2.15</td></tr>
+      <tr><td>26-50</td><td class="r">10.41%</td><td class="r">10.49%</td><td class="r">+0.08</td></tr>
+      <tr><td>51-100</td><td class="r">8.29%</td><td class="r">8.70%</td><td class="r">+0.41</td></tr>
+      <tr><td>100+ (super-loyal)</td><td class="r">5.30%</td><td class="r">5.09%</td><td class="r num-good">−0.21</td></tr>
+    </tbody>
+  </table>
+  <p>Downgrade share moved by &lt; ±1pp in 4 cohorts (0-1, 2-5, 51-100, 100+), and by ~2pp downward in 2 cohorts (6-10 and 11-25). 26-50 is essentially flat. Mid-tenure cohorts (6-10, 11-25) drove most of the headline drop.</p>
+
+  <h3>Downgrade share by original plan-size cohort</h3>
+  <div class="chart-card">
+    <div class="chart-title">Δ percentage points by original plan (baseline → deep gap)</div>
+    <div class="chart-subtitle">Bars below zero = favorable for AOV. Bars above zero = unfavorable.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartDgByPlan"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Original plan</th><th class="r">Baseline</th><th class="r">Deep gap</th><th class="r">Δ pp</th></tr></thead>
+    <tbody>
+      <tr><td>2p × 3r</td><td class="r">7.05%</td><td class="r">6.25%</td><td class="r num-good">−0.80</td></tr>
+      <tr><td>2p × 4r</td><td class="r">9.59%</td><td class="r">9.12%</td><td class="r num-good">−0.47</td></tr>
+      <tr><td>2p × 5r</td><td class="r">11.58%</td><td class="r">11.28%</td><td class="r num-good">−0.30</td></tr>
+      <tr><td>4p × 3r</td><td class="r">8.41%</td><td class="r">8.42%</td><td class="r">+0.01</td></tr>
+      <tr><td>4p × 4r</td><td class="r">10.82%</td><td class="r">10.06%</td><td class="r num-good">−0.76</td></tr>
+      <tr><td>4p × 5r</td><td class="r">10.45%</td><td class="r">10.97%</td><td class="r">+0.52</td></tr>
+      <tr><td>6p × 4r</td><td class="r">9.35%</td><td class="r">11.51%</td><td class="r">+2.16</td></tr>
+      <tr><td>6p × 5r</td><td class="r">4.83%</td><td class="r">7.49%</td><td class="r">+2.66</td></tr>
+    </tbody>
+  </table>
+  <p>Among 2-person plans, DG % declined in every plan size. Among 4-person plans, the 4p×5r DG share rose +0.52pp. Among 6-person plans, DG share rose in 6p×4r (+2.16pp) and 6p×5r (+2.66pp), but on small bases (n ≈ 1,200–1,900 customer-weeks per window).</p>
+</section>
+
+<!-- 4. SEAMLESS UPGRADES -->
+<section id="ug">
+  <h2>4. Mechanism 2 — Seamless upgrades</h2>
+
+  <div class="chart-card">
+    <div class="chart-title">Seamless upgrade % weekly, HF-CA 2026</div>
+    <div class="chart-subtitle">Validated to basis-point match against Seamless Dashboard NEW. Lower = unfavorable for AOV.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartUgWeekly"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Wk</th><th class="r">UG %</th><th>Wk</th><th class="r">UG %</th><th>Wk</th><th class="r">UG %</th><th>Wk</th><th class="r">UG %</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td class="r">10.30%</td><td>W7</td><td class="r">10.40%</td><td>W13</td><td class="r">10.93%</td><td>W19</td><td class="r">10.38%</td></tr>
+      <tr><td>W2</td><td class="r">11.87%</td><td>W8</td><td class="r">10.47%</td><td>W14</td><td class="r">10.79%</td><td>W20</td><td class="r">10.42%</td></tr>
+      <tr><td>W3</td><td class="r">11.53%</td><td>W9</td><td class="r">10.31%</td><td>W15</td><td class="r">10.63%</td><td>W21</td><td class="r">10.14%</td></tr>
+      <tr><td>W4</td><td class="r">11.18%</td><td>W10</td><td class="r">10.97%</td><td>W16</td><td class="r">10.76%</td><td>W22</td><td class="r">10.27%</td></tr>
+      <tr><td>W5</td><td class="r">11.30%</td><td>W11</td><td class="r">10.55%</td><td>W17</td><td class="r">10.21%</td><td>W23</td><td class="r">10.27%</td></tr>
+      <tr><td>W6</td><td class="r">11.25%</td><td>W12</td><td class="r">10.99%</td><td>W18</td><td class="r">10.84%</td><td>W24</td><td class="r">10.08%</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Observations:</strong></p>
+  <ul>
+    <li>Upgrade share peaked at 11.87% (W2) and declined to 10.08% (W24).</li>
+    <li>W1–W5 average: 11.24%. W19–W24 average: 10.26%. <strong>Drop: −0.98pp.</strong></li>
+    <li>The decline is gradual, not a step-change. Roughly half the drop (−0.5pp) is between W2–W6 and W7–W12; the remaining −0.5pp is between W12 and W24.</li>
+  </ul>
+
+  <h3>Upgrade share by loyalty cohort, weekly</h3>
+  <div class="chart-card">
+    <div class="chart-title">Weekly upgrade % by loyalty cohort</div>
+    <div class="chart-subtitle">Click cohort names in the legend to isolate. Lower = unfavorable for AOV.</div>
+    <div class="chart-canvas-wrap tall"><canvas id="chartUgByCohort"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Cohort</th><th class="r">Baseline (W1–W5)</th><th class="r">Deep gap (W19–W24)</th><th class="r">Δ pp</th></tr></thead>
+    <tbody>
+      <tr class="highlight"><td>0-1 (newest)</td><td class="r">15.16%</td><td class="r">13.44%</td><td class="r num-bad">−1.72</td></tr>
+      <tr><td>2-5</td><td class="r">9.46%</td><td class="r">8.18%</td><td class="r num-bad">−1.28</td></tr>
+      <tr><td>6-10</td><td class="r">9.25%</td><td class="r">8.24%</td><td class="r num-bad">−1.01</td></tr>
+      <tr><td>11-25</td><td class="r">9.56%</td><td class="r">8.41%</td><td class="r num-bad">−1.15</td></tr>
+      <tr><td>26-50</td><td class="r">9.99%</td><td class="r">9.28%</td><td class="r num-bad">−0.71</td></tr>
+      <tr><td>51-100</td><td class="r">11.30%</td><td class="r">10.36%</td><td class="r num-bad">−0.94</td></tr>
+      <tr><td>100+ (super-loyal)</td><td class="r">14.50%</td><td class="r">13.75%</td><td class="r num-bad">−0.75</td></tr>
+    </tbody>
+  </table>
+  <p>Upgrade share declined in every loyalty cohort. The largest absolute decline is in the newest cohort (0-1, −1.72pp). Long-tenured cohorts (26-50, 51-100, 100+) have smaller declines (−0.71 to −0.94pp).</p>
+
+  <h3>Upgrade share by original plan-size cohort</h3>
+  <div class="chart-card">
+    <div class="chart-title">Δ percentage points by original plan (baseline → deep gap)</div>
+    <div class="chart-subtitle">Bars below zero = unfavorable for AOV. Highlighted plans dropped ≥ 2.5pp.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartUgByPlan"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Original plan</th><th class="r">Baseline UG%</th><th class="r">Deep UG%</th><th class="r">Δ pp</th><th class="r">N (baseline / deep)</th></tr></thead>
+    <tbody>
+      <tr><td>2p × 2r</td><td class="r">17.35%</td><td class="r">15.90%</td><td class="r num-bad">−1.45</td><td class="r">2,951 / 4,659</td></tr>
+      <tr><td>2p × 3r</td><td class="r">11.10%</td><td class="r">10.43%</td><td class="r num-bad">−0.67</td><td class="r">221,042 / 250,828</td></tr>
+      <tr class="highlight"><td>2p × 4r</td><td class="r">11.62%</td><td class="r">10.30%</td><td class="r num-bad">−1.32</td><td class="r">49,762 / 57,066</td></tr>
+      <tr class="highlight"><td>2p × 5r</td><td class="r">16.32%</td><td class="r">14.99%</td><td class="r num-bad">−1.33</td><td class="r">26,274 / 27,225</td></tr>
+      <tr class="highlight"><td>4p × 2r</td><td class="r">14.18%</td><td class="r">10.84%</td><td class="r num-bad">−3.34</td><td class="r">2,193 / 3,624</td></tr>
+      <tr class="highlight"><td>4p × 3r</td><td class="r">9.81%</td><td class="r">8.43%</td><td class="r num-bad">−1.38</td><td class="r">88,397 / 102,589</td></tr>
+      <tr><td>4p × 4r</td><td class="r">11.45%</td><td class="r">11.23%</td><td class="r num-bad">−0.22</td><td class="r">16,694 / 19,204</td></tr>
+      <tr class="highlight"><td>4p × 5r</td><td class="r">13.14%</td><td class="r">10.32%</td><td class="r num-bad">−2.82</td><td class="r">11,867 / 11,370</td></tr>
+      <tr class="highlight"><td>6p × 2r</td><td class="r">9.95%</td><td class="r">8.38%</td><td class="r num-bad">−1.57</td><td class="r">3,296 / 4,043</td></tr>
+      <tr class="highlight"><td>6p × 3r</td><td class="r">13.05%</td><td class="r">9.08%</td><td class="r num-bad">−3.97</td><td class="r">3,609 / 4,172</td></tr>
+      <tr class="highlight"><td>6p × 4r</td><td class="r">13.31%</td><td class="r">10.34%</td><td class="r num-bad">−2.97</td><td class="r">1,240 / 1,373</td></tr>
+      <tr><td>6p × 5r</td><td class="r">0.79%</td><td class="r">0.18%</td><td class="r num-bad">−0.61</td><td class="r">1,904 / 1,628</td></tr>
+    </tbody>
+  </table>
+  <p>Upgrade share declined in every plan cohort. Largest pp drops occurred in 6p×3r (−3.97), 4p×2r (−3.34), 6p×4r (−2.97), and 4p×5r (−2.82). The 2p×3r plan (largest volume cohort, ~250K customer-weeks) saw a smaller drop of −0.67pp; given its size, this single plan contributes the most absolute upgrade-share decline to the overall metric.</p>
+
+  <div class="source-note">Source: pa_food_seamless_dashboard_fixed, COALESCE(original_box_type, box_type_ordered) parsed as recipes × people. n ≥ 1,000 customer-weeks per window.</div>
+</section>
+
+<!-- 5. NET MEAL DELTA -->
+<section id="net">
+  <h2>5. Net seamless meal delta</h2>
+
+  <p>The net meals added/removed per customer-week via seamless. Computed as <code>SUM(difference_in_meals) / COUNT(*)</code> for the CA customer-weeks in <code>pa_food_seamless_dashboard_fixed</code>.</p>
+
+  <div class="chart-card">
+    <div class="chart-title">Weekly net seamless meal delta per customer-row</div>
+    <div class="chart-subtitle">Positive = upgrades contribute more meals than downgrades remove. Declining = upgrade lift is weakening.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartNetMeal"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Wk</th><th class="r">Net meals/row</th><th>Wk</th><th class="r">Net meals/row</th><th>Wk</th><th class="r">Net meals/row</th><th>Wk</th><th class="r">Net meals/row</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td class="r">+0.028</td><td>W7</td><td class="r">+0.050</td><td>W13</td><td class="r">+0.065</td><td>W19</td><td class="r">+0.061</td></tr>
+      <tr><td>W2</td><td class="r">+0.067</td><td>W8</td><td class="r">+0.052</td><td>W14</td><td class="r">+0.059</td><td>W20</td><td class="r">+0.055</td></tr>
+      <tr><td>W3</td><td class="r">+0.072</td><td>W9</td><td class="r">+0.054</td><td>W15</td><td class="r">+0.059</td><td>W21</td><td class="r">+0.049</td></tr>
+      <tr><td>W4</td><td class="r">+0.064</td><td>W10</td><td class="r">+0.066</td><td>W16</td><td class="r">+0.061</td><td>W22</td><td class="r">+0.053</td></tr>
+      <tr><td>W5</td><td class="r">+0.070</td><td>W11</td><td class="r">+0.058</td><td>W17</td><td class="r">+0.055</td><td>W23</td><td class="r">+0.053</td></tr>
+      <tr><td>W6</td><td class="r">+0.067</td><td>W12</td><td class="r">+0.069</td><td>W18</td><td class="r">+0.069</td><td>W24</td><td class="r">+0.049</td></tr>
+    </tbody>
+  </table>
+
+  <ul>
+    <li>Net meal delta is positive every week (upgrade contributions exceed downgrade contributions in meal count).</li>
+    <li>W1–W5 average (excluding W1 outlier): +0.068. W19–W24 average: +0.053.</li>
+    <li>Drop from baseline to deep gap: <strong>−0.015 meals/row</strong>.</li>
+  </ul>
+</section>
+
+<!-- 6. PLAN MIX -->
+<section id="mix">
+  <h2>6. Mechanism 3 — Original plan mix shift</h2>
+
+  <p>Plan = (people × recipes) of the customer's original plan. For customers without a seamless event in a given week, original = shipped. Convention: <code>XxY</code> = X recipes × Y people.</p>
+
+  <h3>Volume by plan, baseline vs deep gap</h3>
+
+  <div class="chart-card">
+    <div class="chart-title">% volume change by original plan (baseline → deep gap)</div>
+    <div class="chart-subtitle">Plans sorted by absolute size. Bars below zero = volume contracting.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartPlanVol"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Plan</th><th class="r">Baseline boxes/wk</th><th class="r">Deep boxes/wk</th><th class="r">Δ %</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>2p × 3r</td><td class="r">44,208</td><td class="r">41,150</td><td class="r num-bad">−6.9%</td><td>Largest plan</td></tr>
+      <tr><td>4p × 3r</td><td class="r">17,679</td><td class="r">16,818</td><td class="r num-bad">−4.9%</td><td>Second-largest plan</td></tr>
+      <tr><td>2p × 4r</td><td class="r">9,952</td><td class="r">9,359</td><td class="r num-bad">−6.0%</td><td>Mid-range</td></tr>
+      <tr class="highlight"><td>2p × 5r</td><td class="r">5,255</td><td class="r">4,465</td><td class="r num-bad">−15.0%</td><td>HIGH AOV</td></tr>
+      <tr><td>4p × 4r</td><td class="r">3,339</td><td class="r">3,154</td><td class="r num-bad">−5.5%</td><td>Mid-range</td></tr>
+      <tr class="highlight"><td>4p × 5r</td><td class="r">2,373</td><td class="r">1,864</td><td class="r num-bad">−21.5%</td><td>HIGH AOV</td></tr>
+      <tr><td>6p × 3r</td><td class="r">722</td><td class="r">685</td><td class="r num-bad">−5.1%</td><td>Small plan</td></tr>
+      <tr class="highlight"><td>2p × 2r</td><td class="r">590</td><td class="r">764</td><td class="r num-good">+29.5%</td><td>SMALLEST — only one growing</td></tr>
+      <tr><td>6p × 2r</td><td class="r">659</td><td class="r">666</td><td class="r">+1.0%</td><td>Flat</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Weekly plan-share trend (selected plans)</h3>
+
+  <div class="chart-card">
+    <div class="chart-title">Weekly share of original plan (high-AOV 5-recipe plans and smallest plan)</div>
+    <div class="chart-subtitle">Three plans shown — toggle others via the legend.</div>
+    <div class="chart-canvas-wrap tall"><canvas id="chartPlanShareWeekly"></canvas></div>
+  </div>
+
+  <h3>Plan share — baseline vs deep gap</h3>
+
+  <table>
+    <thead><tr><th>Plan</th><th class="r">Baseline share</th><th class="r">Deep-gap share</th><th class="r">Δ pp</th></tr></thead>
+    <tbody>
+      <tr><td>2p × 3r</td><td class="r">51.42%</td><td class="r">51.32%</td><td class="r">−0.10</td></tr>
+      <tr><td>4p × 3r</td><td class="r">20.42%</td><td class="r">20.99%</td><td class="r num-good">+0.57</td></tr>
+      <tr><td>2p × 4r</td><td class="r">11.57%</td><td class="r">11.67%</td><td class="r num-good">+0.10</td></tr>
+      <tr class="highlight"><td>2p × 5r</td><td class="r">6.11%</td><td class="r">5.57%</td><td class="r num-bad">−0.54</td></tr>
+      <tr><td>4p × 4r</td><td class="r">3.88%</td><td class="r">3.93%</td><td class="r">+0.05</td></tr>
+      <tr class="highlight"><td>4p × 5r</td><td class="r">2.76%</td><td class="r">2.32%</td><td class="r num-bad">−0.44</td></tr>
+      <tr><td>6p × 3r</td><td class="r">0.84%</td><td class="r">0.85%</td><td class="r">+0.01</td></tr>
+      <tr class="highlight"><td>2p × 2r</td><td class="r">0.69%</td><td class="r">0.95%</td><td class="r num-good">+0.26</td></tr>
+      <tr><td>6p × 2r</td><td class="r">0.77%</td><td class="r">0.83%</td><td class="r num-good">+0.06</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Average original meals per box</h3>
+
+  <table>
+    <thead><tr><th>Window</th><th class="r">Avg meals/box</th></tr></thead>
+    <tbody>
+      <tr><td>W1–W5 (baseline)</td><td class="r">3.32</td></tr>
+      <tr><td>W6–W12</td><td class="r">3.32</td></tr>
+      <tr><td>W13–W18</td><td class="r">3.31</td></tr>
+      <tr><td>W19–W24 (deep gap)</td><td class="r">3.295</td></tr>
+    </tbody>
+  </table>
+  <p>Avg original meals/box dropped from 3.32 (baseline) to 3.295 (deep gap), a difference of <strong>−0.027 meals/box</strong>.</p>
+</section>
+
+<!-- 7. LASPEYRES SUMMARY -->
+<section id="laspeyres">
+  <h2>7. Plan-mix contribution to AOV — summary</h2>
+
+  <p><strong>Question:</strong> Of the observed AOV decline, how much is mechanically caused by customers selecting smaller original plans on average — independent of any seamless behavior?</p>
+
+  <p><strong>Method (one line):</strong> hold each plan's $/box at its W1–W5 average, then re-compute AOV using each week's actual mix of original plans. The only thing changing is which plans customers selected.</p>
+
+  <table>
+    <thead><tr><th>Metric</th><th class="r">Value</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline (W1–W5) mix-only AOV</td><td class="r">$105.44</td></tr>
+      <tr><td>Deep gap (W19–W24) mix-only AOV</td><td class="r">$104.87</td></tr>
+      <tr class="highlight"><td><strong>Mix-only Δ from baseline to deep gap</strong></td><td class="r num-bad"><strong>−$0.57/box</strong></td></tr>
+      <tr><td>Observed tracker AOV gap (W19–W24 avg vs budget)</td><td class="r num-bad">−$0.74/box</td></tr>
+      <tr><td>Mix contribution as % of observed gap</td><td class="r">~77%</td></tr>
+    </tbody>
+  </table>
+
+  <p>Plan-mix shift accounts for ~$0.57/box of the ~$0.74/box observed gap. The remaining ~$0.17/box is attributable to changes in seamless behavior (mainly weakening upgrades, per §4) and small calculation differences vs the canonical source.</p>
+
+  <p class="source-note">Full formula, per-plan baseline $/box, weekly mix-only AOV chart and table are in the <a href="#appendix-laspeyres">Appendix — Laspeyres calculation detail</a>.</p>
+</section>
+
+<!-- 8. PLAN MIX BY COHORT -->
+<section id="mix-cohort">
+  <h2>8. Plan mix shift by loyalty cohort</h2>
+
+  <p>Volume change per recipe-count tier, within each loyalty cohort. Comparison: W1–W5 baseline (5-week average) vs W19–W24 deep gap (6-week average).</p>
+
+  <div class="chart-card">
+    <div class="chart-title">Volume change by recipe-tier within each loyalty cohort</div>
+    <div class="chart-subtitle">Grouped bars per cohort: each cohort × recipe-count contribution. Toggle tiers via the legend.</div>
+    <div class="chart-canvas-wrap tall"><canvas id="chartMixCohort"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Cohort</th><th class="r">Total Δ%</th><th class="r">2r Δ%</th><th class="r">3r Δ%</th><th class="r">4r Δ%</th><th class="r">5r Δ%</th></tr></thead>
+    <tbody>
+      <tr class="highlight"><td><strong>0-1 (newest)</strong></td><td class="r num-bad">−40.3%</td><td class="r num-bad">−21.9%</td><td class="r num-bad">−43.8%</td><td class="r num-bad">−33.4%</td><td class="r num-bad">−34.9%</td></tr>
+      <tr><td>2-5</td><td class="r num-bad">−23.9%</td><td class="r">−3.4%</td><td class="r num-bad">−24.7%</td><td class="r num-bad">−19.6%</td><td class="r num-bad">−28.5%</td></tr>
+      <tr><td>6-10</td><td class="r num-bad">−10.1%</td><td class="r num-good">+25.7%</td><td class="r">−9.4%</td><td class="r">−10.8%</td><td class="r num-bad">−19.5%</td></tr>
+      <tr><td>11-25</td><td class="r num-bad">−12.9%</td><td class="r">−12.7%</td><td class="r">−11.2%</td><td class="r">−14.3%</td><td class="r num-bad">−22.9%</td></tr>
+      <tr><td>26-50</td><td class="r num-bad">−13.9%</td><td class="r num-good">+13.6%</td><td class="r">−13.5%</td><td class="r">−14.3%</td><td class="r num-bad">−23.7%</td></tr>
+      <tr><td>51-100</td><td class="r num-bad">−13.8%</td><td class="r num-good">+14.3%</td><td class="r">−14.9%</td><td class="r">−11.2%</td><td class="r num-bad">−16.2%</td></tr>
+      <tr><td>100+ (super-loyal)</td><td class="r num-bad">−9.4%</td><td class="r num-good">+25.7%</td><td class="r">−10.8%</td><td class="r">−8.2%</td><td class="r">−7.1%</td></tr>
+    </tbody>
+  </table>
+
+  <ul>
+    <li>Every cohort lost total volume. Range: −9.4% (100+) to −40.3% (0-1).</li>
+    <li>The 0-1 cohort (newest customers) lost the most volume in both absolute and percentage terms (−40.3%).</li>
+    <li>The 5-recipe plan declined in every cohort. Range: −7.1% (100+) to −34.9% (0-1).</li>
+    <li>The 2-recipe plan grew in 4 cohorts (6-10, 26-50, 51-100, 100+) by +13.6% to +25.7%. Declined in 2 cohorts (0-1, 11-25). Roughly flat in 2-5.</li>
+    <li>The 5r decline within a cohort is larger than that cohort's total decline in 6 of 7 cohorts (the exception is 100+).</li>
+  </ul>
+</section>
+
+<!-- 9. CAVEATS -->
+<section id="caveats">
+  <h2>9. Data caveats</h2>
+  <ol>
+    <li><strong>Tracker freshness for W19–W25.</strong> Tracker CSV values for W19–W25 reconcile within $0.41 to the canonical revenue source. Live data is slightly fresher than the CSV snapshot.</li>
+    <li><strong>Convention check.</strong> Plan codes use XxY = X recipes × Y people in both the seamless table and the tracker. Verified empirically via SKU pattern <code>CA-{base}-{recipes}-{people}-0</code> in <code>facts_recipes_ordered_enriched</code>. The seamless table's <code>meals_*_sub</code> columns store recipe count, not portion count.</li>
+  </ol>
+</section>
+
+<!-- 10. SOURCES -->
+<section id="sources">
+  <h2>10. Sources</h2>
+  <table>
+    <thead><tr><th>Source</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>public_edw_business_mart_live.revenue_dashboard</code></td><td>Canonical Core AOV; reconciles to tracker to the cent W1–W18</td></tr>
+      <tr><td><code>uploads.pa_food_seamless_dashboard_fixed</code></td><td>Seamless DG/UG shares, original plan, plan mix by cohort</td></tr>
+      <tr><td><code>public_one_product_meal_live.facts_recipes_ordered_enriched</code></td><td>Per-plan baseline AOV for Laspeyres calculation</td></tr>
+      <tr><td>Weekly KPI 2026 Tracker - HF Rev.csv, rows 42 / 150</td><td>Budget AOV and Actual AOV reference</td></tr>
+      <tr><td><a href="https://tableau.hellofresh.io/#/views/SeamlessDashboard/SeamlessDashboardNEW">Seamless Dashboard NEW (CA filter)</a></td><td>G4 validation (basis-point match to seamless table)</td></tr>
+      <tr><td><a href="https://tableau.hellofresh.io/#/views/RevenueDashboardDetailed/RevenueperEntity">Revenue Dashboard - Revenue per Entity</a></td><td>Tracker source (the cell in the KPI tracker is populated from this view)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- APPENDIX — LASPEYRES DETAIL -->
+<section id="appendix-laspeyres">
+  <h2>Appendix — Laspeyres calculation detail</h2>
+
+  <h3>How to read the chart below in plain language</h3>
+  <p>For each week, we ask a simple "what-if": if every plan still earned the same $/box it earned in W1–W5 (e.g., a 2p×3r box still earns ~$78, a 4p×5r still earns ~$200, a 6p×5r still earns ~$300), what would AOV be — given only the actual change in <em>which original plans customers selected</em> that week?</p>
+
+  <p>Concretely, the calculation:</p>
+  <ul>
+    <li><strong>Holds constant:</strong> each plan's baseline $/box. This $/box already reflects baseline seamless behavior (downgrades and upgrades that were happening in W1–W5). It is <em>not</em> a "remove seamless" scenario.</li>
+    <li><strong>Lets vary:</strong> the share of customers on each original plan, week by week.</li>
+  </ul>
+
+  <p>Reading the result: if mix-only AOV drops by $0.57 from baseline to deep gap, that means <strong>$0.57 of the AOV decline is purely from customers selecting smaller original plans on average</strong> — even if seamless behavior had stayed exactly the same as in baseline.</p>
+
+  <div class="callout neutral">
+    <strong>Note — this is not "AOV without seamless".</strong> That would be a different calculation, using each customer's pre-seamless original-plan price instead of the realized price. That counterfactual is a Phase 2 question.
+  </div>
+
+  <h3>Formula</h3>
+  <div class="formula">ΔAOV_mix = Σ_p (share_p^t − share_p^baseline) × AOV_p^baseline
+
+where:
+  share_p^t          = share of plan p in week t's original-plan mix
+  share_p^baseline   = share of plan p averaged over baseline (W1–W5)
+  AOV_p^baseline     = per-plan revenue per box, baseline avg</div>
+
+  <h3>Per-plan baseline AOV (input)</h3>
+  <p>Computed from <code>facts_recipes_ordered_enriched</code> over W1–W5. Each value is the average revenue per box for that plan during the baseline window. These are the prices that stay locked when we vary the mix.</p>
+
+  <div class="two-col">
+    <table>
+      <thead><tr><th>Plan</th><th class="r">$/box (meal items)</th></tr></thead>
+      <tbody>
+        <tr><td>2p × 2r</td><td class="r">$58.00</td></tr>
+        <tr><td>2p × 3r</td><td class="r">$77.97</td></tr>
+        <tr><td>2p × 4r</td><td class="r">$99.96</td></tr>
+        <tr><td>2p × 5r</td><td class="r">$123.36</td></tr>
+        <tr><td>2p × 6r</td><td class="r">$144.81</td></tr>
+        <tr><td>4p × 2r</td><td class="r">$93.81</td></tr>
+        <tr><td>4p × 3r</td><td class="r">$137.94</td></tr>
+        <tr><td>4p × 4r</td><td class="r">$175.56</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Plan</th><th class="r">$/box (meal items)</th></tr></thead>
+      <tbody>
+        <tr><td>4p × 5r</td><td class="r">$199.84</td></tr>
+        <tr><td>4p × 6r</td><td class="r">$239.82</td></tr>
+        <tr><td>6p × 1r</td><td class="r">$77.96</td></tr>
+        <tr><td>6p × 2r</td><td class="r">$137.73</td></tr>
+        <tr><td>6p × 3r</td><td class="r">$188.97</td></tr>
+        <tr><td>6p × 4r</td><td class="r">$239.16</td></tr>
+        <tr><td>6p × 5r</td><td class="r">$299.81</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Weekly mix-only AOV</h3>
+  <div class="chart-card">
+    <div class="chart-title">Mix-only AOV — what AOV would be each week if customers selected different plans, but every plan still earned its baseline $/box</div>
+    <div class="chart-subtitle">Per-plan $/box held at W1–W5 averages. Mix (share of each plan in the customer base) is the only thing changing week to week. Dashed line = baseline mix-only AOV.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartLaspeyres"></canvas></div>
+  </div>
+
+  <h3>Full weekly values</h3>
+  <table>
+    <thead><tr><th>Wk</th><th class="r">Mix-only AOV</th><th class="r">Δ vs baseline</th><th>Wk</th><th class="r">Mix-only AOV</th><th class="r">Δ vs baseline</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td class="r">$104.38</td><td class="r num-bad">−$1.06</td><td>W13</td><td class="r">$104.64</td><td class="r num-bad">−$0.79</td></tr>
+      <tr><td>W2</td><td class="r">$105.11</td><td class="r num-bad">−$0.33</td><td>W14</td><td class="r">$104.89</td><td class="r num-bad">−$0.55</td></tr>
+      <tr><td>W3</td><td class="r">$106.05</td><td class="r num-good">+$0.61</td><td>W15</td><td class="r">$105.21</td><td class="r num-bad">−$0.23</td></tr>
+      <tr><td>W4</td><td class="r">$105.88</td><td class="r num-good">+$0.44</td><td>W16</td><td class="r">$104.70</td><td class="r num-bad">−$0.74</td></tr>
+      <tr><td>W5</td><td class="r">$105.78</td><td class="r num-good">+$0.34</td><td>W17</td><td class="r">$104.73</td><td class="r num-bad">−$0.71</td></tr>
+      <tr><td>W6</td><td class="r">$105.85</td><td class="r num-good">+$0.41</td><td>W18</td><td class="r">$104.89</td><td class="r num-bad">−$0.55</td></tr>
+      <tr><td>W7</td><td class="r">$105.63</td><td class="r num-good">+$0.19</td><td>W19</td><td class="r">$104.82</td><td class="r num-bad">−$0.62</td></tr>
+      <tr><td>W8</td><td class="r">$105.35</td><td class="r num-bad">−$0.09</td><td>W20</td><td class="r">$104.76</td><td class="r num-bad">−$0.68</td></tr>
+      <tr><td>W9</td><td class="r">$105.39</td><td class="r num-bad">−$0.05</td><td>W21</td><td class="r">$104.68</td><td class="r num-bad">−$0.76</td></tr>
+      <tr><td>W10</td><td class="r">$104.64</td><td class="r num-bad">−$0.80</td><td>W22</td><td class="r">$104.84</td><td class="r num-bad">−$0.60</td></tr>
+      <tr><td>W11</td><td class="r">$104.85</td><td class="r num-bad">−$0.59</td><td>W23</td><td class="r">$105.05</td><td class="r num-bad">−$0.39</td></tr>
+      <tr><td>W12</td><td class="r">$104.52</td><td class="r num-bad">−$0.92</td><td>W24</td><td class="r">$105.10</td><td class="r num-bad">−$0.34</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</div>
+
+<script>
+// ============ DATA ============
+const WEEKS24 = Array.from({length: 24}, (_, i) => `W${i + 1}`);
+
+const aov_budget = [115.93,117.71,118.38,118.71,118.74,118.98,118.89,118.55,118.49,118.31,118.04,117.97,117.91,117.87,117.73,117.94,117.94,117.97,118.02,117.89,117.90,117.92,117.75,117.73];
+const aov_actual = [116.04,117.72,118.74,118.38,118.49,118.43,117.81,117.75,118.03,117.73,117.77,117.87,117.91,118.12,117.98,117.40,117.22,117.78,117.21,116.94,116.65,116.98,117.22,117.18];
+const aov_gap = aov_actual.map((a, i) => +(a - aov_budget[i]).toFixed(2));
+
+const dg_weekly = [9.61,8.13,7.66,7.83,7.51,7.61,7.95,7.94,7.57,7.26,7.50,7.15,7.26,7.63,7.37,7.42,7.26,6.94,7.09,7.47,7.60,7.45,7.49,7.61];
+const ug_weekly = [10.30,11.87,11.53,11.18,11.30,11.25,10.40,10.47,10.31,10.97,10.55,10.99,10.93,10.79,10.63,10.76,10.21,10.84,10.38,10.42,10.14,10.27,10.27,10.08];
+const net_meal = [0.0284,0.0666,0.0718,0.0637,0.0699,0.0673,0.0499,0.0520,0.0540,0.0661,0.0579,0.0693,0.0650,0.0594,0.0591,0.0606,0.0550,0.0690,0.0613,0.0553,0.0489,0.0530,0.0525,0.0487];
+
+// DG % by cohort (24 weeks × 7 cohorts)
+const dg_by_cohort = {
+  "0-1":   [2.75,2.95,2.88,2.72,2.35,2.18,2.29,2.27,2.25,2.50,2.11,1.95,2.08,2.35,2.25,2.45,2.17,2.23,2.14,2.65,2.38,2.56,2.41,2.40],
+  "2-5":   [7.74,7.30,6.43,6.84,6.79,6.88,7.07,7.13,6.87,6.21,6.32,5.71,6.11,6.64,6.08,6.10,6.14,5.81,5.62,5.97,6.12,5.94,6.42,6.89],
+  "6-10":  [10.97,10.35,9.86,9.08,9.03,9.20,9.57,9.61,8.71,8.71,8.71,8.33,8.13,8.54,7.86,8.00,7.68,7.20,7.45,7.11,7.52,7.71,7.84,8.00],
+  "11-25": [12.60,11.48,10.98,11.38,11.13,11.04,10.92,10.68,10.30,10.04,10.13,9.37,9.65,10.13,9.88,9.63,9.34,9.12,8.94,9.61,9.63,9.04,8.87,9.06],
+  "26-50": [12.07,10.48,10.32,10.01,9.86,9.78,10.13,10.48,9.97,9.09,9.85,9.71,9.64,9.49,9.80,10.15,10.13,9.47,9.61,10.51,10.86,10.64,10.48,10.38],
+  "51-100":[10.06,8.18,7.79,8.00,8.11,8.28,8.56,8.43,7.98,7.69,7.92,7.83,7.98,8.62,8.18,8.12,8.39,7.60,8.23,8.59,8.95,8.61,8.80,8.94],
+  "100+":  [7.24,5.16,4.97,5.08,4.66,4.78,5.26,5.13,4.78,4.62,4.96,4.83,4.73,5.19,4.95,5.09,4.63,4.58,4.86,4.98,4.94,5.11,5.13,5.11]
+};
+
+const ug_by_cohort = {
+  "0-1":   [15.18,15.97,14.58,14.95,15.28,15.69,14.44,13.92,15.33,14.55,14.62,15.90,14.48,15.54,15.71,15.81,14.73,15.68,14.56,14.19,12.44,13.19,13.83,12.51],
+  "2-5":   [8.38,10.20,9.80,9.20,9.47,9.21,8.84,8.72,8.59,8.96,8.89,9.20,10.05,9.04,9.17,9.16,8.26,8.64,8.11,8.32,7.75,7.88,7.95,8.45],
+  "6-10":  [7.90,9.52,9.64,9.60,9.07,8.85,8.61,8.95,8.61,9.12,8.33,8.50,8.98,8.52,8.16,8.43,7.54,8.74,8.32,7.99,8.04,8.24,8.41,8.37],
+  "11-25": [8.63,10.13,9.78,9.53,9.41,9.48,8.75,9.07,8.57,9.36,8.89,9.00,9.23,9.12,8.65,9.09,8.39,8.81,8.57,8.18,8.44,8.46,8.33,8.35],
+  "26-50": [9.26,10.87,10.17,9.87,9.55,10.28,9.15,9.12,8.69,10.00,9.66,10.41,10.26,9.98,9.24,9.52,9.20,9.61,9.33,9.23,9.41,9.40,9.22,9.04],
+  "51-100":[10.38,11.71,11.18,11.55,11.35,10.95,10.26,10.40,10.18,10.99,10.38,10.79,10.44,10.30,10.30,10.05,9.85,11.06,10.40,10.73,10.33,10.04,10.26,10.23],
+  "100+":  [13.31,14.47,14.97,14.45,14.94,15.00,13.88,13.85,13.85,14.61,14.08,14.45,13.94,14.07,14.28,14.18,13.91,14.33,13.90,14.26,13.57,13.91,13.70,13.09]
+};
+
+const dg_by_plan = [
+  {plan: "2p × 3r", d: -0.80}, {plan: "2p × 4r", d: -0.47}, {plan: "2p × 5r", d: -0.30},
+  {plan: "4p × 3r", d: 0.01},  {plan: "4p × 4r", d: -0.76}, {plan: "4p × 5r", d: 0.52},
+  {plan: "6p × 4r", d: 2.16},  {plan: "6p × 5r", d: 2.66}
+];
+
+const ug_by_plan = [
+  {plan: "2p × 2r", d: -1.45}, {plan: "2p × 3r", d: -0.67}, {plan: "2p × 4r", d: -1.32}, {plan: "2p × 5r", d: -1.33},
+  {plan: "4p × 2r", d: -3.34}, {plan: "4p × 3r", d: -1.38}, {plan: "4p × 4r", d: -0.22}, {plan: "4p × 5r", d: -2.82},
+  {plan: "6p × 2r", d: -1.57}, {plan: "6p × 3r", d: -3.97}, {plan: "6p × 4r", d: -2.97}, {plan: "6p × 5r", d: -0.61}
+];
+
+const plan_volume_change = [
+  {plan: "2p × 3r", d: -6.9}, {plan: "4p × 3r", d: -4.9}, {plan: "2p × 4r", d: -6.0},
+  {plan: "2p × 5r", d: -15.0}, {plan: "4p × 4r", d: -5.5}, {plan: "4p × 5r", d: -21.5},
+  {plan: "6p × 3r", d: -5.1}, {plan: "2p × 2r", d: 29.5}, {plan: "6p × 2r", d: 1.0}
+];
+
+const plan_share_weekly = {
+  "2p × 5r": [6.485,5.868,6.046,6.078,6.215,6.163,6.032,6.018,6.042,6.046,5.924,6.018,5.845,5.783,5.874,5.704,5.649,5.574,5.458,5.598,5.691,5.552,5.528,5.606],
+  "4p × 5r": [2.737,2.681,2.872,2.726,2.766,2.751,2.738,2.562,2.676,2.482,2.531,2.557,2.536,2.596,2.648,2.319,2.356,2.334,2.327,2.293,2.279,2.256,2.400,2.402],
+  "2p × 2r": [0.744,0.743,0.666,0.665,0.647,0.660,0.682,0.691,0.705,0.786,0.799,0.835,0.868,0.835,0.882,0.844,0.901,0.883,0.922,0.938,0.924,0.990,0.986,0.962]
+};
+
+const laspeyres = [104.38,105.11,106.05,105.88,105.78,105.85,105.63,105.35,105.39,104.64,104.85,104.52,104.64,104.89,105.21,104.70,104.73,104.89,104.82,104.76,104.68,104.84,105.05,105.10];
+const LASP_BASELINE = 105.44;
+
+const mix_cohort = {
+  cohorts: ["0-1 (newest)", "2-5", "6-10", "11-25", "26-50", "51-100", "100+"],
+  r2: [-21.9, -3.4, 25.7, -12.7, 13.6, 14.3, 25.7],
+  r3: [-43.8, -24.7, -9.4, -11.2, -13.5, -14.9, -10.8],
+  r4: [-33.4, -19.6, -10.8, -14.3, -14.3, -11.2, -8.2],
+  r5: [-34.9, -28.5, -19.5, -22.9, -23.7, -16.2, -7.1]
+};
+
+// ============ COLORS ============
+const PALETTE = {
+  budget: "#6b7280", actual: "#c44536",
+  dg: "#c44536", ug: "#1f6f3b",
+  good: "#2d8a47", bad: "#b8392a", warn: "#d4a017", ink: "#1a1f2e",
+  cohort: ["#c44536","#d4a017","#1f6f3b","#3a7ca5","#7c3aed","#0891b2","#1a1f2e"],
+  recipe: {r2: "#7c3aed", r3: "#3a7ca5", r4: "#d4a017", r5: "#c44536"}
+};
+
+// ============ DEFAULTS ============
+Chart.defaults.font.family = "'Inter', -apple-system, system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = "#4a5060";
+Chart.defaults.plugins.tooltip.backgroundColor = "rgba(26, 31, 46, 0.95)";
+Chart.defaults.plugins.tooltip.titleFont = {weight: "700", size: 12};
+Chart.defaults.plugins.tooltip.bodyFont = {size: 12};
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 4;
+Chart.defaults.plugins.tooltip.boxPadding = 6;
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.boxHeight = 8;
+Chart.defaults.plugins.legend.labels.padding = 14;
+Chart.defaults.scale.grid.color = "rgba(230, 227, 216, 0.6)";
+Chart.defaults.scale.ticks.color = "#6b7280";
+
+if (window["chartjs-plugin-annotation"]) Chart.register(window["chartjs-plugin-annotation"]);
+
+// ============ CHART BUILDERS ============
+function linePoint(color, label, data, opts = {}) {
+  return {
+    label, data,
+    borderColor: color,
+    backgroundColor: color,
+    tension: 0.25,
+    pointRadius: 2.5,
+    pointHoverRadius: 5,
+    borderWidth: opts.dashed ? 1.5 : 2,
+    borderDash: opts.dashed ? [5, 4] : [],
+    fill: false,
+    ...opts.extra
+  };
+}
+
+// 1. AOV Budget vs Actual
+new Chart(document.getElementById("chartAov"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [
+      linePoint(PALETTE.budget, "Budget", aov_budget, {dashed: true}),
+      linePoint(PALETTE.actual, "Actual", aov_actual)
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode: "index", intersect: false},
+    scales: {
+      y: {min: 115, max: 120, ticks: {callback: v => "$" + v.toFixed(2)}, title: {display: true, text: "AOV per box ($)"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`}},
+      annotation: {
+        annotations: {
+          deepGap: {
+            type: "box", xMin: 18, xMax: 23,
+            backgroundColor: "rgba(196, 69, 54, 0.06)",
+            borderColor: "rgba(196, 69, 54, 0.25)", borderWidth: 1,
+            label: {content: "Deep gap W19–W24", display: true, position: "start",
+                    color: "#c44536", font: {size: 10, weight: "700"},
+                    backgroundColor: "rgba(0,0,0,0)"}
+          }
+        }
+      }
+    }
+  }
+});
+
+// 2. Gap bars
+new Chart(document.getElementById("chartGap"), {
+  type: "bar",
+  data: {
+    labels: WEEKS24,
+    datasets: [{
+      label: "Gap (Actual − Budget) $/box",
+      data: aov_gap,
+      backgroundColor: aov_gap.map(v => v >= 0 ? "rgba(45, 138, 71, 0.78)" : "rgba(184, 57, 42, 0.78)"),
+      borderColor: aov_gap.map(v => v >= 0 ? PALETTE.good : PALETTE.bad),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {ticks: {callback: v => (v >= 0 ? "+$" : "−$") + Math.abs(v).toFixed(2)},
+          title: {display: true, text: "Gap $/box"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Gap: ${ctx.parsed.y >= 0 ? "+" : "−"}$${Math.abs(ctx.parsed.y).toFixed(2)}/box`}}
+    }
+  }
+});
+
+// 3. DG weekly
+new Chart(document.getElementById("chartDgWeekly"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [linePoint(PALETTE.dg, "Downgrade %", dg_weekly)]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {min: 6, max: 10, ticks: {callback: v => v.toFixed(1) + "%"}, title: {display: true, text: "Downgrade %"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `Downgrade: ${ctx.parsed.y.toFixed(2)}%`}}
+    }
+  }
+});
+
+// 4. DG by cohort
+new Chart(document.getElementById("chartDgByCohort"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: Object.keys(dg_by_cohort).map((cohort, i) =>
+      linePoint(PALETTE.cohort[i], cohort, dg_by_cohort[cohort])
+    )
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode: "nearest", intersect: false},
+    scales: {
+      y: {ticks: {callback: v => v.toFixed(1) + "%"}, title: {display: true, text: "Downgrade %"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`}}
+    }
+  }
+});
+
+// 5. DG by plan (bar)
+new Chart(document.getElementById("chartDgByPlan"), {
+  type: "bar",
+  data: {
+    labels: dg_by_plan.map(p => p.plan),
+    datasets: [{
+      label: "Δ Downgrade pp",
+      data: dg_by_plan.map(p => p.d),
+      backgroundColor: dg_by_plan.map(p => p.d < 0 ? "rgba(45, 138, 71, 0.78)" : "rgba(184, 57, 42, 0.78)"),
+      borderColor: dg_by_plan.map(p => p.d < 0 ? PALETTE.good : PALETTE.bad),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {ticks: {callback: v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(1) + "pp"},
+          title: {display: true, text: "Δ Downgrade percentage points"}},
+      x: {title: {display: true, text: "Original plan"}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Δ: ${ctx.parsed.y >= 0 ? "+" : ""}${ctx.parsed.y.toFixed(2)}pp`}}
+    }
+  }
+});
+
+// 6. UG weekly
+new Chart(document.getElementById("chartUgWeekly"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [linePoint(PALETTE.ug, "Upgrade %", ug_weekly)]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {min: 9.5, max: 12.5, ticks: {callback: v => v.toFixed(1) + "%"}, title: {display: true, text: "Upgrade %"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `Upgrade: ${ctx.parsed.y.toFixed(2)}%`}}
+    }
+  }
+});
+
+// 7. UG by cohort
+new Chart(document.getElementById("chartUgByCohort"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: Object.keys(ug_by_cohort).map((cohort, i) =>
+      linePoint(PALETTE.cohort[i], cohort, ug_by_cohort[cohort])
+    )
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode: "nearest", intersect: false},
+    scales: {
+      y: {ticks: {callback: v => v.toFixed(1) + "%"}, title: {display: true, text: "Upgrade %"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`}}
+    }
+  }
+});
+
+// 8. UG by plan (bar)
+new Chart(document.getElementById("chartUgByPlan"), {
+  type: "bar",
+  data: {
+    labels: ug_by_plan.map(p => p.plan),
+    datasets: [{
+      label: "Δ Upgrade pp",
+      data: ug_by_plan.map(p => p.d),
+      backgroundColor: ug_by_plan.map(p => p.d <= -2.5 ? "rgba(184, 57, 42, 0.92)" : (p.d < 0 ? "rgba(184, 57, 42, 0.78)" : "rgba(45, 138, 71, 0.78)")),
+      borderColor: ug_by_plan.map(p => p.d < 0 ? PALETTE.bad : PALETTE.good),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {ticks: {callback: v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(1) + "pp"},
+          title: {display: true, text: "Δ Upgrade percentage points"}},
+      x: {title: {display: true, text: "Original plan"}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Δ: ${ctx.parsed.y >= 0 ? "+" : ""}${ctx.parsed.y.toFixed(2)}pp`}}
+    }
+  }
+});
+
+// 9. Net meal delta
+new Chart(document.getElementById("chartNetMeal"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [linePoint(PALETTE.warn, "Net meals/row", net_meal)]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {min: 0, ticks: {callback: v => v.toFixed(3)}, title: {display: true, text: "Net meals/row"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Net: +${ctx.parsed.y.toFixed(4)} meals/row`}}
+    }
+  }
+});
+
+// 10. Plan volume change
+new Chart(document.getElementById("chartPlanVol"), {
+  type: "bar",
+  data: {
+    labels: plan_volume_change.map(p => p.plan),
+    datasets: [{
+      label: "Δ % volume",
+      data: plan_volume_change.map(p => p.d),
+      backgroundColor: plan_volume_change.map(p => p.d < 0 ? "rgba(184, 57, 42, 0.78)" : "rgba(45, 138, 71, 0.78)"),
+      borderColor: plan_volume_change.map(p => p.d < 0 ? PALETTE.bad : PALETTE.good),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    indexAxis: "y",
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      x: {ticks: {callback: v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(0) + "%"},
+          title: {display: true, text: "Δ % volume (baseline → deep gap)"}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Δ volume: ${ctx.parsed.x >= 0 ? "+" : ""}${ctx.parsed.x.toFixed(1)}%`}}
+    }
+  }
+});
+
+// 11. Plan share weekly
+new Chart(document.getElementById("chartPlanShareWeekly"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [
+      linePoint(PALETTE.bad, "2p × 5r (HIGH AOV)", plan_share_weekly["2p × 5r"]),
+      linePoint(PALETTE.warn, "4p × 5r (HIGH AOV)", plan_share_weekly["4p × 5r"]),
+      linePoint(PALETTE.good, "2p × 2r (smallest)", plan_share_weekly["2p × 2r"])
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode: "index", intersect: false},
+    scales: {
+      y: {ticks: {callback: v => v.toFixed(1) + "%"}, title: {display: true, text: "Plan share of all CA boxes"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`}}
+    }
+  }
+});
+
+// 12. Laspeyres mix-only AOV
+new Chart(document.getElementById("chartLaspeyres"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [linePoint(PALETTE.actual, "Mix-only AOV", laspeyres)]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {min: 104, max: 106.5,
+          ticks: {callback: v => "$" + v.toFixed(2)},
+          title: {display: true, text: "Mix-only AOV $/box (constant prices)"}},
+      x: {title: {display: true, text: "Week"}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Mix-only AOV: $${ctx.parsed.y.toFixed(2)} (Δ ${(ctx.parsed.y - LASP_BASELINE >= 0 ? "+$" : "−$") + Math.abs(ctx.parsed.y - LASP_BASELINE).toFixed(2)} vs baseline)`}},
+      annotation: {
+        annotations: {
+          baseline: {
+            type: "line", yMin: LASP_BASELINE, yMax: LASP_BASELINE,
+            borderColor: "rgba(26, 31, 46, 0.4)", borderWidth: 1.5, borderDash: [4, 4],
+            label: {content: `Baseline $${LASP_BASELINE.toFixed(2)}`, display: true, position: "end",
+                    backgroundColor: "rgba(255,255,255,0.9)", color: "#1a1f2e",
+                    font: {size: 10, weight: "600"}, padding: 4}
+          }
+        }
+      }
+    }
+  }
+});
+
+// 13. Mix by cohort (grouped bar)
+new Chart(document.getElementById("chartMixCohort"), {
+  type: "bar",
+  data: {
+    labels: mix_cohort.cohorts,
+    datasets: [
+      {label: "2 recipes", data: mix_cohort.r2, backgroundColor: PALETTE.recipe.r2, borderWidth: 0},
+      {label: "3 recipes", data: mix_cohort.r3, backgroundColor: PALETTE.recipe.r3, borderWidth: 0},
+      {label: "4 recipes", data: mix_cohort.r4, backgroundColor: PALETTE.recipe.r4, borderWidth: 0},
+      {label: "5 recipes", data: mix_cohort.r5, backgroundColor: PALETTE.recipe.r5, borderWidth: 0}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: {ticks: {callback: v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(0) + "%"},
+          title: {display: true, text: "Δ % volume (baseline → deep gap)"}},
+      x: {title: {display: true, text: "Loyalty cohort"}}
+    },
+    plugins: {
+      tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y >= 0 ? "+" : ""}${ctx.parsed.y.toFixed(1)}%`}}
+    }
+  }
+});
+</script>
+</body>
+</html>
