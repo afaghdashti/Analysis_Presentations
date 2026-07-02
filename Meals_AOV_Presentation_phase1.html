@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Core AOV Decline — HFCA 2026 — Phase 1 Findings</title>
+<title>Core AOV Decline — HFCA 2026 — Findings</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <style>
@@ -46,6 +46,24 @@
     font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
     border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin: 0 0 20px;
   }
+  .section-lede {
+    font-size: 13px; color: var(--ink-2); font-style: italic;
+    margin: -8px 0 20px; padding-bottom: 4px;
+  }
+  /* Exec summary KPI tiles */
+  .kpi-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin: 20px 0 24px;
+  }
+  .kpi.big { padding: 20px 22px; }
+  .kpi.big .kpi-num { font-size: 40px; letter-spacing: -0.03em; }
+  .kpi.big .kpi-label { font-size: 12px; margin-top: 10px; line-height: 1.4; }
+  section.exec {
+    background: linear-gradient(180deg, #fbf7ed 0%, var(--paper) 100%);
+    border: 1px solid var(--line); border-radius: 4px;
+    padding: 28px 32px; margin-bottom: 40px;
+  }
+  section.exec h2 { border-bottom-color: var(--accent); }
   h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; color: var(--ink); }
   h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
   p { margin: 0 0 12px; }
@@ -126,33 +144,102 @@
 
 <header>
   <div class="eyebrow">POA · Meals Analysis · 2026 YTD</div>
-  <h1>Core AOV (meals) Decline — HFCA<br>Phase 1: Findings</h1>
+  <h1>Core AOV (meals) Decline — HFCA<br>Findings</h1>
   <div class="meta">
     <span><strong>Author:</strong> Afagh Dashti</span>
     <span><strong>Window:</strong> 2026 W1–W24</span>
+    <span><strong>Last updated:</strong> 2026-07-02</span>
+    <span><strong>Data as of:</strong> 2026 W24 close</span>
   </div>
 </header>
 
 <nav class="toc">
   <h3>Contents</h3>
   <ol>
+    <li><a href="#exec">Executive summary — the gap and its drivers</a></li>
     <li><a href="#metric">The metric and the AOV gap</a></li>
-    <li><a href="#framework">Phase 1 framework</a></li>
+    <li><a href="#framework">Framework</a></li>
     <li><a href="#dg">Mechanism 1 — Seamless downgrades</a></li>
     <li><a href="#ug">Mechanism 2 — Seamless upgrades</a></li>
-    <li><a href="#net">Net seamless meal delta</a></li>
+    <li><a href="#net">Net seamless contribution — meals and $/box</a></li>
     <li><a href="#mix">Mechanism 3 — Original plan mix shift</a></li>
-    <li><a href="#laspeyres">Plan-mix contribution to AOV — summary</a></li>
+    <li><a href="#laspeyres">Additive decomposition — plan mix vs seamless</a></li>
     <li><a href="#mix-cohort">Plan mix shift by loyalty cohort</a></li>
     <li><a href="#caveats">Data caveats</a></li>
     <li><a href="#sources">Sources</a></li>
-    <li><a href="#appendix-laspeyres">Appendix — Laspeyres calculation detail</a></li>
+    <li><a href="#appendix-laspeyres">Appendix — Shapley calculation detail</a></li>
   </ol>
 </nav>
+
+<!-- EXECUTIVE SUMMARY -->
+<section id="exec" class="exec">
+  <h2>Executive summary — the gap and its drivers</h2>
+
+  <div class="kpi-row">
+    <div class="kpi big">
+      <div class="kpi-num bad">−$0.84</div>
+      <div class="kpi-label"><strong>AOV drop, baseline → deep gap</strong><br>Actual W1–W5 avg $117.87 → W19–W24 avg $117.03. Every box now generates $0.84 less revenue than in early 2026.</div>
+    </div>
+    <div class="kpi big">
+      <div class="kpi-num bad">−$0.53</div>
+      <div class="kpi-label"><strong>Plan-mix contribution — 63% of the drop</strong><br>The distribution of selected original plans has shifted smaller, most sharply in the 5-recipe tiers (−15% to −22% volume) while the 2-recipe plan grew (+29% volume).</div>
+    </div>
+    <div class="kpi big">
+      <div class="kpi-num bad">−$0.31</div>
+      <div class="kpi-label"><strong>Seamless-behavior contribution — 37% of the drop</strong><br>Seamless is still net-positive per box, but the lift has weakened: upgrade share fell 11.24% → 10.26%, and net $/row dropped ~$1.53 → $1.09.</div>
+    </div>
+  </div>
+
+  <div class="callout neutral">
+    <strong>vs Budget.</strong> The other common frame is "how far below plan?" — for the deep-gap window the observed <strong>Actual − Budget gap is −$0.74/box</strong> (W19–W24 avg Actual $117.17 vs Budget $117.91). Applying the same 63 / 37 shares gives <strong>−$0.47 plan mix</strong> and <strong>−$0.27 seamless</strong> against the Budget frame. Because Budget is essentially flat across the year, the vs-baseline drop (−$0.84) and vs-Budget gap (−$0.74) tell the same directional story.
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">AOV decomposition — Shapley (W1–W5 → W19–W24)</div>
+    <div class="chart-subtitle">Additive by construction: plan-mix + seamless-behavior sum exactly to the observed drop. Values are Shapley raw (−$0.62 mix, −$0.36 seamless) rescaled by 0.84 / 0.98 to align with the tracker's observed change.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartShapley"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Mechanism</th><th class="r">Direction (baseline → deep gap)</th><th class="r">Contribution ($/box)</th><th class="r">Share of total</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Seamless downgrades</strong></td>
+        <td class="r num-good">Share fell 8.15% → 7.45% (favorable)</td>
+        <td class="r">Rolled into seamless total below</td>
+        <td class="r">—</td>
+      </tr>
+      <tr>
+        <td><strong>Seamless upgrades</strong></td>
+        <td class="r num-bad">Share fell 11.24% → 10.26% (unfavorable)</td>
+        <td class="r">Rolled into seamless total below</td>
+        <td class="r">—</td>
+      </tr>
+      <tr>
+        <td><strong>Seamless behavior — combined</strong></td>
+        <td class="r num-bad">Net shipped-vs-original transition weakened</td>
+        <td class="r num-bad">−$0.31</td>
+        <td class="r">37%</td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>Original plan mix</strong></td>
+        <td class="r num-bad">Smaller plans gaining share; 5-recipe plans shrinking</td>
+        <td class="r num-bad">−$0.53</td>
+        <td class="r">63%</td>
+      </tr>
+      <tr>
+        <td colspan="4" style="font-size: 12px; color: var(--ink-2); font-style: italic; padding-top: 10px;">Method: two-factor Shapley over (plan mix P, seamless-transition matrix S). AOV(P,S) = Σ P[orig] · S[shipped|orig] · baseline_price[shipped]. Shapley contribution of P = ½·[AOV(P_d,S_b) − AOV(P_b,S_b)] + ½·[AOV(P_d,S_d) − AOV(P_b,S_d)], and analogously for S. Raw values (−$0.62 mix, −$0.36 seamless) rescaled by 0.84/0.98 to align with tracker's observed drop.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size: 13px; color: var(--ink-2); margin-top: 12px;">Reference windows used throughout: <strong style="color: var(--good);">Baseline W1–W5</strong> and <strong style="color: var(--bad);">Deep gap W19–W24</strong>. Full weekly detail in the sections below.</p>
+</section>
 
 <!-- 1. METRIC & GAP -->
 <section id="metric">
   <h2>1. The metric and the AOV gap</h2>
+  <p class="section-lede">How Core AOV (meals) is defined and the size of its gap vs budget, weekly.</p>
 
   <p>Core AOV (meals) is computed from <code>public_edw_business_mart_live.revenue_dashboard</code> as:</p>
   <div class="formula">SUM(order_item_revenue_excl_sales_tax + shipping_revenue_excl_sales_tax) / SUM(orders_count)
@@ -164,7 +251,7 @@ GROUP BY hellofresh_week</div>
 
   <div class="chart-card">
     <div class="chart-title">Weekly Core AOV — Budget vs Actual, HF-CA 2026</div>
-    <div class="chart-subtitle">Tracker rows 42 (BUDGET) and 150 (ACTUAL). Deep-gap window (W19–W24) shaded.</div>
+    <div class="chart-subtitle">Tracker rows 42 (BUDGET) and 150 (ACTUAL). Baseline (W1–W5) and Deep gap (W19–W24) windows shaded.</div>
     <div class="chart-canvas-wrap"><canvas id="chartAov"></canvas></div>
     <div class="chart-hint">Hover to inspect weekly values. Click a series name in the legend to toggle it.</div>
   </div>
@@ -196,12 +283,13 @@ GROUP BY hellofresh_week</div>
 
   <p>The gap is negative every week from W4 onward except W13–W15. The deepest single week is W21 (−$1.25).</p>
 
-  <div class="source-note">Source: Weekly KPI 2026 Tracker - HF Rev.csv rows 42 (BUDGET) and 150 (ACTUAL); reconciled to public_edw_business_mart_live.revenue_dashboard.</div>
+  <div class="source-note">Source: Weekly KPI 2026 Tracker - HF Rev.csv rows 42 (BUDGET) and 150 (ACTUAL); reconciled to public_edw_business_mart_live.revenue_dashboard. W1–W18 match the canonical source to the cent; W19–W24 reconcile within $0.41 (CSV freshness lag). Baseline avg $117.87 and deep-gap avg $117.03 quoted in the Executive summary are computed from these CSV values.</div>
 </section>
 
 <!-- 2. FRAMEWORK -->
 <section id="framework">
-  <h2>2. Phase 1 framework</h2>
+  <h2>2. Framework</h2>
+  <p class="section-lede">The three mechanisms that can move Core AOV given fixed prices, and what each subsequent section covers.</p>
 
   <p>Core recipe prices and shipping fees are fixed in 2026 YTD. Per-box Core AOV can only move via one or more of these three mechanisms:</p>
 
@@ -211,7 +299,7 @@ GROUP BY hellofresh_week</div>
     <li><strong>Original plan mix changes</strong> — the distribution of plans (people × recipes) customers <em>originally</em> select.</li>
   </ol>
 
-  <p>This document reports weekly trends and cohort breakdowns for each mechanism, plus a Laspeyres calculation quantifying how much of the AOV gap is mechanically attributable to plan-mix shift.</p>
+  <p>This document reports weekly trends and cohort breakdowns for each mechanism, plus an additive Shapley decomposition attributing the observed AOV change to plan mix and seamless behavior.</p>
 
   <p><strong>Convention.</strong> Plan codes use <code>XxY = X recipes × Y people</code> in both the seamless table (<code>original_box_type</code>) and the KPI tracker (<code>PBxy</code>). Verified empirically against the SKU pattern <code>CA-{base}-{recipes}-{people}-0</code> in <code>facts_recipes_ordered_enriched</code>.</p>
 
@@ -224,6 +312,7 @@ GROUP BY hellofresh_week</div>
 <!-- 3. SEAMLESS DOWNGRADES -->
 <section id="dg">
   <h2>3. Mechanism 1 — Seamless downgrades</h2>
+  <p class="section-lede">How the share of customers auto-shrunk via the seamless flow has moved over time, by loyalty cohort and by original plan.</p>
 
   <div class="chart-card">
     <div class="chart-title">Seamless downgrade % weekly, HF-CA 2026</div>
@@ -305,6 +394,7 @@ GROUP BY hellofresh_week</div>
 <!-- 4. SEAMLESS UPGRADES -->
 <section id="ug">
   <h2>4. Mechanism 2 — Seamless upgrades</h2>
+  <p class="section-lede">How the share of customers auto-grown via the seamless flow has moved over time, by loyalty cohort and by original plan.</p>
 
   <div class="chart-card">
     <div class="chart-title">Seamless upgrade % weekly, HF-CA 2026</div>
@@ -382,11 +472,14 @@ GROUP BY hellofresh_week</div>
   <div class="source-note">Source: pa_food_seamless_dashboard_fixed, COALESCE(original_box_type, box_type_ordered) parsed as recipes × people. n ≥ 1,000 customer-weeks per window.</div>
 </section>
 
-<!-- 5. NET MEAL DELTA -->
+<!-- 5. NET SEAMLESS CONTRIBUTION -->
 <section id="net">
-  <h2>5. Net seamless meal delta</h2>
+  <h2>5. Net seamless contribution — meals and $/box</h2>
+  <p class="section-lede">The combined net effect of upgrades and downgrades on meal count and on revenue per customer-week.</p>
 
-  <p>The net meals added/removed per customer-week via seamless. Computed as <code>SUM(difference_in_meals) / COUNT(*)</code> for the CA customer-weeks in <code>pa_food_seamless_dashboard_fixed</code>.</p>
+  <p>Two views of the same phenomenon: <strong>net meals/row</strong> (upgrade meals added minus downgrade meals removed, per customer-week), and <strong>net $/row</strong> (the same, priced with per-plan baseline $/box).</p>
+
+  <h3>Net meals per customer-row</h3>
 
   <div class="chart-card">
     <div class="chart-title">Weekly net seamless meal delta per customer-row</div>
@@ -408,16 +501,60 @@ GROUP BY hellofresh_week</div>
 
   <ul>
     <li>Net meal delta is positive every week (upgrade contributions exceed downgrade contributions in meal count).</li>
-    <li>W1–W5 average (excluding W1 outlier): +0.068. W19–W24 average: +0.053.</li>
-    <li>Drop from baseline to deep gap: <strong>−0.015 meals/row</strong>.</li>
+    <li>W1–W5 average (excluding W1 outlier): +0.068. W19–W24 average: +0.053. <strong>Drop: −0.015 meals/row.</strong></li>
   </ul>
+
+  <h3>Net seamless contribution in $/row</h3>
+  <p>Each seamless event's meal-delta priced at the per-plan baseline $/box difference (shipped plan $/box minus original plan $/box), then averaged over all customer-weeks. This is the direct dollar answer for "what did seamless add or subtract per row?"</p>
+
+  <div class="chart-card">
+    <div class="chart-title">Weekly net seamless contribution ($ per customer-row)</div>
+    <div class="chart-subtitle">Positive every week — seamless is net-positive for AOV, but the lift is shrinking. Baseline (W1–W5, green) vs deep gap (W19–W24, red) shaded.</div>
+    <div class="chart-canvas-wrap"><canvas id="chartNetDollar"></canvas></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Wk</th><th class="r">Net $/row</th><th>Wk</th><th class="r">Net $/row</th><th>Wk</th><th class="r">Net $/row</th><th>Wk</th><th class="r">Net $/row</th></tr></thead>
+    <tbody>
+      <tr><td>W1</td><td class="r">+$0.56</td><td>W7</td><td class="r">+$1.04</td><td>W13</td><td class="r">+$1.43</td><td>W19</td><td class="r">+$1.33</td></tr>
+      <tr><td>W2</td><td class="r">+$1.52</td><td>W8</td><td class="r">+$1.13</td><td>W14</td><td class="r">+$1.30</td><td>W20</td><td class="r">+$1.14</td></tr>
+      <tr><td>W3</td><td class="r">+$1.61</td><td>W9</td><td class="r">+$1.14</td><td>W15</td><td class="r">+$1.24</td><td>W21</td><td class="r">+$0.93</td></tr>
+      <tr><td>W4</td><td class="r">+$1.41</td><td>W10</td><td class="r">+$1.47</td><td>W16</td><td class="r">+$1.24</td><td>W22</td><td class="r">+$1.09</td></tr>
+      <tr><td>W5</td><td class="r">+$1.59</td><td>W11</td><td class="r">+$1.21</td><td>W17</td><td class="r">+$1.15</td><td>W23</td><td class="r">+$1.07</td></tr>
+      <tr><td>W6</td><td class="r">+$1.47</td><td>W12</td><td class="r">+$1.54</td><td>W18</td><td class="r">+$1.56</td><td>W24</td><td class="r">+$0.97</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead><tr><th>Window</th><th class="r">Avg net $/row</th></tr></thead>
+    <tbody>
+      <tr><td>W1–W5 baseline</td><td class="r">+$1.34</td></tr>
+      <tr><td>W1–W5 baseline (excluding W1 outlier)</td><td class="r">+$1.53</td></tr>
+      <tr><td>W19–W24 deep gap</td><td class="r">+$1.09</td></tr>
+      <tr class="highlight"><td><strong>Change baseline → deep gap</strong></td><td class="r num-bad"><strong>−$0.25/row</strong> (using baseline avg)<br>or <strong>−$0.44/row</strong> (excluding W1)</td></tr>
+    </tbody>
+  </table>
+
+  <p>Seamless is still net-positive on AOV in every week, but the direct per-row lift has weakened by <strong>$0.25–$0.44 per row</strong> from baseline to deep gap. This section reports the raw per-row measurement; the population-level, non-overlapping attribution of this weakening to the AOV gap is the <strong>−$0.31/box</strong> Shapley contribution (rescaled to tracker) in the Executive summary — see §7 for the rescaling step.</p>
+
+  <div class="source-note">Method: for every seamless row in pa_food_seamless_dashboard_fixed with country='CA', the shipped and original plans are joined to the per-plan baseline $/box (§7 appendix). The row's contribution is (shipped $/box − original $/box); the weekly figure is the mean over all rows that week.</div>
 </section>
 
 <!-- 6. PLAN MIX -->
 <section id="mix">
   <h2>6. Mechanism 3 — Original plan mix shift</h2>
+  <p class="section-lede">How the distribution of customers across original plans (people × recipes) has moved.</p>
 
   <p>Plan = (people × recipes) of the customer's original plan. For customers without a seamless event in a given week, original = shipped. Convention: <code>XxY</code> = X recipes × Y people.</p>
+
+  <div class="callout neutral">
+    <strong>Two ways this section slices plan mix:</strong>
+    <ul style="margin: 8px 0 0;">
+      <li><strong>Volume</strong> — absolute customer count per plan (e.g., 2p×3r had 44,208 customers/wk in baseline, 41,150 in deep gap → −6.9%).</li>
+      <li><strong>Share</strong> — each plan's slice of the total customer base (e.g., 2p×3r was 51.5% of all customers in baseline, 51.3% in deep gap → −0.20pp).</li>
+    </ul>
+    Because the total base is shrinking, a plan can lose customers in absolute terms (negative volume Δ) while still gaining share (positive Δpp) if it shrinks less than average. That is why 4p×3r shows −4.9% volume but +0.56pp share.
+  </div>
 
   <h3>Volume by plan, baseline vs deep gap</h3>
 
@@ -451,19 +588,24 @@ GROUP BY hellofresh_week</div>
   </div>
 
   <h3>Plan share — baseline vs deep gap</h3>
+  <p class="source-note">Each row = share of all HF-CA customer-weeks that selected this plan. Rows sum to 100% within a window.</p>
 
   <table>
     <thead><tr><th>Plan</th><th class="r">Baseline share</th><th class="r">Deep-gap share</th><th class="r">Δ pp</th></tr></thead>
     <tbody>
-      <tr><td>2p × 3r</td><td class="r">51.42%</td><td class="r">51.32%</td><td class="r">−0.10</td></tr>
-      <tr><td>4p × 3r</td><td class="r">20.42%</td><td class="r">20.99%</td><td class="r num-good">+0.57</td></tr>
-      <tr><td>2p × 4r</td><td class="r">11.57%</td><td class="r">11.67%</td><td class="r num-good">+0.10</td></tr>
-      <tr class="highlight"><td>2p × 5r</td><td class="r">6.11%</td><td class="r">5.57%</td><td class="r num-bad">−0.54</td></tr>
-      <tr><td>4p × 4r</td><td class="r">3.88%</td><td class="r">3.93%</td><td class="r">+0.05</td></tr>
-      <tr class="highlight"><td>4p × 5r</td><td class="r">2.76%</td><td class="r">2.32%</td><td class="r num-bad">−0.44</td></tr>
-      <tr><td>6p × 3r</td><td class="r">0.84%</td><td class="r">0.85%</td><td class="r">+0.01</td></tr>
+      <tr><td>2p × 3r</td><td class="r">51.52%</td><td class="r">51.32%</td><td class="r">−0.20</td></tr>
+      <tr><td>4p × 3r</td><td class="r">20.43%</td><td class="r">20.99%</td><td class="r num-good">+0.56</td></tr>
+      <tr><td>2p × 4r</td><td class="r">11.63%</td><td class="r">11.68%</td><td class="r num-good">+0.05</td></tr>
+      <tr class="highlight"><td>2p × 5r</td><td class="r">6.14%</td><td class="r">5.57%</td><td class="r num-bad">−0.57</td></tr>
+      <tr><td>4p × 4r</td><td class="r">3.86%</td><td class="r">3.93%</td><td class="r num-good">+0.07</td></tr>
+      <tr class="highlight"><td>4p × 5r</td><td class="r">2.76%</td><td class="r">2.33%</td><td class="r num-bad">−0.43</td></tr>
       <tr class="highlight"><td>2p × 2r</td><td class="r">0.69%</td><td class="r">0.95%</td><td class="r num-good">+0.26</td></tr>
-      <tr><td>6p × 2r</td><td class="r">0.77%</td><td class="r">0.83%</td><td class="r num-good">+0.06</td></tr>
+      <tr><td>6p × 3r</td><td class="r">0.83%</td><td class="r">0.85%</td><td class="r num-good">+0.02</td></tr>
+      <tr><td>6p × 2r</td><td class="r">0.76%</td><td class="r">0.83%</td><td class="r num-good">+0.07</td></tr>
+      <tr><td>4p × 2r</td><td class="r">0.51%</td><td class="r">0.74%</td><td class="r num-good">+0.23</td></tr>
+      <tr><td>6p × 5r</td><td class="r">0.44%</td><td class="r">0.33%</td><td class="r num-bad">−0.11</td></tr>
+      <tr><td>6p × 4r</td><td class="r">0.28%</td><td class="r">0.28%</td><td class="r">0.00</td></tr>
+      <tr><td>6p × 1r</td><td class="r">0.15%</td><td class="r">0.19%</td><td class="r num-good">+0.04</td></tr>
     </tbody>
   </table>
 
@@ -481,33 +623,58 @@ GROUP BY hellofresh_week</div>
   <p>Avg original meals/box dropped from 3.32 (baseline) to 3.295 (deep gap), a difference of <strong>−0.027 meals/box</strong>.</p>
 </section>
 
-<!-- 7. LASPEYRES SUMMARY -->
+<!-- 7. SHAPLEY DECOMPOSITION -->
 <section id="laspeyres">
-  <h2>7. Plan-mix contribution to AOV — summary</h2>
+  <h2>7. Additive decomposition — plan mix vs seamless</h2>
+  <p class="section-lede">Two-factor Shapley: the mechanism attribution that additively sums to the observed AOV change.</p>
 
-  <p><strong>Question:</strong> Of the observed AOV decline, how much is mechanically caused by customers selecting smaller original plans on average — independent of any seamless behavior?</p>
-
-  <p><strong>Method (one line):</strong> hold each plan's $/box at its W1–W5 average, then re-compute AOV using each week's actual mix of original plans. The only thing changing is which plans customers selected.</p>
+  <p><strong>Method.</strong> Define the model as <code>AOV(P, S) = Σ P[orig] · S[shipped|orig] · price[shipped]</code>, with per-plan baseline $/box held constant. Vary the plan mix (P) and the seamless-transition matrix (S) independently between baseline and deep gap. Two-factor Shapley averages each factor's marginal effect across both orderings — the result is exactly additive and free of double-counting.</p>
 
   <table>
-    <thead><tr><th>Metric</th><th class="r">Value</th></tr></thead>
+    <thead><tr><th>Scenario</th><th class="r">Model AOV</th></tr></thead>
     <tbody>
-      <tr><td>Baseline (W1–W5) mix-only AOV</td><td class="r">$105.44</td></tr>
-      <tr><td>Deep gap (W19–W24) mix-only AOV</td><td class="r">$104.87</td></tr>
-      <tr class="highlight"><td><strong>Mix-only Δ from baseline to deep gap</strong></td><td class="r num-bad"><strong>−$0.57/box</strong></td></tr>
-      <tr><td>Observed tracker AOV gap (W19–W24 avg vs budget)</td><td class="r num-bad">−$0.74/box</td></tr>
-      <tr><td>Mix contribution as % of observed gap</td><td class="r">~77%</td></tr>
+      <tr><td>AOV(P_baseline, S_baseline) — both at baseline</td><td class="r">$106.97</td></tr>
+      <tr><td>AOV(P_deep, S_baseline) — mix at deep, seamless at baseline</td><td class="r">$106.35</td></tr>
+      <tr><td>AOV(P_baseline, S_deep) — mix at baseline, seamless at deep</td><td class="r">$106.61</td></tr>
+      <tr><td>AOV(P_deep, S_deep) — both at deep gap</td><td class="r">$105.99</td></tr>
+      <tr class="highlight"><td><strong>Total model change (baseline → deep gap)</strong></td><td class="r num-bad"><strong>−$0.98/box</strong></td></tr>
     </tbody>
   </table>
 
-  <p>Plan-mix shift accounts for ~$0.57/box of the ~$0.74/box observed gap. The remaining ~$0.17/box is attributable to changes in seamless behavior (mainly weakening upgrades, per §4) and small calculation differences vs the canonical source.</p>
+  <h3>Shapley split — raw model output</h3>
+  <table>
+    <thead><tr><th>Factor</th><th class="r">Shapley (raw)</th><th class="r">Share</th></tr></thead>
+    <tbody>
+      <tr class="highlight"><td>Plan mix (P)</td><td class="r num-bad">−$0.62/box</td><td class="r">63%</td></tr>
+      <tr><td>Seamless behavior (S)</td><td class="r num-bad">−$0.36/box</td><td class="r">37%</td></tr>
+      <tr><td><strong>Sum (Shapley exact)</strong></td><td class="r num-bad"><strong>−$0.98/box</strong></td><td class="r">100%</td></tr>
+    </tbody>
+  </table>
 
-  <p class="source-note">Full formula, per-plan baseline $/box, weekly mix-only AOV chart and table are in the <a href="#appendix-laspeyres">Appendix — Laspeyres calculation detail</a>.</p>
+  <p>Sanity check: the classical main-effects + interaction decomposition returns the same values (Main P = −$0.62, Main S = −$0.36, Interaction = +$0.001/box). The near-zero interaction confirms mix and seamless move essentially independently — the Shapley split is stable.</p>
+
+  <h3>Reconciliation and rescaling to tracker</h3>
+  <p>Model total change: <strong>−$0.98/box</strong>. Tracker Actual W1–W5 avg $117.87 → W19–W24 avg $117.03 gives an observed drop of <strong>−$0.84/box</strong>. The <strong>+$0.14/box reconciliation gap</strong> reflects shipping revenue (present in tracker Actual, not in the model) and small per-plan price drift not captured by the constant baseline prices.</p>
+
+  <p>To publish contributions that sum exactly to the observed −$0.84 drop, the raw Shapley values are rescaled by the ratio <code>0.84 / 0.98 = 0.857</code>. This preserves the 63 / 37 shares while distributing the reconciliation gap proportionally across mechanisms.</p>
+
+  <table>
+    <thead><tr><th>Factor</th><th class="r">Shapley (raw)</th><th class="r">× 0.857</th><th class="r">Rescaled (published)</th></tr></thead>
+    <tbody>
+      <tr class="highlight"><td>Plan mix (P)</td><td class="r">−$0.62</td><td class="r">—</td><td class="r num-bad">−$0.53/box</td></tr>
+      <tr><td>Seamless behavior (S)</td><td class="r">−$0.36</td><td class="r">—</td><td class="r num-bad">−$0.31/box</td></tr>
+      <tr><td><strong>Sum</strong></td><td class="r">−$0.98</td><td class="r">—</td><td class="r num-bad"><strong>−$0.84/box</strong></td></tr>
+    </tbody>
+  </table>
+  <p>The Executive summary and waterfall chart use the rescaled values.</p>
+
+  <p class="source-note">Full formulas, worked example, four-scenario inputs, and reconciliation math are in the <a href="#appendix-laspeyres">Appendix — Shapley calculation detail</a>.</p>
 </section>
 
 <!-- 8. PLAN MIX BY COHORT -->
 <section id="mix-cohort">
   <h2>8. Plan mix shift by loyalty cohort</h2>
+  <p class="section-lede">Which loyalty cohorts drive the plan-mix shift, broken down by recipe tier.</p>
 
   <p>Volume change per recipe-count tier, within each loyalty cohort. Comparison: W1–W5 baseline (5-week average) vs W19–W24 deep gap (6-week average).</p>
 
@@ -542,6 +709,7 @@ GROUP BY hellofresh_week</div>
 <!-- 9. CAVEATS -->
 <section id="caveats">
   <h2>9. Data caveats</h2>
+  <p class="section-lede">Freshness gaps and naming conventions relevant to reading the numbers above.</p>
   <ol>
     <li><strong>Tracker freshness for W19–W25.</strong> Tracker CSV values for W19–W25 reconcile within $0.41 to the canonical revenue source. Live data is slightly fresher than the CSV snapshot.</li>
     <li><strong>Convention check.</strong> Plan codes use XxY = X recipes × Y people in both the seamless table and the tracker. Verified empirically via SKU pattern <code>CA-{base}-{recipes}-{people}-0</code> in <code>facts_recipes_ordered_enriched</code>. The seamless table's <code>meals_*_sub</code> columns store recipe count, not portion count.</li>
@@ -551,12 +719,13 @@ GROUP BY hellofresh_week</div>
 <!-- 10. SOURCES -->
 <section id="sources">
   <h2>10. Sources</h2>
+  <p class="section-lede">Underlying tables and dashboards that produced every figure in this document.</p>
   <table>
     <thead><tr><th>Source</th><th>Use</th></tr></thead>
     <tbody>
       <tr><td><code>public_edw_business_mart_live.revenue_dashboard</code></td><td>Canonical Core AOV; reconciles to tracker to the cent W1–W18</td></tr>
       <tr><td><code>uploads.pa_food_seamless_dashboard_fixed</code></td><td>Seamless DG/UG shares, original plan, plan mix by cohort</td></tr>
-      <tr><td><code>public_one_product_meal_live.facts_recipes_ordered_enriched</code></td><td>Per-plan baseline AOV for Laspeyres calculation</td></tr>
+      <tr><td><code>public_one_product_meal_live.facts_recipes_ordered_enriched</code></td><td>Per-plan baseline $/box for the Shapley decomposition</td></tr>
       <tr><td>Weekly KPI 2026 Tracker - HF Rev.csv, rows 42 / 150</td><td>Budget AOV and Actual AOV reference</td></tr>
       <tr><td><a href="https://tableau.hellofresh.io/#/views/SeamlessDashboard/SeamlessDashboardNEW">Seamless Dashboard NEW (CA filter)</a></td><td>G4 validation (basis-point match to seamless table)</td></tr>
       <tr><td><a href="https://tableau.hellofresh.io/#/views/RevenueDashboardDetailed/RevenueperEntity">Revenue Dashboard - Revenue per Entity</a></td><td>Tracker source (the cell in the KPI tracker is populated from this view)</td></tr>
@@ -564,39 +733,33 @@ GROUP BY hellofresh_week</div>
   </table>
 </section>
 
-<!-- APPENDIX — LASPEYRES DETAIL -->
+<!-- APPENDIX — SHAPLEY DETAIL -->
 <section id="appendix-laspeyres">
-  <h2>Appendix — Laspeyres calculation detail</h2>
+  <h2>Appendix — Shapley calculation detail</h2>
+  <p class="section-lede">Full inputs and arithmetic behind the additive decomposition in §7.</p>
 
-  <h3>How to read the chart below in plain language</h3>
-  <p>For each week, we ask a simple "what-if": if every plan still earned the same $/box it earned in W1–W5 (e.g., a 2p×3r box still earns ~$78, a 4p×5r still earns ~$200, a 6p×5r still earns ~$300), what would AOV be — given only the actual change in <em>which original plans customers selected</em> that week?</p>
-
-  <p>Concretely, the calculation:</p>
-  <ul>
-    <li><strong>Holds constant:</strong> each plan's baseline $/box. This $/box already reflects baseline seamless behavior (downgrades and upgrades that were happening in W1–W5). It is <em>not</em> a "remove seamless" scenario.</li>
-    <li><strong>Lets vary:</strong> the share of customers on each original plan, week by week.</li>
-  </ul>
-
-  <p>Reading the result: if mix-only AOV drops by $0.57 from baseline to deep gap, that means <strong>$0.57 of the AOV decline is purely from customers selecting smaller original plans on average</strong> — even if seamless behavior had stayed exactly the same as in baseline.</p>
-
-  <div class="callout neutral">
-    <strong>Note — this is not "AOV without seamless".</strong> That would be a different calculation, using each customer's pre-seamless original-plan price instead of the realized price. That counterfactual is a Phase 2 question.
-  </div>
-
-  <h3>Formula</h3>
-  <div class="formula">ΔAOV_mix = Σ_p (share_p^t − share_p^baseline) × AOV_p^baseline
+  <h3>Model definition</h3>
+  <p>For a given plan mix P and seamless-transition matrix S, the model AOV is:</p>
+  <div class="formula">AOV(P, S) = Σ over (orig, shipped)  P[orig] · S[shipped | orig] · price[shipped]
 
 where:
-  share_p^t          = share of plan p in week t's original-plan mix
-  share_p^baseline   = share of plan p averaged over baseline (W1–W5)
-  AOV_p^baseline     = per-plan revenue per box, baseline avg</div>
+  P[orig]                    = share of customers whose original plan is `orig`
+  S[shipped | orig]          = P(shipped = s | original = o), the seamless transition
+  price[shipped]             = per-plan baseline $/box (constant across scenarios)</div>
 
-  <h3>Per-plan baseline AOV (input)</h3>
-  <p>Computed from <code>facts_recipes_ordered_enriched</code> over W1–W5. Each value is the average revenue per box for that plan during the baseline window. These are the prices that stay locked when we vary the mix.</p>
+  <h3>Shapley formulas</h3>
+  <div class="formula">Shapley(P) = ½·[AOV(P_d, S_b) − AOV(P_b, S_b)] + ½·[AOV(P_d, S_d) − AOV(P_b, S_d)]
+Shapley(S) = ½·[AOV(P_b, S_d) − AOV(P_b, S_b)] + ½·[AOV(P_d, S_d) − AOV(P_d, S_b)]
+
+Shapley(P) + Shapley(S) = AOV(P_d, S_d) − AOV(P_b, S_b)   (exact by construction)</div>
+  <p>Subscript <code>b</code> = baseline (W1–W5), <code>d</code> = deep gap (W19–W24). Each Shapley value averages the factor's marginal effect across both orderings (switching it first vs switching it last), ensuring no double-counting.</p>
+
+  <h3>Per-plan baseline $/box (input)</h3>
+  <p>Computed from <code>facts_recipes_ordered_enriched</code> over W1–W5. Each value is the average revenue per box for that plan during the baseline window. These prices stay locked across all four scenarios.</p>
 
   <div class="two-col">
     <table>
-      <thead><tr><th>Plan</th><th class="r">$/box (meal items)</th></tr></thead>
+      <thead><tr><th>Plan</th><th class="r">$/box</th></tr></thead>
       <tbody>
         <tr><td>2p × 2r</td><td class="r">$58.00</td></tr>
         <tr><td>2p × 3r</td><td class="r">$77.97</td></tr>
@@ -609,7 +772,7 @@ where:
       </tbody>
     </table>
     <table>
-      <thead><tr><th>Plan</th><th class="r">$/box (meal items)</th></tr></thead>
+      <thead><tr><th>Plan</th><th class="r">$/box</th></tr></thead>
       <tbody>
         <tr><td>4p × 5r</td><td class="r">$199.84</td></tr>
         <tr><td>4p × 6r</td><td class="r">$239.82</td></tr>
@@ -622,29 +785,65 @@ where:
     </table>
   </div>
 
-  <h3>Weekly mix-only AOV</h3>
-  <div class="chart-card">
-    <div class="chart-title">Mix-only AOV — what AOV would be each week if customers selected different plans, but every plan still earned its baseline $/box</div>
-    <div class="chart-subtitle">Per-plan $/box held at W1–W5 averages. Mix (share of each plan in the customer base) is the only thing changing week to week. Dashed line = baseline mix-only AOV.</div>
-    <div class="chart-canvas-wrap"><canvas id="chartLaspeyres"></canvas></div>
-  </div>
-
-  <h3>Full weekly values</h3>
+  <h3>Four scenario AOVs</h3>
   <table>
-    <thead><tr><th>Wk</th><th class="r">Mix-only AOV</th><th class="r">Δ vs baseline</th><th>Wk</th><th class="r">Mix-only AOV</th><th class="r">Δ vs baseline</th></tr></thead>
+    <thead><tr><th>Scenario</th><th>Description</th><th class="r">Model AOV</th></tr></thead>
     <tbody>
-      <tr><td>W1</td><td class="r">$104.38</td><td class="r num-bad">−$1.06</td><td>W13</td><td class="r">$104.64</td><td class="r num-bad">−$0.79</td></tr>
-      <tr><td>W2</td><td class="r">$105.11</td><td class="r num-bad">−$0.33</td><td>W14</td><td class="r">$104.89</td><td class="r num-bad">−$0.55</td></tr>
-      <tr><td>W3</td><td class="r">$106.05</td><td class="r num-good">+$0.61</td><td>W15</td><td class="r">$105.21</td><td class="r num-bad">−$0.23</td></tr>
-      <tr><td>W4</td><td class="r">$105.88</td><td class="r num-good">+$0.44</td><td>W16</td><td class="r">$104.70</td><td class="r num-bad">−$0.74</td></tr>
-      <tr><td>W5</td><td class="r">$105.78</td><td class="r num-good">+$0.34</td><td>W17</td><td class="r">$104.73</td><td class="r num-bad">−$0.71</td></tr>
-      <tr><td>W6</td><td class="r">$105.85</td><td class="r num-good">+$0.41</td><td>W18</td><td class="r">$104.89</td><td class="r num-bad">−$0.55</td></tr>
-      <tr><td>W7</td><td class="r">$105.63</td><td class="r num-good">+$0.19</td><td>W19</td><td class="r">$104.82</td><td class="r num-bad">−$0.62</td></tr>
-      <tr><td>W8</td><td class="r">$105.35</td><td class="r num-bad">−$0.09</td><td>W20</td><td class="r">$104.76</td><td class="r num-bad">−$0.68</td></tr>
-      <tr><td>W9</td><td class="r">$105.39</td><td class="r num-bad">−$0.05</td><td>W21</td><td class="r">$104.68</td><td class="r num-bad">−$0.76</td></tr>
-      <tr><td>W10</td><td class="r">$104.64</td><td class="r num-bad">−$0.80</td><td>W22</td><td class="r">$104.84</td><td class="r num-bad">−$0.60</td></tr>
-      <tr><td>W11</td><td class="r">$104.85</td><td class="r num-bad">−$0.59</td><td>W23</td><td class="r">$105.05</td><td class="r num-bad">−$0.39</td></tr>
-      <tr><td>W12</td><td class="r">$104.52</td><td class="r num-bad">−$0.92</td><td>W24</td><td class="r">$105.10</td><td class="r num-bad">−$0.34</td></tr>
+      <tr><td>AOV(P_b, S_b)</td><td>Baseline mix, baseline seamless (start point)</td><td class="r">$106.97</td></tr>
+      <tr><td>AOV(P_d, S_b)</td><td>Deep-gap mix, baseline seamless (mix only)</td><td class="r">$106.35</td></tr>
+      <tr><td>AOV(P_b, S_d)</td><td>Baseline mix, deep-gap seamless (seamless only)</td><td class="r">$106.61</td></tr>
+      <tr><td>AOV(P_d, S_d)</td><td>Deep-gap mix, deep-gap seamless (end point)</td><td class="r">$105.99</td></tr>
+      <tr class="highlight"><td colspan="2"><strong>Total model change</strong></td><td class="r num-bad"><strong>−$0.98/box</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Shapley values (worked)</h3>
+  <div class="formula">Shapley(P) = ½·[$106.35 − $106.97] + ½·[$105.99 − $106.61]
+           = ½·(−$0.62)     + ½·(−$0.62)
+           = −$0.62/box
+
+Shapley(S) = ½·[$106.61 − $106.97] + ½·[$105.99 − $106.35]
+           = ½·(−$0.36)     + ½·(−$0.36)
+           = −$0.36/box
+
+Sum        = −$0.62 + −$0.36 = −$0.98/box  ✓</div>
+
+  <h3>Sanity check — classical decomposition with interaction</h3>
+  <table>
+    <thead><tr><th>Term</th><th class="r">Value</th></tr></thead>
+    <tbody>
+      <tr><td>Main effect of P (mix, holding S at baseline): AOV(P_d, S_b) − AOV(P_b, S_b)</td><td class="r">−$0.62</td></tr>
+      <tr><td>Main effect of S (seamless, holding P at baseline): AOV(P_b, S_d) − AOV(P_b, S_b)</td><td class="r">−$0.36</td></tr>
+      <tr><td>Interaction P × S: AOV(P_d, S_d) − AOV(P_d, S_b) − AOV(P_b, S_d) + AOV(P_b, S_b)</td><td class="r">+$0.001</td></tr>
+      <tr><td><strong>Sum</strong></td><td class="r num-bad"><strong>−$0.98</strong></td></tr>
+    </tbody>
+  </table>
+  <p>The near-zero interaction term is what makes the Shapley split stable: mix and seamless move essentially independently at the population level, so switching order doesn't change the attribution.</p>
+
+  <h3>Reconciliation to tracker</h3>
+  <table>
+    <thead><tr><th>Metric</th><th class="r">Value</th></tr></thead>
+    <tbody>
+      <tr><td>Model AOV change (baseline → deep gap)</td><td class="r num-bad">−$0.98/box</td></tr>
+      <tr><td>Tracker Actual W1–W5 avg → W19–W24 avg</td><td class="r num-bad">−$0.84/box</td></tr>
+      <tr class="highlight"><td><strong>Reconciliation gap</strong></td><td class="r">+$0.14/box</td></tr>
+    </tbody>
+  </table>
+  <p>Reconciliation gap sources: shipping revenue (present in tracker Actual, not in the model since it's constant per-plan and doesn't affect the mechanism attribution); small per-plan price drift over the period not captured by the constant baseline prices.</p>
+
+  <h3>Rescaling to tracker</h3>
+  <p>The Executive summary and §7 publish rescaled Shapley values that sum exactly to the tracker's observed −$0.84/box drop, so stakeholders see numbers that add up to the metric they follow. Rescaling multiplies each raw Shapley value by <code>0.84 / 0.98 ≈ 0.857</code>, distributing the +$0.14/box reconciliation gap proportionally across mechanisms while preserving the 63 / 37 shares.</p>
+  <div class="formula">Shapley(P) rescaled = −$0.62 × (0.84 / 0.98) = −$0.53/box
+Shapley(S) rescaled = −$0.36 × (0.84 / 0.98) = −$0.31/box
+Sum                = −$0.84/box  ✓</div>
+  <p>The raw values above (−$0.62 and −$0.36) are the correct model output. The rescaled values (−$0.53 and −$0.31) are the tracker-aligned figures published in the summary. Both are defensible; the choice is a communication one.</p>
+
+  <h3>Population sizes</h3>
+  <table>
+    <thead><tr><th>Window</th><th class="r">Customer-weeks</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline (W1–W5)</td><td class="r">429,891</td></tr>
+      <tr><td>Deep gap (W19–W24)</td><td class="r">488,756</td></tr>
     </tbody>
   </table>
 </section>
@@ -662,6 +861,7 @@ const aov_gap = aov_actual.map((a, i) => +(a - aov_budget[i]).toFixed(2));
 const dg_weekly = [9.61,8.13,7.66,7.83,7.51,7.61,7.95,7.94,7.57,7.26,7.50,7.15,7.26,7.63,7.37,7.42,7.26,6.94,7.09,7.47,7.60,7.45,7.49,7.61];
 const ug_weekly = [10.30,11.87,11.53,11.18,11.30,11.25,10.40,10.47,10.31,10.97,10.55,10.99,10.93,10.79,10.63,10.76,10.21,10.84,10.38,10.42,10.14,10.27,10.27,10.08];
 const net_meal = [0.0284,0.0666,0.0718,0.0637,0.0699,0.0673,0.0499,0.0520,0.0540,0.0661,0.0579,0.0693,0.0650,0.0594,0.0591,0.0606,0.0550,0.0690,0.0613,0.0553,0.0489,0.0530,0.0525,0.0487];
+const net_dollar = [0.555,1.523,1.613,1.408,1.590,1.469,1.039,1.129,1.143,1.466,1.208,1.543,1.432,1.301,1.240,1.244,1.154,1.560,1.327,1.141,0.927,1.090,1.066,0.974];
 
 // DG % by cohort (24 weeks × 7 cohorts)
 const dg_by_cohort = {
@@ -708,8 +908,6 @@ const plan_share_weekly = {
   "2p × 2r": [0.744,0.743,0.666,0.665,0.647,0.660,0.682,0.691,0.705,0.786,0.799,0.835,0.868,0.835,0.882,0.844,0.901,0.883,0.922,0.938,0.924,0.990,0.986,0.962]
 };
 
-const laspeyres = [104.38,105.11,106.05,105.88,105.78,105.85,105.63,105.35,105.39,104.64,104.85,104.52,104.64,104.89,105.21,104.70,104.73,104.89,104.82,104.76,104.68,104.84,105.05,105.10];
-const LASP_BASELINE = 105.44;
 
 const mix_cohort = {
   cohorts: ["0-1 (newest)", "2-5", "6-10", "11-25", "26-50", "51-100", "100+"],
@@ -783,6 +981,14 @@ new Chart(document.getElementById("chartAov"), {
       tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`}},
       annotation: {
         annotations: {
+          baseline: {
+            type: "box", xMin: 0, xMax: 4,
+            backgroundColor: "rgba(45, 138, 71, 0.06)",
+            borderColor: "rgba(45, 138, 71, 0.25)", borderWidth: 1,
+            label: {content: "Baseline W1–W5", display: true, position: "start",
+                    color: "#2d8a47", font: {size: 10, weight: "700"},
+                    backgroundColor: "rgba(0,0,0,0)"}
+          },
           deepGap: {
             type: "box", xMin: 18, xMax: 23,
             backgroundColor: "rgba(196, 69, 54, 0.06)",
@@ -980,6 +1186,48 @@ new Chart(document.getElementById("chartNetMeal"), {
   }
 });
 
+// 9b. Net $/row seamless contribution
+new Chart(document.getElementById("chartNetDollar"), {
+  type: "line",
+  data: {
+    labels: WEEKS24,
+    datasets: [linePoint(PALETTE.actual, "Net $/row (seamless)", net_dollar)]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    animation: {duration: 800, easing: "easeOutQuart"},
+    scales: {
+      y: {min: 0, max: 2, ticks: {callback: v => "$" + v.toFixed(2)},
+          title: {display: true, text: "Net contribution $/row"}},
+      x: {title: {display: true, text: "Week"}, grid: {display: false}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: ctx => `Net: +$${ctx.parsed.y.toFixed(2)}/row`}},
+      annotation: {
+        annotations: {
+          baseline: {
+            type: "box", xMin: 0, xMax: 4,
+            backgroundColor: "rgba(45, 138, 71, 0.06)",
+            borderColor: "rgba(45, 138, 71, 0.25)", borderWidth: 1,
+            label: {content: "Baseline W1–W5", display: true, position: "start",
+                    color: "#2d8a47", font: {size: 10, weight: "700"},
+                    backgroundColor: "rgba(0,0,0,0)"}
+          },
+          deepGap: {
+            type: "box", xMin: 18, xMax: 23,
+            backgroundColor: "rgba(196, 69, 54, 0.06)",
+            borderColor: "rgba(196, 69, 54, 0.25)", borderWidth: 1,
+            label: {content: "Deep gap W19–W24", display: true, position: "start",
+                    color: "#c44536", font: {size: 10, weight: "700"},
+                    backgroundColor: "rgba(0,0,0,0)"}
+          }
+        }
+      }
+    }
+  }
+});
+
 // 10. Plan volume change
 new Chart(document.getElementById("chartPlanVol"), {
   type: "bar",
@@ -1031,40 +1279,7 @@ new Chart(document.getElementById("chartPlanShareWeekly"), {
   }
 });
 
-// 12. Laspeyres mix-only AOV
-new Chart(document.getElementById("chartLaspeyres"), {
-  type: "line",
-  data: {
-    labels: WEEKS24,
-    datasets: [linePoint(PALETTE.actual, "Mix-only AOV", laspeyres)]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    scales: {
-      y: {min: 104, max: 106.5,
-          ticks: {callback: v => "$" + v.toFixed(2)},
-          title: {display: true, text: "Mix-only AOV $/box (constant prices)"}},
-      x: {title: {display: true, text: "Week"}}
-    },
-    plugins: {
-      legend: {display: false},
-      tooltip: {callbacks: {label: ctx => `Mix-only AOV: $${ctx.parsed.y.toFixed(2)} (Δ ${(ctx.parsed.y - LASP_BASELINE >= 0 ? "+$" : "−$") + Math.abs(ctx.parsed.y - LASP_BASELINE).toFixed(2)} vs baseline)`}},
-      annotation: {
-        annotations: {
-          baseline: {
-            type: "line", yMin: LASP_BASELINE, yMax: LASP_BASELINE,
-            borderColor: "rgba(26, 31, 46, 0.4)", borderWidth: 1.5, borderDash: [4, 4],
-            label: {content: `Baseline $${LASP_BASELINE.toFixed(2)}`, display: true, position: "end",
-                    backgroundColor: "rgba(255,255,255,0.9)", color: "#1a1f2e",
-                    font: {size: 10, weight: "600"}, padding: 4}
-          }
-        }
-      }
-    }
-  }
-});
-
-// 13. Mix by cohort (grouped bar)
+// 12. Mix by cohort (grouped bar)
 new Chart(document.getElementById("chartMixCohort"), {
   type: "bar",
   data: {
@@ -1088,6 +1303,98 @@ new Chart(document.getElementById("chartMixCohort"), {
     }
   }
 });
+
+// ============ EXECUTIVE SUMMARY CHARTS ============
+
+// A. Shapley additive decomposition (waterfall)
+// Baseline → +plan-mix Δ → +seamless Δ → deep gap (model total)
+const SHAPLEY_STAGES = [
+  {label: "Baseline AOV\n(W1–W5 avg)", type: "start", value: 117.87,
+   note: "Tracker Actual W1–W5 average"},
+  {label: "Plan-mix (Shapley)", type: "delta", value: -0.53,
+   note: "Customers picking smaller original plans; 63% of the drop (Shapley raw −$0.62, rescaled by 0.84/0.98)"},
+  {label: "Seamless (Shapley)", type: "delta", value: -0.31,
+   note: "Weaker net seamless lift (fewer upgrades, downgrade mix); 37% of the drop (Shapley raw −$0.36, rescaled by 0.84/0.98)"},
+  {label: "Deep-gap AOV\n(W19–W24 avg)", type: "end", value: 117.03,
+   note: "Tracker Actual W19–W24 average"}
+];
+const SHAPLEY_TOTAL_ABS = Math.abs(SHAPLEY_STAGES[3].value - SHAPLEY_STAGES[0].value);
+
+const sh_bases = [], sh_heights = [], sh_colors = [], sh_borders = [];
+const sh_running_before = [], sh_running_after = [];
+let sh_running = 0;
+SHAPLEY_STAGES.forEach(s => {
+  if (s.type === "start") {
+    sh_running_before.push(0);
+    sh_bases.push(0); sh_heights.push(s.value);
+    sh_colors.push("rgba(107, 114, 128, 0.85)"); sh_borders.push("#6b7280");
+    sh_running = s.value;
+    sh_running_after.push(sh_running);
+  } else if (s.type === "end") {
+    sh_running_before.push(sh_running);
+    sh_bases.push(0); sh_heights.push(s.value);
+    sh_colors.push("rgba(196, 69, 54, 0.85)"); sh_borders.push(PALETTE.actual);
+    sh_running_after.push(s.value);
+  } else {
+    const next = sh_running + s.value;
+    sh_running_before.push(sh_running);
+    sh_bases.push(Math.min(sh_running, next));
+    sh_heights.push(Math.abs(s.value));
+    sh_colors.push(s.value < 0 ? "rgba(184, 57, 42, 0.85)" : "rgba(45, 138, 71, 0.85)");
+    sh_borders.push(s.value < 0 ? PALETTE.bad : PALETTE.good);
+    sh_running = next;
+    sh_running_after.push(sh_running);
+  }
+});
+
+new Chart(document.getElementById("chartShapley"), {
+  type: "bar",
+  data: {
+    labels: SHAPLEY_STAGES.map(s => s.label.split("\n")),
+    datasets: [
+      {label: "_base", data: sh_bases, backgroundColor: "rgba(0,0,0,0)", stack: "sh", borderWidth: 0},
+      {label: "AOV / Δ", data: sh_heights, backgroundColor: sh_colors, borderColor: sh_borders,
+       stack: "sh", borderWidth: 1.5, borderSkipped: false}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    animation: {duration: 900, easing: "easeOutQuart"},
+    scales: {
+      y: {min: 116.5, max: 118.4,
+          ticks: {callback: v => "$" + v.toFixed(2)},
+          title: {display: true, text: "AOV per box ($)"}},
+      x: {ticks: {font: {size: 11}}, grid: {display: false}}
+    },
+    plugins: {
+      legend: {display: false},
+      tooltip: {
+        callbacks: {
+          title: ctx => SHAPLEY_STAGES[ctx[0].dataIndex].label.replace("\n", " "),
+          label: ctx => {
+            if (ctx.dataset.label === "_base") return null;
+            const s = SHAPLEY_STAGES[ctx.dataIndex];
+            const lines = [];
+            if (s.type === "delta") {
+              const sign = s.value >= 0 ? "+" : "−";
+              const pct = Math.round(100 * Math.abs(s.value) / SHAPLEY_TOTAL_ABS);
+              lines.push(`Shapley contribution: ${sign}$${Math.abs(s.value).toFixed(2)}/box  (${pct}% of change)`);
+              lines.push(`Running AOV: $${sh_running_before[ctx.dataIndex].toFixed(2)}  →  $${sh_running_after[ctx.dataIndex].toFixed(2)}`);
+            } else {
+              lines.push(`$${s.value.toFixed(2)} per box`);
+            }
+            lines.push("");
+            lines.push(s.note);
+            return lines;
+          }
+        },
+        filter: item => item.dataset.label !== "_base",
+        displayColors: false
+      }
+    }
+  }
+});
+
 </script>
 </body>
 </html>
