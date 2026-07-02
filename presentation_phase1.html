@@ -281,19 +281,25 @@ GROUP BY hellofresh_week</div>
   </div>
 
   <table>
-    <thead><tr><th>Original plan</th><th class="r">Baseline</th><th class="r">Deep gap</th><th class="r">Δ pp</th></tr></thead>
+    <thead><tr><th>Original plan</th><th class="r">Baseline</th><th class="r">Deep gap</th><th class="r">Δ pp</th><th class="r">N (baseline / deep)</th></tr></thead>
     <tbody>
-      <tr><td>2p × 3r</td><td class="r">7.05%</td><td class="r">6.25%</td><td class="r num-good">−0.80</td></tr>
-      <tr><td>2p × 4r</td><td class="r">9.59%</td><td class="r">9.12%</td><td class="r num-good">−0.47</td></tr>
-      <tr><td>2p × 5r</td><td class="r">11.58%</td><td class="r">11.28%</td><td class="r num-good">−0.30</td></tr>
-      <tr><td>4p × 3r</td><td class="r">8.41%</td><td class="r">8.42%</td><td class="r">+0.01</td></tr>
-      <tr><td>4p × 4r</td><td class="r">10.82%</td><td class="r">10.06%</td><td class="r num-good">−0.76</td></tr>
-      <tr><td>4p × 5r</td><td class="r">10.45%</td><td class="r">10.97%</td><td class="r">+0.52</td></tr>
-      <tr><td>6p × 4r</td><td class="r">9.35%</td><td class="r">11.51%</td><td class="r">+2.16</td></tr>
-      <tr><td>6p × 5r</td><td class="r">4.83%</td><td class="r">7.49%</td><td class="r">+2.66</td></tr>
+      <tr><td>2p × 2r *</td><td class="r">0.00%</td><td class="r">0.00%</td><td class="r">—</td><td class="r">2,951 / 4,659</td></tr>
+      <tr><td>2p × 3r</td><td class="r">7.05%</td><td class="r">6.25%</td><td class="r num-good">−0.80</td><td class="r">221,042 / 250,828</td></tr>
+      <tr><td>2p × 4r</td><td class="r">9.59%</td><td class="r">9.12%</td><td class="r num-good">−0.47</td><td class="r">49,762 / 57,066</td></tr>
+      <tr><td>2p × 5r</td><td class="r">11.58%</td><td class="r">11.28%</td><td class="r num-good">−0.30</td><td class="r">26,274 / 27,225</td></tr>
+      <tr><td>4p × 2r *</td><td class="r">0.00%</td><td class="r">0.00%</td><td class="r">—</td><td class="r">2,193 / 3,624</td></tr>
+      <tr><td>4p × 3r</td><td class="r">8.41%</td><td class="r">8.42%</td><td class="r">+0.01</td><td class="r">88,397 / 102,589</td></tr>
+      <tr><td>4p × 4r</td><td class="r">10.82%</td><td class="r">10.06%</td><td class="r num-good">−0.76</td><td class="r">16,694 / 19,204</td></tr>
+      <tr><td>4p × 5r</td><td class="r">10.45%</td><td class="r">10.97%</td><td class="r">+0.52</td><td class="r">11,867 / 11,370</td></tr>
+      <tr><td>6p × 1r *</td><td class="r">0.00%</td><td class="r">0.00%</td><td class="r">—</td><td class="r">649 / 918</td></tr>
+      <tr><td>6p × 2r</td><td class="r">3.64%</td><td class="r">2.92%</td><td class="r num-good">−0.72</td><td class="r">3,296 / 4,043</td></tr>
+      <tr><td>6p × 3r</td><td class="r">5.38%</td><td class="r">5.47%</td><td class="r">+0.09</td><td class="r">3,609 / 4,172</td></tr>
+      <tr><td>6p × 4r</td><td class="r">9.35%</td><td class="r">11.51%</td><td class="r">+2.16</td><td class="r">1,240 / 1,373</td></tr>
+      <tr><td>6p × 5r</td><td class="r">4.83%</td><td class="r">7.49%</td><td class="r">+2.66</td><td class="r">1,904 / 1,628</td></tr>
     </tbody>
   </table>
-  <p>Among 2-person plans, DG % declined in every plan size. Among 4-person plans, the 4p×5r DG share rose +0.52pp. Among 6-person plans, DG share rose in 6p×4r (+2.16pp) and 6p×5r (+2.66pp), but on small bases (n ≈ 1,200–1,900 customer-weeks per window).</p>
+  <p class="source-note">* Floor plans (smallest recipe count for that people-size) cannot be downgraded further, so downgrade % is 0 by construction.</p>
+  <p>Among 2-person plans, DG % declined in every plan size where downgrades are possible. Among 4-person plans, only 4p×5r rose (+0.52pp). Among 6-person plans, 6p×2r declined (−0.72pp) while 6p×3r stayed flat and 6p×4r / 6p×5r rose (+2.16pp and +2.66pp), but on small bases (n ≈ 1,200–4,200 customer-weeks per window).</p>
 </section>
 
 <!-- 4. SEAMLESS UPGRADES -->
@@ -364,13 +370,14 @@ GROUP BY hellofresh_week</div>
       <tr class="highlight"><td>4p × 3r</td><td class="r">9.81%</td><td class="r">8.43%</td><td class="r num-bad">−1.38</td><td class="r">88,397 / 102,589</td></tr>
       <tr><td>4p × 4r</td><td class="r">11.45%</td><td class="r">11.23%</td><td class="r num-bad">−0.22</td><td class="r">16,694 / 19,204</td></tr>
       <tr class="highlight"><td>4p × 5r</td><td class="r">13.14%</td><td class="r">10.32%</td><td class="r num-bad">−2.82</td><td class="r">11,867 / 11,370</td></tr>
+      <tr class="highlight"><td>6p × 1r</td><td class="r">11.71%</td><td class="r">9.04%</td><td class="r num-bad">−2.67</td><td class="r">649 / 918</td></tr>
       <tr class="highlight"><td>6p × 2r</td><td class="r">9.95%</td><td class="r">8.38%</td><td class="r num-bad">−1.57</td><td class="r">3,296 / 4,043</td></tr>
       <tr class="highlight"><td>6p × 3r</td><td class="r">13.05%</td><td class="r">9.08%</td><td class="r num-bad">−3.97</td><td class="r">3,609 / 4,172</td></tr>
       <tr class="highlight"><td>6p × 4r</td><td class="r">13.31%</td><td class="r">10.34%</td><td class="r num-bad">−2.97</td><td class="r">1,240 / 1,373</td></tr>
       <tr><td>6p × 5r</td><td class="r">0.79%</td><td class="r">0.18%</td><td class="r num-bad">−0.61</td><td class="r">1,904 / 1,628</td></tr>
     </tbody>
   </table>
-  <p>Upgrade share declined in every plan cohort. Largest pp drops occurred in 6p×3r (−3.97), 4p×2r (−3.34), 6p×4r (−2.97), and 4p×5r (−2.82). The 2p×3r plan (largest volume cohort, ~250K customer-weeks) saw a smaller drop of −0.67pp; given its size, this single plan contributes the most absolute upgrade-share decline to the overall metric.</p>
+  <p>Upgrade share declined in every plan cohort. Largest pp drops occurred in 6p×3r (−3.97), 4p×2r (−3.34), 6p×4r (−2.97), 4p×5r (−2.82), and 6p×1r (−2.67). The 2p×3r plan (largest volume cohort, ~250K customer-weeks) saw a smaller drop of −0.67pp; given its size, this single plan contributes the most absolute upgrade-share decline to the overall metric.</p>
 
   <div class="source-note">Source: pa_food_seamless_dashboard_fixed, COALESCE(original_box_type, box_type_ordered) parsed as recipes × people. n ≥ 1,000 customer-weeks per window.</div>
 </section>
@@ -680,13 +687,13 @@ const ug_by_cohort = {
 const dg_by_plan = [
   {plan: "2p × 3r", d: -0.80}, {plan: "2p × 4r", d: -0.47}, {plan: "2p × 5r", d: -0.30},
   {plan: "4p × 3r", d: 0.01},  {plan: "4p × 4r", d: -0.76}, {plan: "4p × 5r", d: 0.52},
-  {plan: "6p × 4r", d: 2.16},  {plan: "6p × 5r", d: 2.66}
+  {plan: "6p × 2r", d: -0.72}, {plan: "6p × 3r", d: 0.09},  {plan: "6p × 4r", d: 2.16}, {plan: "6p × 5r", d: 2.66}
 ];
 
 const ug_by_plan = [
   {plan: "2p × 2r", d: -1.45}, {plan: "2p × 3r", d: -0.67}, {plan: "2p × 4r", d: -1.32}, {plan: "2p × 5r", d: -1.33},
   {plan: "4p × 2r", d: -3.34}, {plan: "4p × 3r", d: -1.38}, {plan: "4p × 4r", d: -0.22}, {plan: "4p × 5r", d: -2.82},
-  {plan: "6p × 2r", d: -1.57}, {plan: "6p × 3r", d: -3.97}, {plan: "6p × 4r", d: -2.97}, {plan: "6p × 5r", d: -0.61}
+  {plan: "6p × 1r", d: -2.67}, {plan: "6p × 2r", d: -1.57}, {plan: "6p × 3r", d: -3.97}, {plan: "6p × 4r", d: -2.97}, {plan: "6p × 5r", d: -0.61}
 ];
 
 const plan_volume_change = [
