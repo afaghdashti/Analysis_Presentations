@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Optimo — PM Tracker</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: #F7F7F9; color: #1F2937; margin: 0; padding: 24px 32px 80px;
+  }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 4px; color: #1F3864; letter-spacing: -0.01em; }
+  h1 span { font-weight: 400; color: #6B7280; font-size: 14px; margin-left: 12px; }
+  .subtitle { color: #6B7280; font-size: 13px; margin-bottom: 20px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px;
+         box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .kpi .label { font-size: 11px; text-transform: uppercase; color: #6B7280; letter-spacing: 0.05em; }
+  .kpi .value { font-size: 24px; font-weight: 700; color: #1F3864; margin-top: 4px; }
+  .kpi .sub { font-size: 11px; color: #9CA3AF; margin-top: 2px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid #E5E7EB; }
+  .tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 600; background: transparent;
+             border: none; cursor: pointer; color: #6B7280; border-bottom: 3px solid transparent;
+             margin-bottom: -2px; }
+  .tab-btn.active { color: #1F3864; border-bottom-color: #1F3864; }
+  .tab-btn:hover { color: #1F3864; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 16px; }
+  .filter-bar label { font-size: 11px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+  .filter-bar select, .filter-bar input {
+    font-size: 13px; padding: 6px 8px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF;
+    color: #1F2937; font-family: inherit; }
+  .filter-bar input { min-width: 220px; }
+  .top-actions { display: flex; gap: 8px; margin-left: auto; }
+  .top-actions button {
+    font-size: 12px; padding: 6px 12px; border-radius: 6px;
+    cursor: pointer; border: 1px solid #D1D5DB; background: #FFFFFF; }
+  .top-actions button.primary { background: #1F3864; color: #FFFFFF; border-color: #1F3864; }
+  .top-actions button:hover { background: #F3F4F6; }
+  .top-actions button.primary:hover { background: #2A4A80; }
+
+  .table-wrap { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px;
+                overflow: visible; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #1F3864; color: #FFFFFF; text-align: left; padding: 10px 12px;
+       font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em;
+       position: sticky; top: 0; z-index: 2; white-space: nowrap; }
+  td { padding: 6px 10px; border-top: 1px solid #F0F0F2; vertical-align: top; }
+  tbody tr.task-row:nth-child(even) { background: #FAFAFB; }
+  tbody tr.task-row:hover { background: #EEF3FB; }
+
+  /* Page banner rows */
+  tr.page-banner td {
+    background: linear-gradient(90deg, #4472C4 0%, #5B85D6 100%);
+    color: #FFFFFF; font-weight: 700; font-size: 13px;
+    padding: 8px 14px; border-top: 2px solid #FFFFFF;
+    letter-spacing: 0.02em;
+  }
+  tr.page-banner td .page-count {
+    float: right; font-weight: 400; font-size: 11px; opacity: 0.85;
+  }
+
+  /* Inline-editable cells */
+  .cell-edit {
+    display: block; width: 100%; min-height: 22px; padding: 4px 6px;
+    border: 1px solid transparent; border-radius: 4px;
+    font: inherit; color: #1F2937; background: transparent;
+    white-space: pre-wrap; word-break: break-word; cursor: text;
+  }
+  .cell-edit:hover { background: #FFFFFF; border-color: #E5E7EB; }
+  .cell-edit:focus { outline: none; background: #FFFFFF; border-color: #1F3864;
+                     box-shadow: 0 0 0 2px rgba(31,56,100,0.12); }
+  .cell-edit[data-empty="1"]::before {
+    content: attr(data-placeholder); color: #C4C7CE; font-style: italic;
+  }
+  .cell-edit[data-empty="1"]:focus::before { content: ""; }
+
+  /* Select styled as a badge */
+  select.cell-select {
+    appearance: none; -webkit-appearance: none;
+    padding: 3px 22px 3px 8px; border-radius: 999px;
+    border: 1px solid transparent; font: inherit; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.02em; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%234B5563' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center;
+  }
+  select.cell-select:focus { outline: 2px solid rgba(31,56,100,0.25); outline-offset: 1px; }
+
+  /* Page select is a plain select (not a pill) */
+  select.cell-select-page {
+    appearance: none; -webkit-appearance: none;
+    padding: 4px 22px 4px 8px; font: inherit; font-size: 12px;
+    border: 1px solid transparent; border-radius: 4px; background: transparent;
+    color: #1F2937; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%234B5563' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center;
+  }
+  select.cell-select-page:hover { background-color: #FFFFFF; border-color: #E5E7EB; }
+  select.cell-select-page:focus { outline: none; background-color: #FFFFFF; border-color: #1F3864;
+                                  box-shadow: 0 0 0 2px rgba(31,56,100,0.12); }
+
+  /* Status/Priority badge colours as select background */
+  .status-Backlog     { background: #E5E7EB; color: #374151; }
+  .status-Not-started { background: #DBEAFE; color: #1E3A8A; }
+  .status-In-progress { background: #FEF3C7; color: #92400E; }
+  .status-Pending-Engineering-Review { background: #E4D6F5; color: #5B21B6; }
+  .status-Blocked     { background: #FEE2E2; color: #991B1B; }
+  .status-Done        { background: #D1FAE5; color: #065F46; }
+  .status-Cancelled   { background: #E5E7EB; color: #6B7280; text-decoration: line-through; }
+  .prio-High   { background: #FEE2E2; color: #991B1B; }
+  .prio-Medium { background: #FEF3C7; color: #92400E; }
+  .prio-Low    { background: #F3F4F6; color: #4B5563; }
+
+  /* ID cell — show × delete button on row hover */
+  td.id-cell { position: relative; padding-right: 24px; white-space: nowrap; }
+  .row-delete {
+    position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px; border-radius: 50%; background: #FEE2E2; color: #991B1B;
+    font-size: 12px; font-weight: 700; line-height: 18px; text-align: center;
+    border: none; cursor: pointer; opacity: 0; transition: opacity 0.15s;
+    padding: 0;
+  }
+  tr.task-row:hover .row-delete { opacity: 1; }
+  .row-delete:hover { background: #FECACA; }
+
+  .timeline { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px;
+              padding: 20px 24px; margin-top: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .timeline h2 { font-size: 16px; font-weight: 700; color: #1F3864; margin: 0 0 4px; }
+  .timeline .subtitle-small { font-size: 12px; color: #6B7280; margin-bottom: 16px; }
+  .milestone { display: grid; grid-template-columns: 260px 160px 1fr 200px; gap: 12px;
+               padding: 10px 0; border-top: 1px solid #F0F0F2; align-items: start; font-size: 13px; }
+  .milestone:first-of-type { border-top: none; }
+  .milestone .phase { font-weight: 600; color: #1F2937; }
+  .milestone .dates { color: #6B7280; font-size: 12px; }
+  .milestone .desc { color: #4B5563; }
+
+  /* ---------- Gantt chart ---------- */
+  .gantt-wrap { margin-top: 8px; margin-bottom: 24px; background: #FFFFFF;
+                border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px 24px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.04); overflow-x: auto; }
+  .gantt-wrap h2 { font-size: 16px; font-weight: 700; color: #1F3864; margin: 0 0 4px; }
+  .gantt-wrap .subtitle-small { font-size: 12px; color: #6B7280; margin-bottom: 16px; }
+
+  /* Chart is a table-style layout: fixed-width label column + track column that holds the full-height today overlay */
+  .gantt-container {
+    position: relative;
+    min-width: 900px;
+    font-size: 12px;
+  }
+  .gantt-row {
+    display: flex; align-items: stretch;
+    min-height: 26px;
+  }
+  .gantt-header {
+    border-bottom: 1px solid #E5E7EB;
+    min-height: 32px;
+    margin-bottom: 6px;
+  }
+  .gantt-label {
+    width: 320px; flex-shrink: 0;
+    padding: 4px 12px 4px 0;
+    color: #1F2937;
+    display: flex; align-items: center; gap: 8px;
+    overflow: hidden;
+  }
+  .gantt-label-id {
+    color: #6B7280;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    flex-shrink: 0;
+    min-width: 46px;
+  }
+  .gantt-label-task {
+    color: #1F2937;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .gantt-track-header, .gantt-track {
+    flex: 1;
+    position: relative;
+    min-width: 500px;
+  }
+  .gantt-track-header {
+    height: 100%;
+  }
+  .gantt-track {
+    height: 22px; margin: 2px 0;
+    background: repeating-linear-gradient(90deg, transparent 0 30px, rgba(0,0,0,0.03) 30px 31px);
+    border-radius: 4px;
+  }
+  .gantt-month-tick {
+    position: absolute; top: 4px; bottom: 4px;
+    padding-left: 3px;
+    display: flex; align-items: center;
+    letter-spacing: 0.02em;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  .gantt-month-tick.gantt-month-marker {
+    border-left: 1px solid #9CA3AF;
+    color: #374151; font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  .gantt-month-tick.gantt-week-marker {
+    border-left: 1px dashed #E5E7EB;
+    color: #9CA3AF; font-weight: 500;
+  }
+  .gantt-bar {
+    position: absolute; top: 2px; bottom: 2px;
+    border-radius: 4px;
+    padding: 0 12px;
+    color: #FFFFFF; font-size: 10px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: flex; align-items: center;
+    cursor: grab;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    user-select: none;
+  }
+  .gantt-bar.dragging { cursor: grabbing; opacity: 0.9; box-shadow: 0 3px 8px rgba(0,0,0,0.25); z-index: 10; }
+  .gantt-bar-resize {
+    position: absolute; top: 0; bottom: 0; width: 6px;
+    cursor: ew-resize; opacity: 0;
+    background: rgba(255,255,255,0.4);
+  }
+  .gantt-bar:hover .gantt-bar-resize { opacity: 1; }
+  .gantt-bar-resize.left { left: 0; border-radius: 4px 0 0 4px; }
+  .gantt-bar-resize.right { right: 0; border-radius: 0 4px 4px 0; }
+  .gantt-row.reorder-source { opacity: 0.4; }
+  .gantt-row.reorder-target-above { border-top: 2px solid #1F3864; }
+  .gantt-row.reorder-target-below { border-bottom: 2px solid #1F3864; }
+
+  /* Drag handle in the label column */
+  .gantt-drag-handle {
+    width: 14px; flex-shrink: 0;
+    color: #C4C7CE; cursor: grab; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    user-select: none;
+  }
+  .gantt-drag-handle:hover { color: #6B7280; }
+  .gantt-drag-handle:active { cursor: grabbing; }
+
+  /* Tooltip shown while dragging */
+  .gantt-drag-tooltip {
+    position: fixed; z-index: 1000;
+    background: #1F2937; color: #FFFFFF;
+    padding: 6px 10px; border-radius: 4px;
+    font-size: 11px; font-weight: 500;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    white-space: nowrap;
+  }
+  .gantt-bar-done { background: #059669; }
+  .gantt-bar-pending { background: #7C3AED; }
+  .gantt-bar-inprogress { background: #D97706; }
+  .gantt-bar-notstarted-High { background: #DC2626; }
+  .gantt-bar-notstarted-Medium { background: #2563EB; }
+  .gantt-bar-notstarted-Low { background: #64748B; }
+  .gantt-bar-backlog { background: #94A3B8; }
+  /* Bars that extend past the visible range fade toward the clipped edge */
+  .gantt-bar.overflow-right {
+    -webkit-mask-image: linear-gradient(to right, black 88%, transparent 100%);
+            mask-image: linear-gradient(to right, black 88%, transparent 100%);
+    border-top-right-radius: 0; border-bottom-right-radius: 0;
+  }
+  .gantt-bar.overflow-left {
+    -webkit-mask-image: linear-gradient(to left, black 88%, transparent 100%);
+            mask-image: linear-gradient(to left, black 88%, transparent 100%);
+    border-top-left-radius: 0; border-bottom-left-radius: 0;
+  }
+  .gantt-bar.overflow-left.overflow-right {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  }
+
+  /* Today marker overlay — absolutely positioned across the full chart height */
+  .gantt-today-overlay {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 320px;   /* start after the label column */
+    right: 0;
+    pointer-events: none;    /* let clicks pass through except on the line itself */
+    z-index: 5;
+  }
+  .gantt-today-line {
+    position: absolute; top: 0; bottom: 0;
+    border-left: 2px solid #DC2626;
+    pointer-events: auto;
+    cursor: ew-resize;
+    width: 12px;             /* wider hit target than the visual line */
+    margin-left: -5px;       /* centre the hit target on the visual line */
+  }
+  .gantt-today-line:hover {
+    border-left-width: 3px;
+    margin-left: -6px;
+  }
+  .gantt-today-label {
+    position: absolute; top: -4px;
+    background: #DC2626; color: #FFFFFF;
+    font-size: 10px; font-weight: 700; padding: 2px 6px;
+    border-radius: 3px; white-space: nowrap;
+    transform: translateX(-50%);
+    left: 5px;
+    pointer-events: none;
+  }
+
+  /* Bars fully in the past (end date < current today marker) are greyed out */
+  .gantt-bar.past {
+    filter: grayscale(1) opacity(0.55);
+  }
+
+  /* ---------- Unscheduled tasks ---------- */
+  .unscheduled-wrap { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px;
+                      padding: 20px 24px; margin-top: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .unscheduled-wrap h2 { font-size: 16px; font-weight: 700; color: #1F3864; margin: 0 0 4px; }
+  .unscheduled-wrap .subtitle-small { font-size: 12px; color: #6B7280; margin-bottom: 12px; }
+  .unscheduled-row {
+    display: grid; grid-template-columns: 80px 180px 1fr 120px;
+    gap: 12px; padding: 8px 0;
+    border-top: 1px solid #F0F0F2;
+    align-items: center; font-size: 13px;
+  }
+  .unscheduled-row:first-child { border-top: none; }
+  .unscheduled-row .u-id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #6B7280; font-size: 11px; }
+  .unscheduled-row .u-cat { font-size: 11px; color: #374151; }
+  .unscheduled-row .u-task { color: #1F2937; }
+  .unscheduled-row .u-status { text-align: right; }
+
+  /* ---------- Category rollup ---------- */
+  .cats-wrap { background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px;
+               padding: 20px 24px; margin-top: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .cats-wrap h2 { font-size: 16px; font-weight: 700; color: #1F3864; margin: 0 0 4px; }
+  .cats-wrap .subtitle-small { font-size: 12px; color: #6B7280; margin-bottom: 16px; }
+  .cat-row {
+    display: grid;
+    grid-template-columns: 240px 200px 240px 1fr;
+    gap: 16px; padding: 12px 0;
+    border-top: 1px solid #F0F0F2;
+    align-items: center; font-size: 13px;
+  }
+  .cat-row-5 {
+    display: grid;
+    grid-template-columns: 220px 200px 90px 220px 1fr;
+    gap: 12px; padding: 12px 0;
+    border-top: 1px solid #F0F0F2;
+    align-items: center; font-size: 13px;
+  }
+  .cat-row-5:first-of-type { border-top: none; }
+  .cat-row:first-of-type { border-top: none; }
+  .cat-name { font-weight: 600; color: #1F2937; }
+  .cat-count { color: #6B7280; font-size: 12px; }
+  .cat-dates {
+    color: #6B7280; font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-word; line-height: 1.4;
+  }
+  .cat-tasks { color: #4B5563; }
+  .cat-status-col { display: flex; }
+  .cat-tasks .task-chip {
+    display: inline-block;
+    margin: 2px 6px 2px 0;
+    padding: 2px 8px;
+    background: #F3F4F6; color: #374151;
+    border-radius: 999px;
+    font-size: 11px;
+  }
+  .cat-tasks .task-chip.done { background: #D1FAE5; color: #065F46; }
+  .cat-tasks .task-chip.pending { background: #E4D6F5; color: #5B21B6; }
+  .cat-tasks .task-chip.high { background: #FEE2E2; color: #991B1B; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px;
+           font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
+
+  .save-indicator {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #1F3864; color: #FFFFFF;
+    padding: 8px 16px; border-radius: 6px; font-size: 12px;
+    opacity: 0; transform: translateY(6px); transition: all 0.2s;
+    pointer-events: none; z-index: 100;
+  }
+  .save-indicator.show { opacity: 1; transform: translateY(0); }
+
+  .note-line { font-size: 11px; color: #9CA3AF; margin-top: 24px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Optimo <span>Recipe Database Manager · PM tracker</span></h1>
+<div class="subtitle">
+  <strong>Author:</strong> Afagh Dashti (Data Analyst) &nbsp;·&nbsp;
+  <strong>Repo:</strong> ~/Documents/GitHub/ca-datalit/webapp/staging/optimo/ &nbsp;·&nbsp;
+  <strong>Branch:</strong> App/Staging/CDIA-2858/Optimo_Analytics_Tab_v2 &nbsp;·&nbsp;
+  Data persists in your browser (localStorage). All fields are inline-editable.
+</div>
+
+<div class="kpi-row" id="kpiRow"></div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="tasks">Tasks</button>
+  <button class="tab-btn" data-tab="milestones">Milestones</button>
+</div>
+
+<div class="tab-panel active" id="panel-tasks">
+  <div class="filter-bar">
+    <label>Search</label>
+    <input type="text" id="search" placeholder="Filter by task, notes, stakeholder…" />
+    <label>Page</label>
+    <select id="filterPage"><option value="">All</option></select>
+    <label>Status</label>
+    <select id="filterStatus"><option value="">All</option></select>
+    <label>Priority</label>
+    <select id="filterPriority"><option value="">All</option></select>
+    <div class="top-actions">
+      <button id="addRow" class="primary">+ Add task</button>
+      <button id="exportCsv">Export CSV</button>
+      <button id="resetData" title="Reset all tracker data to shipped defaults">Reset</button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="tasksTable">
+      <thead>
+        <tr>
+          <th style="width:80px;">ID</th>
+          <th style="width:140px;">Page</th>
+          <th>Task</th>
+          <th style="width:100px;">Priority</th>
+          <th style="width:190px;">Status</th>
+          <th style="width:130px;">Stakeholder</th>
+          <th style="width:105px;">Start</th>
+          <th style="width:105px;">Target</th>
+          <th style="width:220px;">Notes</th>
+        </tr>
+      </thead>
+      <tbody id="tasksBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="tab-panel" id="panel-milestones">
+  <div class="gantt-wrap">
+    <h2>Timeline</h2>
+    <div class="subtitle-small">Task-level Gantt lane. Bars scaled to target dates (4 working days/week). Vertical red line marks today.</div>
+    <div class="gantt" id="ganttChart"></div>
+  </div>
+  <div class="unscheduled-wrap" id="unscheduledWrap">
+    <h2>Unscheduled tasks</h2>
+    <div class="subtitle-small">Tasks without dates. Assign a Start and Target date to move them onto the Gantt.</div>
+    <div id="unscheduledList"></div>
+  </div>
+  <div class="cats-wrap">
+    <h2>Milestones by category</h2>
+    <div class="subtitle-small">Shipped PRs first, then open work grouped into five categories.</div>
+    <div id="phasesList"></div>
+    <div id="categoryList"></div>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveIndicator">Saved</div>
+
+<div class="note-line">
+  Edit any cell directly — dropdowns for Priority / Status / Page, text for the rest. Changes save to <code>localStorage</code> under <code>optimo_pm_v4</code>. Reset restores defaults. Export CSV to upload into Sheets.
+</div>
+
+<script>
+const DEFAULT_TASKS = [
+  {
+    "id": "MA-01",
+    "page": "Menu Analytics",
+    "task": "Build initial Menu Analytics page — tabs, charts, and sign-off scorecard; wire into Optimo staging navigation",
+    "priority": "High",
+    "status": "Done",
+    "stakeholder": "",
+    "target": "",
+    "notes": "PR #1162 (merged)",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-02",
+    "page": "Menu Analytics",
+    "task": "Add Photon/Snowflake SQL queries and data_fetcher helpers (demand, popularity, performance, seasonality, trend) to power RIS/RAR/AOR",
+    "priority": "High",
+    "status": "Done",
+    "stakeholder": "",
+    "target": "",
+    "notes": "PR #1162 (merged)",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-03",
+    "page": "Menu Analytics",
+    "task": "Author DASHBOARD_MANUAL.md (metric lineage documentation)",
+    "priority": "Medium",
+    "status": "Done",
+    "stakeholder": "",
+    "target": "",
+    "notes": "PR #1162 (merged)",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-04",
+    "page": "Menu Analytics",
+    "task": "Add page-specific styling (analytics_style.css)",
+    "priority": "Low",
+    "status": "Done",
+    "stakeholder": "",
+    "target": "",
+    "notes": "PR #1162 (merged)",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-13",
+    "page": "Menu Analytics",
+    "task": "Review New Recipe logic — count was displaying values in the 20s",
+    "priority": "Low",
+    "status": "Done",
+    "stakeholder": "Emma Szalai",
+    "target": "",
+    "notes": "Feedback tracker. Fixed as part of PR #1173.",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-05",
+    "page": "Menu Analytics",
+    "task": "Add Chef's Plate final menu to Menu Analytics page",
+    "priority": "High",
+    "status": "Pending Engineering Review",
+    "stakeholder": "Karren",
+    "target": "",
+    "notes": "PR #1173",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-06",
+    "page": "Menu Analytics",
+    "task": "Add HelloFresh Final menu to Menu Analytics page",
+    "priority": "High",
+    "status": "Pending Engineering Review",
+    "stakeholder": "Linnea",
+    "target": "",
+    "notes": "PR #1173",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-07",
+    "page": "Menu Analytics",
+    "task": "Backfill EDW final-menu data to 2024-W01",
+    "priority": "Medium",
+    "status": "Pending Engineering Review",
+    "stakeholder": "Linnea",
+    "target": "",
+    "notes": "PR #1173",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-08",
+    "page": "Menu Analytics",
+    "task": "Tab 7 — add GAMP ↔ Final swap detection",
+    "priority": "Medium",
+    "status": "Pending Engineering Review",
+    "stakeholder": "Emma",
+    "target": "",
+    "notes": "PR #1173",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-09",
+    "page": "Menu Analytics",
+    "task": "Composition tab — fix New Recipe count for GAMP and Final versions",
+    "priority": "Medium",
+    "status": "Pending Engineering Review",
+    "stakeholder": "",
+    "target": "",
+    "notes": "PR #1173",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-10",
+    "page": "Menu Analytics",
+    "task": "Composition tab — add New Recipes list",
+    "priority": "Medium",
+    "status": "Pending Engineering Review",
+    "stakeholder": "Emma",
+    "target": "",
+    "notes": "PR #1173",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MA-11",
+    "page": "Menu Analytics",
+    "task": "Add Recipe Type filter (surcharge, core, etc.) to Menu Analytics",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "Linnea",
+    "target": "2026-08-25",
+    "notes": "Jira ticket. Discuss with Irene.",
+    "category": "New Filters & Controls",
+    "start_date": "2026-08-20",
+    "end_date": "2026-08-25",
+    "sequence": 5
+  },
+  {
+    "id": "MA-12",
+    "page": "Menu Analytics",
+    "task": "Investigate preference-value source in codebase and correct the Preference filter values",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "2026-10-25",
+    "notes": "Jira ticket. Companion to MAR-01.",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-10-17",
+    "end_date": "2026-10-25",
+    "sequence": 14
+  },
+  {
+    "id": "MA-14",
+    "page": "Menu Analytics",
+    "task": "Update low-score threshold (move from 4-point rating to 5) after confirming target with Tim G.",
+    "priority": "Low",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-08-31",
+    "notes": "Feedback tracker — dependency: confirm new threshold with Timothy Guo",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-08-26",
+    "end_date": "2026-08-31",
+    "sequence": 6
+  },
+  {
+    "id": "MA-15",
+    "page": "Menu Analytics",
+    "task": "Expose recipe titles inline alongside Menu Analytics charts (gut-check titles from the protein mix and other charts)",
+    "priority": "Low",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-10-16",
+    "notes": "Feedback tracker",
+    "category": "New Views & Information",
+    "start_date": "2026-10-13",
+    "end_date": "2026-10-16",
+    "sequence": 13
+  },
+  {
+    "id": "MA-16",
+    "page": "Menu Analytics",
+    "task": "Protein mix chart — break out into specific protein cuts within groups (e.g. sub-buckets under Chicken)",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-09-04",
+    "notes": "Feedback tracker",
+    "category": "New Views & Information",
+    "start_date": "2026-09-01",
+    "end_date": "2026-09-04",
+    "sequence": 7
+  },
+  {
+    "id": "MA-17",
+    "page": "Menu Analytics",
+    "task": "AI-based recommendations for Recipe Swaps and Menu Optimisation",
+    "priority": "Medium",
+    "status": "Backlog",
+    "stakeholder": "",
+    "target": "2027-02-21",
+    "notes": "Bigger change",
+    "category": "Redesigns & New Capabilities",
+    "start_date": "2026-12-12",
+    "end_date": "2027-02-21",
+    "sequence": 18
+  },
+  {
+    "id": "MV-04",
+    "page": "Menu Validation",
+    "task": "Final Menu — surface the most-up-to-date version (pull from MPS directly, not just initial GAMP upload)",
+    "priority": "High",
+    "status": "Done",
+    "stakeholder": "Emma Szalai",
+    "target": "",
+    "notes": "Feedback tracker. Landed with the PR #1173 Final-menu integration.",
+    "category": "",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "MV-01",
+    "page": "Menu Validation",
+    "task": "Menu Review — Ineligible Recipes should display protein / preference / tag assignments, with an in-tab way to update them",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-11-08",
+    "notes": "Feedback tracker",
+    "category": "New Views & Information",
+    "start_date": "2026-10-26",
+    "end_date": "2026-11-08",
+    "sequence": 15
+  },
+  {
+    "id": "MV-02",
+    "page": "Menu Validation",
+    "task": "Recipe Shortlist — add a way to filter recipes within a swap (currently a 2000+ list; workaround is ctrl-F)",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-09-30",
+    "notes": "Feedback tracker",
+    "category": "New Filters & Controls",
+    "start_date": "2026-09-23",
+    "end_date": "2026-09-30",
+    "sequence": 10
+  },
+  {
+    "id": "MV-03",
+    "page": "Menu Validation",
+    "task": "Final Menu view — make it filterable by slot architecture (currently only slot-number search)",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-10-12",
+    "notes": "Feedback tracker",
+    "category": "New Filters & Controls",
+    "start_date": "2026-10-05",
+    "end_date": "2026-10-12",
+    "sequence": 12
+  },
+  {
+    "id": "MV-05",
+    "page": "Menu Validation",
+    "task": "Menu Review — add a summary dashboard inside the tab",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "2026-10-04",
+    "notes": "Bigger change",
+    "category": "New Views & Information",
+    "start_date": "2026-10-01",
+    "end_date": "2026-10-04",
+    "sequence": 11
+  },
+  {
+    "id": "MV-06",
+    "page": "Menu Validation",
+    "task": "Redesign the Swap function in Optimo",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "2026-09-13",
+    "notes": "Bigger change — pair with MV-07",
+    "category": "Redesigns & New Capabilities",
+    "start_date": "2026-09-05",
+    "end_date": "2026-09-13",
+    "sequence": 8
+  },
+  {
+    "id": "MV-07",
+    "page": "Menu Validation",
+    "task": "Implement the new design for Swap",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "2026-09-22",
+    "notes": "Bigger change — follows MV-06",
+    "category": "Redesigns & New Capabilities",
+    "start_date": "2026-09-14",
+    "end_date": "2026-09-22",
+    "sequence": 9
+  },
+  {
+    "id": "MV-08",
+    "page": "Menu Validation",
+    "task": "Menu Upload — searchable columns not bound by the strict uploading-menu rule",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Timothy Guo",
+    "target": "2026-11-12",
+    "notes": "Feedback tracker — current workaround: manually adjust the column",
+    "category": "New Filters & Controls",
+    "start_date": "2026-11-09",
+    "end_date": "2026-11-12",
+    "sequence": 16
+  },
+  {
+    "id": "MV-09",
+    "page": "Menu Validation",
+    "task": "Funnel GAMP constraints into Optimo so Menu Analytics can show easy sign-off checks (e.g. balanced meals hit 20%)",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "Emma Szalai",
+    "target": "2026-12-11",
+    "notes": "Feedback tracker — replaces ad-hoc menu sign-off checks. Includes investigation + scoping.",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-11-13",
+    "end_date": "2026-12-11",
+    "sequence": 17
+  },
+  {
+    "id": "MAR-01",
+    "page": "Menu Architecture",
+    "task": "Correct preference values in Menu Architecture to match personalization values",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "2026-08-05",
+    "notes": "Bigger change. Companion to MA-12.",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-07-28",
+    "end_date": "2026-08-05",
+    "sequence": 1
+  },
+  {
+    "id": "RP-01",
+    "page": "Recipe Pool",
+    "task": "Correct Total_Time column in Recipe Pool",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Irene",
+    "target": "2026-08-09",
+    "notes": "Jira: Recipe_Pool_Table_Optimisation",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-08-06",
+    "end_date": "2026-08-09",
+    "sequence": 2
+  },
+  {
+    "id": "RP-02",
+    "page": "Recipe Pool",
+    "task": "Correct Cost2p column after revising it in Recipe Pool",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "Irene",
+    "target": "2026-08-13",
+    "notes": "Jira: Recipe_Pool_Table_Optimisation",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-08-10",
+    "end_date": "2026-08-13",
+    "sequence": 3
+  },
+  {
+    "id": "RP-03",
+    "page": "Recipe Pool",
+    "task": "Optimize recipe_pool_master_enriched query",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "2026-08-19",
+    "notes": "Query/pipeline optimization — foundation for downstream Recipe Pool work",
+    "category": "Data & Logic Accuracy",
+    "start_date": "2026-08-14",
+    "end_date": "2026-08-19",
+    "sequence": 4
+  },
+  {
+    "id": "DV-01",
+    "page": "Data Validation",
+    "task": "Remove the Data Validation tab or fold its code into another page",
+    "priority": "Medium",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "",
+    "notes": "Bigger change — decision needed",
+    "category": "Deployment & Refactoring",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  },
+  {
+    "id": "INF-01",
+    "page": "Infra / Deployment",
+    "task": "Discuss and agree on the process for pushing updates from Optimo Staging to Optimo Live",
+    "priority": "High",
+    "status": "Not started",
+    "stakeholder": "",
+    "target": "",
+    "notes": "Bigger change — release process. TBD pending decision.",
+    "category": "Deployment & Refactoring",
+    "start_date": "",
+    "end_date": "",
+    "sequence": null
+  }
+];
+const DEFAULT_MILESTONES = [
+  {
+    "phase": "Menu Analytics — CP + HF Final (PR #1173)",
+    "start": "2026-07-14",
+    "end": "2026-08-15",
+    "status": "Pending Engineering Review",
+    "desc": "Chef's Plate + HF Final menu, EDW backfill to 2024-W01, Tab 7 swap detection, New Recipes count fix + list."
+  }
+];
+const PAGE_ORDER = ["Menu Analytics", "Menu Validation", "Menu Architecture", "Recipe Pool", "Data Validation", "Infra / Deployment"];
+const CATEGORY_ORDER = ["Data & Logic Accuracy", "New Filters & Controls", "New Views & Information", "Redesigns & New Capabilities", "Deployment & Refactoring"];
+
+// Milestones are mutable and persisted (drag edits should survive reload).
+let MILESTONES = loadMilestones();
+const MILESTONES_KEY = "optimo_pm_v4_milestones";
+function loadMilestones() {
+  try {
+    const raw = localStorage.getItem("optimo_pm_v4_milestones");
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return DEFAULT_MILESTONES.map(m => ({...m}));
+}
+function saveMilestones() {
+  localStorage.setItem(MILESTONES_KEY, JSON.stringify(MILESTONES));
+}
+
+const STORAGE_KEY = "optimo_pm_v4";
+const STATUS_ORDER = {"Done": 0, "Pending Engineering Review": 1, "In progress": 2, "Not started": 3, "Backlog": 4, "Blocked": 5, "Cancelled": 6};
+const STATUSES = ["Done","Pending Engineering Review","In progress","Not started","Backlog","Blocked","Cancelled"];
+const PRIORITIES = ["High","Medium","Low"];
+
+// Today marker — session-only, always resets to real today on reload
+let todayIso = (function() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+})();
+
+// Category status overrides — display-only. Keyed by category name.
+const CATEGORY_STATUS_KEY = STORAGE_KEY + "_category_status";
+let categoryStatus = loadCategoryStatus();
+function loadCategoryStatus() {
+  try {
+    const raw = localStorage.getItem(CATEGORY_STATUS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return {};
+}
+function saveCategoryStatus() {
+  localStorage.setItem(CATEGORY_STATUS_KEY, JSON.stringify(categoryStatus));
+}
+function categoryDefaultStatus(catName) {
+  // Derive a sensible default from the tasks in the category
+  const members = tasks.filter(t => t.category === catName);
+  if (members.length === 0) return "Not started";
+  if (members.every(t => t.status === "Done" || t.status === "Cancelled")) return "Done";
+  if (members.some(t => t.status === "In progress" || t.status === "Pending Engineering Review")) return "In progress";
+  return "Not started";
+}
+function currentCategoryStatus(catName) {
+  return categoryStatus[catName] || categoryDefaultStatus(catName);
+}
+
+let tasks = load();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return DEFAULT_TASKS.map(t => ({...t}));
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  saveMilestones();
+  flashSaved();
+}
+function slug(s) { return String(s).replace(/\s+/g,"-"); }
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[ch]));
+}
+
+let saveTimer = null;
+function flashSaved() {
+  const el = document.getElementById("saveIndicator");
+  el.classList.add("show");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove("show"), 800);
+}
+
+function populateFilters() {
+  const pages = [...new Set(tasks.map(t => t.page))].sort((a,b) => {
+    const ai = PAGE_ORDER.indexOf(a), bi = PAGE_ORDER.indexOf(b);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+  const pageSel = document.getElementById("filterPage");
+  const statSel = document.getElementById("filterStatus");
+  const prioSel = document.getElementById("filterPriority");
+  const prev = {page: pageSel.value, status: statSel.value, prio: prioSel.value};
+  [pageSel, statSel, prioSel].forEach(s => { s.innerHTML = '<option value="">All</option>'; });
+  pages.forEach(a => { const o=document.createElement("option"); o.textContent=a; o.value=a; pageSel.appendChild(o); });
+  STATUSES.forEach(a => { const o=document.createElement("option"); o.textContent=a; o.value=a; statSel.appendChild(o); });
+  PRIORITIES.forEach(a => { const o=document.createElement("option"); o.textContent=a; o.value=a; prioSel.appendChild(o); });
+  pageSel.value = prev.page; statSel.value = prev.status; prioSel.value = prev.prio;
+}
+
+function renderKpis() {
+  const total = tasks.length;
+  const done = tasks.filter(t => t.status === "Done").length;
+  const pending = tasks.filter(t => t.status === "Pending Engineering Review").length;
+  const inProg = tasks.filter(t => t.status === "In progress").length;
+  const notStarted = tasks.filter(t => t.status === "Not started").length;
+  const hiOpen = tasks.filter(t => t.priority === "High" && t.status !== "Done" && t.status !== "Cancelled").length;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById("kpiRow").innerHTML = `
+    <div class="kpi"><div class="label">Total</div><div class="value">${total}</div><div class="sub">all pages</div></div>
+    <div class="kpi"><div class="label">Done</div><div class="value">${done}</div><div class="sub">${pct}% of total</div></div>
+    <div class="kpi"><div class="label">Pending Eng review</div><div class="value">${pending}</div><div class="sub">shipped, awaiting review</div></div>
+    <div class="kpi"><div class="label">In progress</div><div class="value">${inProg}</div><div class="sub">active</div></div>
+    <div class="kpi"><div class="label">Not started</div><div class="value">${notStarted}</div><div class="sub">queued</div></div>
+    <div class="kpi"><div class="label">High priority open</div><div class="value">${hiOpen}</div><div class="sub">not yet done</div></div>
+  `;
+}
+
+function currentFiltered() {
+  const q = document.getElementById("search").value.toLowerCase().trim();
+  const page = document.getElementById("filterPage").value;
+  const status = document.getElementById("filterStatus").value;
+  const prio = document.getElementById("filterPriority").value;
+  return tasks.filter(t => {
+    if (page && t.page !== page) return false;
+    if (status && t.status !== status) return false;
+    if (prio && t.priority !== prio) return false;
+    if (q) {
+      const hay = `${t.id} ${t.page} ${t.task} ${t.stakeholder} ${t.notes}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function pageOptionsHtml(selected) {
+  const set = new Set([...PAGE_ORDER, ...tasks.map(t => t.page), selected].filter(Boolean));
+  const ordered = [
+    ...PAGE_ORDER.filter(p => set.has(p)),
+    ...[...set].filter(p => !PAGE_ORDER.includes(p)),
+  ];
+  return ordered.map(p =>
+    `<option ${p === selected ? "selected" : ""}>${escapeHtml(p)}</option>`
+  ).join("");
+}
+
+function taskRowHtml(idx, t) {
+  const statusCls = "status-" + slug(t.status);
+  const prioCls = "prio-" + t.priority;
+  const statusOptions = STATUSES.map(s =>
+    `<option ${s === t.status ? "selected" : ""}>${s}</option>`
+  ).join("");
+  const prioOptions = PRIORITIES.map(p =>
+    `<option ${p === t.priority ? "selected" : ""}>${p}</option>`
+  ).join("");
+  const pageOpts = pageOptionsHtml(t.page);
+  return `<tr class="task-row" data-idx="${idx}">
+    <td class="id-cell">
+      <span class="cell-edit" data-field="id" data-placeholder="ID" contenteditable="true"
+        ${!t.id ? 'data-empty="1"' : ""}>${escapeHtml(t.id || "")}</span>
+      <button class="row-delete" title="Delete row" data-action="delete">×</button>
+    </td>
+    <td>
+      <select class="cell-select-page" data-field="page">${pageOpts}</select>
+    </td>
+    <td>
+      <span class="cell-edit" data-field="task" data-placeholder="Task description" contenteditable="true"
+        ${!t.task ? 'data-empty="1"' : ""}>${escapeHtml(t.task || "")}</span>
+    </td>
+    <td>
+      <select class="cell-select ${prioCls}" data-field="priority">${prioOptions}</select>
+    </td>
+    <td>
+      <select class="cell-select ${statusCls}" data-field="status" style="min-width:180px;">${statusOptions}</select>
+    </td>
+    <td>
+      <span class="cell-edit" data-field="stakeholder" data-placeholder="—" contenteditable="true"
+        ${!t.stakeholder ? 'data-empty="1"' : ""}>${escapeHtml(t.stakeholder || "")}</span>
+    </td>
+    <td>
+      <span class="cell-edit" data-field="start_date" data-placeholder="YYYY-MM-DD" contenteditable="true"
+        ${!t.start_date ? 'data-empty="1"' : ""}>${escapeHtml(t.start_date || "")}</span>
+    </td>
+    <td>
+      <span class="cell-edit" data-field="target" data-placeholder="YYYY-MM-DD" contenteditable="true"
+        ${!t.target ? 'data-empty="1"' : ""}>${escapeHtml(t.target || "")}</span>
+    </td>
+    <td>
+      <span class="cell-edit" data-field="notes" data-placeholder="—" contenteditable="true"
+        ${!t.notes ? 'data-empty="1"' : ""}>${escapeHtml(t.notes || "")}</span>
+    </td>
+  </tr>`;
+}
+
+function renderTasks() {
+  const rows = currentFiltered();
+  const byPage = {};
+  rows.forEach(t => { (byPage[t.page] = byPage[t.page] || []).push(t); });
+  const orderedPages = [
+    ...PAGE_ORDER.filter(p => byPage[p]),
+    ...Object.keys(byPage).filter(p => !PAGE_ORDER.includes(p)),
+  ];
+
+  let html = "";
+  for (const page of orderedPages) {
+    const list = byPage[page];
+    list.sort((a,b) => (STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99));
+    const doneCount = list.filter(x => x.status === "Done").length;
+    // Banner row also carries a page-editor for row moves via dropdown on any cell,
+    // but we keep the banner static and drive page changes via a "Move to page" mini-dropdown
+    // inline on each row. For clarity we keep the banner clean; the page changer lives in the ID column tooltip.
+    html += `<tr class="page-banner" data-page="${escapeHtml(page)}"><td colspan="8">${escapeHtml(page)}
+      <span class="page-count">${list.length} tasks · ${doneCount} done</span></td></tr>`;
+    for (const t of list) {
+      const idx = tasks.indexOf(t);
+      html += taskRowHtml(idx, t);
+    }
+  }
+  if (!html) {
+    html = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#6B7280;">No tasks match filters.</td></tr>`;
+  }
+  document.getElementById("tasksBody").innerHTML = html;
+}
+
+function parseDate(s) {
+  if (!s || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
+  return new Date(s + "T00:00:00");
+}
+
+function fmtRange(a, b) {
+  return (a || "—") + " → " + (b || "…");
+}
+
+function barLabelText(it) {
+  return it.id || it.label.substring(0, 30);
+}
+
+function ganttBarClass(t) {
+  if (t.status === "Done") return "gantt-bar-done";
+  if (t.status === "Pending Engineering Review") return "gantt-bar-pending";
+  if (t.status === "In progress") return "gantt-bar-inprogress";
+  if (t.status === "Backlog") return "gantt-bar-backlog";
+  if (t.status === "Not started") {
+    if (t.priority === "High") return "gantt-bar-notstarted-High";
+    if (t.priority === "Low") return "gantt-bar-notstarted-Low";
+    return "gantt-bar-notstarted-Medium";
+  }
+  return "gantt-bar-notstarted-Medium";
+}
+
+// Combined datasource for the Gantt: shipped PR milestones + open tasks with dates
+// Each item carries a `kind` ("milestone"|"task"), an index into MILESTONES or `tasks`, and its sequence.
+// For milestones whose start is in the past, the visible bar starts from today (countdown mode).
+function ganttItems() {
+  const items = [];
+  const _tNow = new Date(); _tNow.setHours(0,0,0,0);
+  const todayIsoLocal = `${_tNow.getFullYear()}-${String(_tNow.getMonth()+1).padStart(2,"0")}-${String(_tNow.getDate()).padStart(2,"0")}`;
+  MILESTONES.forEach((m, mi) => {
+    // Skip fully-done milestones (their whole span is in the past — no bar needed)
+    if (m.status === "Done") return;
+    if (m.start && m.end) {
+      // Countdown behaviour: if start < today, the effective visible start is today
+      // and the label / tooltip talk in "N days remaining" rather than the past start.
+      const startedInPast = m.start < todayIsoLocal;
+      const effectiveStart = startedInPast ? todayIsoLocal : m.start;
+      const remainingDays = daysBetween(todayIsoLocal, m.end) + 1;
+      items.push({
+        kind: "milestone", mIdx: mi,
+        id: "", label: m.phase,
+        start: effectiveStart, end: m.end,
+        cls: m.status === "Done" ? "gantt-bar-done" :
+             m.status === "Pending Engineering Review" ? "gantt-bar-pending" :
+             "gantt-bar-inprogress",
+        tooltip: startedInPast
+          ? `${m.phase} — ${m.status} — ends ${m.end} — ${remainingDays} day${remainingDays === 1 ? "" : "s"} remaining`
+          : `${m.phase} — ${m.status} — ${fmtRange(m.start, m.end)}`,
+        sequence: null,
+        countdown: startedInPast ? remainingDays : null,
+      });
+    }
+  });
+  tasks.forEach((t, ti) => {
+    // Skip Done and Cancelled tasks — they don't need to clutter the future-facing Gantt.
+    if (t.status === "Done" || t.status === "Cancelled") return;
+    if (t.start_date && t.end_date) {
+      items.push({
+        kind: "task", tIdx: ti,
+        id: t.id, label: t.task,
+        start: t.start_date, end: t.end_date,
+        cls: ganttBarClass(t),
+        tooltip: `${t.id} — ${t.task} — ${t.status} — ${fmtRange(t.start_date, t.end_date)}`,
+        sequence: t.sequence,
+      });
+    }
+  });
+  // Sort: milestones first (by start), then tasks by sequence
+  items.sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === "milestone" ? -1 : 1;
+    if (a.kind === "task") return (a.sequence ?? 999) - (b.sequence ?? 999);
+    return a.start.localeCompare(b.start);
+  });
+  return items;
+}
+
+function renderGantt() {
+  const items = ganttItems();
+  const container = document.getElementById("ganttChart");
+  if (items.length === 0) {
+    container.innerHTML = '<div style="color:#6B7280;font-size:13px;padding:12px;">No dated items to plot.</div>';
+    return;
+  }
+  // Fixed visible range: real today → end of Nov 2026.
+  // The `todayIso` marker (which the user can drag) is *independent* of the range start.
+  // Bars ending before todayIso are greyed out; bars extending past the visible range fade.
+  const _realToday = new Date();
+  _realToday.setHours(0, 0, 0, 0);
+  const rangeStart = _realToday;
+  const rangeEnd = new Date(2026, 10, 30); // Nov 30, 2026 (month is 0-indexed)
+  const todayMarkerDate = parseDate(todayIso) || _realToday;
+  const totalDays = Math.round((rangeEnd - rangeStart) / (1000 * 60 * 60 * 24)) + 1;
+
+  const pctFor = (d) => {
+    const days = Math.round((d - rangeStart) / (1000 * 60 * 60 * 24));
+    return (days / totalDays) * 100;
+  };
+
+  // Weekly tick markers (Mondays) with an ISO week label. Every 4th week also shows the month.
+  const weeks = [];
+  const firstMonday = new Date(rangeStart);
+  while (firstMonday.getDay() !== 1) firstMonday.setDate(firstMonday.getDate() + 1);
+  let wcur = new Date(firstMonday);
+  while (wcur <= rangeEnd) {
+    weeks.push(new Date(wcur));
+    wcur = new Date(wcur.getFullYear(), wcur.getMonth(), wcur.getDate() + 7);
+  }
+  function isoWeekLabel(d) {
+    // Compute ISO week number
+    const target = new Date(d);
+    const dayNum = (target.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNum + 3);
+    const firstThursday = new Date(target.getFullYear(), 0, 4);
+    const diff = target - firstThursday;
+    const week = 1 + Math.round(diff / (7 * 86400000));
+    return `W${String(week).padStart(2, "0")}`;
+  }
+  const monthLabelHtml = weeks.map((m, i) => {
+    const wk = isoWeekLabel(m);
+    // Show month label the first time we cross into a new month
+    const isNewMonth = i === 0 || m.getMonth() !== weeks[i - 1].getMonth();
+    const monthTxt = m.toLocaleDateString("en-US", { month: "short" });
+    const cls = isNewMonth ? "gantt-month-tick gantt-month-marker" : "gantt-month-tick gantt-week-marker";
+    const label = isNewMonth ? `${monthTxt} ${wk}` : wk;
+    return `<div class="${cls}" style="left:${pctFor(m)}%">${label}</div>`;
+  }).join("");
+
+  // Today marker — draggable. Positioned by `todayIso` (which may drift after drags).
+  // Renders even if before rangeStart (pinned to left edge) or after rangeEnd (pinned to right).
+  let todayOverlayHtml = "";
+  {
+    let pct = pctFor(todayMarkerDate);
+    let clamped = false;
+    if (pct < 0) { pct = 0; clamped = true; }
+    if (pct > 100) { pct = 100; clamped = true; }
+    const labelStyle = pct < 3
+      ? "left: 5px; transform: translateX(0);"
+      : (pct > 97 ? "left: -5px; transform: translateX(-100%);" : "");
+    const monthDay = todayMarkerDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    todayOverlayHtml = `
+      <div class="gantt-today-overlay">
+        <div class="gantt-today-line" style="left:${pct}%" title="Drag to move — currently ${todayIso}">
+          <div class="gantt-today-label" style="${labelStyle}">${monthDay}${clamped ? " (off-chart)" : ""}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Store the current range on the container so drag handlers can read it back
+  window._ganttRange = { start: rangeStart.getTime(), totalDays };
+
+  // Rows: label column + track column with a positioned bar
+  const rowsHtml = items.map((it, idx) => {
+    const s = parseDate(it.start);
+    const e = parseDate(it.end);
+    const startsBefore = s < rangeStart;
+    const endsAfter = e > rangeEnd;
+    const clippedStart = startsBefore ? rangeStart : s;
+    const clippedEnd = endsAfter ? rangeEnd : e;
+    const left = pctFor(clippedStart);
+    const rightEdge = pctFor(new Date(clippedEnd.getTime() + 24*60*60*1000));
+    let width = Math.max(1.2, rightEdge - left);
+    if (left + width > 100) width = 100 - left;
+    const isPast = e < todayMarkerDate;
+    // Left-overflow fade suppressed: the visible portion starts cleanly at the range start.
+    const overflowCls = (endsAfter ? " overflow-right" : "") + (isPast ? " past" : "");
+    const rowAttrs = it.kind === "task"
+      ? `data-kind="task" data-tidx="${it.tIdx}" data-seq="${it.sequence}" draggable="true"`
+      : `data-kind="milestone" data-midx="${it.mIdx}" draggable="true"`;
+    return `
+      <div class="gantt-row" ${rowAttrs}>
+        <div class="gantt-label">
+          <span class="gantt-drag-handle" title="Drag to reorder">⋮⋮</span>
+          ${it.id ? `<span class="gantt-label-id">${escapeHtml(it.id)}</span>` : ""}
+          <span class="gantt-label-task">${escapeHtml(it.label)}</span>
+        </div>
+        <div class="gantt-track">
+          <div class="gantt-bar ${it.cls}${overflowCls}" style="left:${left}%; width:${width}%;"
+               data-drag="move">
+            <div class="gantt-bar-resize left" data-drag="resize-left"></div>
+            <span style="pointer-events:none;">${escapeHtml(barLabelText(it))}${endsAfter ? " ›" : ""}</span>
+            ${!endsAfter ? '<div class="gantt-bar-resize right" data-drag="resize-right"></div>' : ""}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  container.innerHTML = `
+    <div class="gantt-container">
+      ${todayOverlayHtml}
+      <div class="gantt-row gantt-header">
+        <div class="gantt-label"><strong style="color:#6B7280;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;">Task</strong></div>
+        <div class="gantt-track-header">${monthLabelHtml}</div>
+      </div>
+      ${rowsHtml}
+    </div>
+  `;
+}
+
+function statusSelectHtml(currentStatus, dataAttrs) {
+  const opts = STATUSES.map(s =>
+    `<option ${s === currentStatus ? "selected" : ""}>${s}</option>`
+  ).join("");
+  const cls = "status-" + slug(currentStatus);
+  return `<select class="cell-select ${cls}" style="min-width:180px;" ${dataAttrs}>${opts}</select>`;
+}
+
+function renderPhases() {
+  const _tNow = new Date(); _tNow.setHours(0,0,0,0);
+  const todayIsoLocal = `${_tNow.getFullYear()}-${String(_tNow.getMonth()+1).padStart(2,"0")}-${String(_tNow.getDate()).padStart(2,"0")}`;
+  document.getElementById("phasesList").innerHTML = MILESTONES.map((m, mi) => {
+    let dateStr = fmtRange(m.start, m.end);
+    if (m.status !== "Done" && m.start && m.end && m.start < todayIsoLocal) {
+      const remaining = daysBetween(todayIsoLocal, m.end) + 1;
+      dateStr = `ends ${m.end} · ${remaining} day${remaining === 1 ? "" : "s"} remaining`;
+    }
+    const sel = statusSelectHtml(m.status, `data-milestone-idx="${mi}"`);
+    return `
+      <div class="cat-row">
+        <div class="cat-name">${escapeHtml(m.phase)}</div>
+        <div class="cat-status-col">${sel}</div>
+        <div class="cat-dates">${dateStr}</div>
+        <div class="cat-tasks">${escapeHtml(m.desc)}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderCategories() {
+  const byCat = {};
+  tasks.forEach(t => {
+    if (!t.category) return;
+    (byCat[t.category] = byCat[t.category] || []).push(t);
+  });
+  const cats = [
+    ...CATEGORY_ORDER.filter(c => byCat[c]),
+    ...Object.keys(byCat).filter(c => !CATEGORY_ORDER.includes(c)),
+  ];
+  const html = cats.map(cat => {
+    const list = byCat[cat];
+    const done = list.filter(t => t.status === "Done").length;
+    const dated = list.filter(t => t.start_date && t.end_date);
+    let dateRange = "unscheduled";
+    if (dated.length) {
+      const starts = dated.map(t => t.start_date).sort();
+      const ends = dated.map(t => t.end_date).sort();
+      dateRange = fmtRange(starts[0], ends[ends.length - 1]);
+    }
+    const chips = list.map(t => {
+      const cls = t.status === "Done" ? "done" :
+                  t.status === "Pending Engineering Review" ? "pending" :
+                  (t.priority === "High" ? "high" : "");
+      return `<span class="task-chip ${cls}" title="${escapeHtml(t.task)}">${escapeHtml(t.id)}</span>`;
+    }).join("");
+    const catStatus = currentCategoryStatus(cat);
+    const sel = statusSelectHtml(catStatus, `data-category="${escapeHtml(cat)}"`);
+    return `
+      <div class="cat-row-5">
+        <div class="cat-name">${escapeHtml(cat)}</div>
+        <div>${sel}</div>
+        <div class="cat-count">${list.length} task${list.length === 1 ? "" : "s"}${done ? ` · ${done} done` : ""}</div>
+        <div class="cat-dates">${dateRange}</div>
+        <div class="cat-tasks">${chips}</div>
+      </div>
+    `;
+  }).join("");
+  document.getElementById("categoryList").innerHTML = html;
+}
+
+function renderUnscheduled() {
+  const list = tasks.filter(t =>
+    (!t.start_date || !t.end_date) &&
+    t.status !== "Done" &&
+    t.status !== "Cancelled"
+  );
+  const wrap = document.getElementById("unscheduledWrap");
+  if (list.length === 0) {
+    wrap.style.display = "none";
+    return;
+  }
+  wrap.style.display = "";
+  document.getElementById("unscheduledList").innerHTML = list.map(t => `
+    <div class="unscheduled-row">
+      <div class="u-id">${escapeHtml(t.id || "")}</div>
+      <div class="u-cat">${escapeHtml(t.category || t.page || "—")}</div>
+      <div class="u-task">${escapeHtml(t.task || "")}</div>
+      <div class="u-status"><span class="badge status-${slug(t.status)}">${t.status}</span></div>
+    </div>
+  `).join("");
+}
+
+function renderMilestones() {
+  renderPhases();
+  renderCategories();
+  renderGantt();
+  renderUnscheduled();
+}
+
+// ================= Gantt drag: move/resize bars with ripple =================
+
+function dateToIso(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function addDays(iso, days) {
+  const d = parseDate(iso);
+  d.setDate(d.getDate() + days);
+  return dateToIso(d);
+}
+function daysBetween(a, b) {
+  return Math.round((parseDate(b) - parseDate(a)) / 86400000);
+}
+
+// Read the current pixel-to-days conversion off the currently-rendered chart
+function pxPerDay() {
+  const track = document.querySelector(".gantt-container .gantt-track");
+  if (!track) return 0;
+  const trackRect = track.getBoundingClientRect();
+  const totalDays = window._ganttRange ? window._ganttRange.totalDays : 1;
+  return trackRect.width / totalDays;
+}
+
+let dragState = null;
+let dragTooltipEl = null;
+
+function ensureTooltip() {
+  if (!dragTooltipEl) {
+    dragTooltipEl = document.createElement("div");
+    dragTooltipEl.className = "gantt-drag-tooltip";
+    dragTooltipEl.style.display = "none";
+    document.body.appendChild(dragTooltipEl);
+  }
+  return dragTooltipEl;
+}
+function showTooltip(x, y, htmlContent) {
+  const el = ensureTooltip();
+  el.style.display = "block";
+  el.style.left = (x + 12) + "px";
+  el.style.top = (y + 12) + "px";
+  el.innerHTML = htmlContent;
+}
+function hideTooltip() { if (dragTooltipEl) dragTooltipEl.style.display = "none"; }
+
+// -------- Hover tooltip on Gantt bars --------
+document.addEventListener("mouseleave", (e) => {
+  if (!dragState) hideTooltip();
+}, true);
+document.addEventListener("mousemove", (e) => {
+  if (dragState) return;   // drag has its own tooltip
+  const bar = e.target.closest(".gantt-bar");
+  if (!bar) { hideTooltip(); return; }
+  const row = bar.closest(".gantt-row");
+  if (!row) { hideTooltip(); return; }
+  const info = getRowInfo(row);
+  if (!info) { hideTooltip(); return; }
+  // Countdown mode: milestone whose start is in the past
+  const _tNow = new Date(); _tNow.setHours(0,0,0,0);
+  const todayIsoLocal = `${_tNow.getFullYear()}-${String(_tNow.getMonth()+1).padStart(2,"0")}-${String(_tNow.getDate()).padStart(2,"0")}`;
+  const isCountdown = row.dataset.kind === "milestone" && info.start && info.start < todayIsoLocal;
+  let datesLine;
+  if (isCountdown) {
+    const remainingDays = daysBetween(todayIsoLocal, info.end) + 1;
+    datesLine = `ends ${info.end} <span style="opacity:0.7;">· ${remainingDays} day${remainingDays === 1 ? "" : "s"} remaining</span>`;
+  } else {
+    const durationDays = daysBetween(info.start, info.end) + 1;
+    const dur = durationDays === 1 ? "1 day" : `${durationDays} days`;
+    datesLine = `${info.start} → ${info.end} <span style="opacity:0.7;">· ${dur}</span>`;
+  }
+  const html = `
+    <div style="font-weight:700; margin-bottom:4px;">${escapeHtmlPlain(info.title)}</div>
+    <div style="opacity:0.85; font-size:10px;">${info.id ? info.id + " · " : ""}${info.status || ""}</div>
+    <div style="margin-top:4px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10px;">
+      ${datesLine}
+    </div>
+  `;
+  showTooltip(e.clientX, e.clientY, html);
+});
+
+function escapeHtmlPlain(s) {
+  return String(s ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[ch]));
+}
+
+function getRowInfo(row) {
+  if (!row) return null;
+  if (row.dataset.kind === "task") {
+    const t = tasks[parseInt(row.dataset.tidx, 10)];
+    if (!t) return null;
+    return { id: t.id, title: t.task, status: t.status,
+             start: t.start_date, end: t.end_date };
+  }
+  if (row.dataset.kind === "milestone") {
+    const m = MILESTONES[parseInt(row.dataset.midx, 10)];
+    if (!m) return null;
+    return { id: "", title: m.phase, status: m.status,
+             start: m.start, end: m.end };
+  }
+  return null;
+}
+
+// Attach bar-drag listeners on mousedown; drag captures window-level move/up.
+document.addEventListener("mousedown", (e) => {
+  // Priority: dragging the Today line
+  if (e.target.classList && e.target.classList.contains("gantt-today-line")) {
+    e.preventDefault();
+    const perDay = pxPerDay();
+    if (perDay <= 0) return;
+    dragState = {
+      dragType: "today",
+      startX: e.clientX,
+      origToday: todayIso,
+      perDay,
+      lastDelta: 0,
+    };
+    document.body.style.cursor = "ew-resize";
+    return;
+  }
+  const dragType = e.target.dataset.drag;
+  if (!dragType) return;
+  const row = e.target.closest(".gantt-row");
+  if (!row) return;
+  e.preventDefault();
+
+  const perDay = pxPerDay();
+  if (perDay <= 0) return;
+
+  const kind = row.dataset.kind;
+  const idx = kind === "task" ? parseInt(row.dataset.tidx, 10) : parseInt(row.dataset.midx, 10);
+  const source = kind === "task" ? tasks[idx] : MILESTONES[parseInt(row.dataset.midx, 10)];
+
+  const startIso = kind === "task" ? source.start_date : source.start;
+  const endIso = kind === "task" ? source.end_date : source.end;
+  const seq = kind === "task" ? source.sequence : null;
+
+  dragState = {
+    dragType, kind, idx, seq,
+    startX: e.clientX,
+    origStart: startIso, origEnd: endIso,
+    perDay,
+    barEl: e.target.closest(".gantt-bar"),
+    lastDelta: 0,
+  };
+  if (dragState.barEl) dragState.barEl.classList.add("dragging");
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!dragState) return;
+  const deltaPx = e.clientX - dragState.startX;
+  const deltaDays = Math.round(deltaPx / dragState.perDay);
+
+  // Today-line drag: just move the marker, no ripple, no save
+  if (dragState.dragType === "today") {
+    if (deltaDays !== dragState.lastDelta) {
+      dragState.lastDelta = deltaDays;
+      todayIso = addDays(dragState.origToday, deltaDays);
+      renderGantt();
+    }
+    const dt = parseDate(todayIso);
+    const monthDay = dt ? dt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : todayIso;
+    showTooltip(e.clientX, e.clientY, `Today marker · ${monthDay}`);
+    return;
+  }
+
+  if (deltaDays === dragState.lastDelta) {
+    showTooltip(e.clientX, e.clientY, ganttTooltipText(dragState, deltaDays));
+    return;
+  }
+  dragState.lastDelta = deltaDays;
+
+  // Apply the delta to the source item, based on drag type
+  applyDrag(dragState, deltaDays);
+  showTooltip(e.clientX, e.clientY, ganttTooltipText(dragState, deltaDays));
+  renderGantt();
+  renderPhases();
+  renderCategories();
+  renderKpis();
+});
+
+document.addEventListener("mouseup", () => {
+  if (!dragState) return;
+  hideTooltip();
+  if (dragState.barEl) dragState.barEl.classList.remove("dragging");
+  document.body.style.cursor = "";
+  // Today-line drag is session-only — don't save it
+  if (dragState.dragType !== "today") save();
+  dragState = null;
+});
+
+function ganttTooltipText(ds, delta) {
+  const label = ds.kind === "task" ? tasks[ds.idx].id : MILESTONES[ds.idx].phase;
+  const startEnd = ds.kind === "task"
+    ? `${tasks[ds.idx].start_date} → ${tasks[ds.idx].end_date}`
+    : `${MILESTONES[ds.idx].start} → ${MILESTONES[ds.idx].end}`;
+  const sign = delta > 0 ? "+" : "";
+  return `${label} · ${startEnd} (${sign}${delta}d)`;
+}
+
+function applyDrag(ds, deltaDays) {
+  // Compute the tentative new start/end from the ORIGINAL positions + total deltaDays
+  let newStart = ds.origStart, newEnd = ds.origEnd;
+  if (ds.dragType === "move") {
+    newStart = addDays(ds.origStart, deltaDays);
+    newEnd = addDays(ds.origEnd, deltaDays);
+  } else if (ds.dragType === "resize-left") {
+    newStart = addDays(ds.origStart, deltaDays);
+    // Don't allow start to pass end
+    if (parseDate(newStart) > parseDate(newEnd)) newStart = newEnd;
+  } else if (ds.dragType === "resize-right") {
+    newEnd = addDays(ds.origEnd, deltaDays);
+    if (parseDate(newEnd) < parseDate(newStart)) newEnd = newStart;
+  }
+
+  if (ds.kind === "task") {
+    const t = tasks[ds.idx];
+    const oldStart = t.start_date, oldEnd = t.end_date;
+    t.start_date = newStart;
+    t.end_date = newEnd;
+    t.target = newEnd;
+
+    // Ripple: if this was a move (both edges shifted), OR a resize-right that pushed the end later,
+    // shift every task with a higher sequence by the same delta between OLD state and NEW state of this task's END date.
+    // Sequence-based ripple (top-to-bottom Gantt order).
+    if (ds.seq != null) {
+      let rippleDelta = 0;
+      if (ds.dragType === "move") {
+        rippleDelta = daysBetween(oldStart, newStart);
+      } else if (ds.dragType === "resize-right") {
+        rippleDelta = daysBetween(oldEnd, newEnd);
+      } else if (ds.dragType === "resize-left") {
+        // Left resize doesn't push subsequent tasks
+        rippleDelta = 0;
+      }
+      if (rippleDelta !== 0) {
+        tasks.forEach(other => {
+          if (other === t) return;
+          if (other.sequence != null && other.sequence > ds.seq &&
+              other.start_date && other.end_date) {
+            other.start_date = addDays(other.start_date, rippleDelta);
+            other.end_date = addDays(other.end_date, rippleDelta);
+            other.target = other.end_date;
+          }
+        });
+      }
+    }
+  } else {
+    // Milestone (PR) — just update dates, no ripple
+    MILESTONES[ds.idx].start = newStart;
+    MILESTONES[ds.idx].end = newEnd;
+  }
+}
+
+// ================= Row reorder via HTML5 drag ==================
+let reorderState = null;
+
+document.addEventListener("dragstart", (e) => {
+  const row = e.target.closest(".gantt-row");
+  if (!row || row.dataset.kind !== "task") return;
+  // Only initiate reorder drag when the user grabbed the drag-handle icon.
+  // If they started on a bar or elsewhere, cancel the drag so bar-drag can run.
+  if (!e.target.classList || !e.target.classList.contains("gantt-drag-handle")) {
+    e.preventDefault();
+    return;
+  }
+  reorderState = { fromSeq: parseInt(row.dataset.seq, 10) };
+  row.classList.add("reorder-source");
+  e.dataTransfer.effectAllowed = "move";
+  // Firefox needs data to actually initiate drag
+  e.dataTransfer.setData("text/plain", row.dataset.seq);
+});
+
+document.addEventListener("dragover", (e) => {
+  if (!reorderState) return;
+  const row = e.target.closest(".gantt-row");
+  if (!row || row.dataset.kind !== "task") return;
+  e.preventDefault();
+  document.querySelectorAll(".gantt-row.reorder-target-above, .gantt-row.reorder-target-below")
+    .forEach(r => r.classList.remove("reorder-target-above", "reorder-target-below"));
+  const rect = row.getBoundingClientRect();
+  const middle = rect.top + rect.height / 2;
+  if (e.clientY < middle) row.classList.add("reorder-target-above");
+  else row.classList.add("reorder-target-below");
+});
+
+document.addEventListener("drop", (e) => {
+  if (!reorderState) return;
+  const row = e.target.closest(".gantt-row");
+  if (!row || row.dataset.kind !== "task") { cleanupReorder(); return; }
+  e.preventDefault();
+  const toSeq = parseInt(row.dataset.seq, 10);
+  const insertAbove = row.classList.contains("reorder-target-above");
+  reorderTasks(reorderState.fromSeq, toSeq, insertAbove);
+  cleanupReorder();
+  save();
+  renderGantt();
+  renderPhases();
+  renderCategories();
+  renderKpis();
+});
+
+document.addEventListener("dragend", () => cleanupReorder());
+
+function cleanupReorder() {
+  document.querySelectorAll(".gantt-row.reorder-source, .gantt-row.reorder-target-above, .gantt-row.reorder-target-below")
+    .forEach(r => r.classList.remove("reorder-source", "reorder-target-above", "reorder-target-below"));
+  reorderState = null;
+}
+
+function reorderTasks(fromSeq, toSeq, insertAbove) {
+  if (fromSeq === toSeq) return;
+  // Build the ordered list of dated tasks by sequence
+  const dated = tasks.filter(t => t.sequence != null && t.start_date && t.end_date);
+  dated.sort((a,b) => a.sequence - b.sequence);
+  const fromIdx = dated.findIndex(t => t.sequence === fromSeq);
+  let toIdx = dated.findIndex(t => t.sequence === toSeq);
+  if (fromIdx === -1 || toIdx === -1) return;
+  const [moved] = dated.splice(fromIdx, 1);
+  // If we removed something before toIdx, the target moved up by one
+  if (fromIdx < toIdx) toIdx--;
+  const insertAt = insertAbove ? toIdx : toIdx + 1;
+  dated.splice(insertAt, 0, moved);
+
+  // Recompute dates back-to-back preserving each task's duration.
+  // Start from the earliest current start date of the first task in the new order.
+  const anchorStart = dated[0].start_date;
+  let cursor = anchorStart;
+  dated.forEach((t, i) => {
+    const dur = daysBetween(t.start_date, t.end_date); // 0-based (start=end → 0 days)
+    t.sequence = i + 1;
+    t.start_date = cursor;
+    t.end_date = addDays(cursor, dur);
+    t.target = t.end_date;
+    cursor = addDays(t.end_date, 1); // next task starts the day after
+  });
+}
+
+// -------- edit handlers --------
+function commitCell(row, field, value) {
+  const idx = parseInt(row.dataset.idx, 10);
+  if (isNaN(idx)) return;
+  const t = tasks[idx];
+  t[field] = value;
+
+  // Sync target ↔ end_date and normalise start_date/end_date so Gantt picks up edits:
+  // - Editing "target" also updates "end_date" (that's what Gantt reads).
+  // - If a Target date is entered but Start is still blank, auto-fill Start = today
+  //   so the task shows up on the Gantt as a proper bar.
+  if (field === "target") {
+    t.end_date = value;
+    if (value && !t.start_date) {
+      const d = new Date(); d.setHours(0,0,0,0);
+      t.start_date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    }
+  }
+  if (field === "start_date") {
+    // If start is entered but target is blank, mirror it to target/end_date as 3-day default
+    if (value && !t.end_date) {
+      const d = new Date(value + "T00:00:00");
+      if (!isNaN(d.getTime())) {
+        d.setDate(d.getDate() + 3);
+        const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+        t.end_date = iso;
+        t.target = iso;
+      }
+    } else if (value) {
+      // Both set — keep them coherent (start <= end)
+      if (value > t.end_date) {
+        t.end_date = value;
+        t.target = value;
+      }
+    }
+  }
+  save();
+}
+
+// If a status change makes the row no longer match the filter, we still want it to be visible until
+// the user finishes editing. We re-render on structural changes (status → could shift group order,
+// priority → could change badge colour). For simple text edits we don't re-render.
+function needsRerenderAfter(field) {
+  return field === "status" || field === "priority" || field === "page";
+}
+
+// Date fields commit on blur (avoids parsing partial input like "2026-"); everything else lives-updates.
+const DATE_FIELDS = new Set(["start_date", "target"]);
+
+document.addEventListener("input", (e) => {
+  const el = e.target;
+  const row = el.closest("tr.task-row");
+  if (!row) return;
+  const field = el.dataset.field;
+  if (!field) return;
+  if (el.classList.contains("cell-edit")) {
+    // Track empty state for placeholder
+    el.dataset.empty = el.textContent.trim() === "" ? "1" : "";
+    if (DATE_FIELDS.has(field)) return;   // date fields commit on blur
+    commitCell(row, field, el.textContent);
+  }
+});
+
+// Blur listener specifically for date cells so bad partial input doesn't mangle scheduling.
+// Also re-renders Milestones / KPIs on blur so a new date immediately puts the task on the Gantt.
+document.addEventListener("blur", (e) => {
+  const el = e.target;
+  if (!el.classList || !el.classList.contains("cell-edit")) return;
+  const field = el.dataset.field;
+  if (!DATE_FIELDS.has(field)) return;
+  const row = el.closest("tr.task-row");
+  if (!row) return;
+  const val = el.textContent.trim();
+  // Accept blank ("") or YYYY-MM-DD. Anything else, clear the cell.
+  if (val !== "" && !/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+    el.textContent = "";
+    el.dataset.empty = "1";
+    commitCell(row, field, "");
+  } else {
+    commitCell(row, field, val);
+  }
+  // Refresh Gantt-related views
+  renderKpis();
+  renderPhases();
+  renderCategories();
+  renderGantt();
+  renderUnscheduled();
+}, true);   // useCapture so blur bubbles from contenteditable spans
+
+document.addEventListener("change", (e) => {
+  const el = e.target;
+
+  // --- PR milestone status change (on Milestones tab) ---
+  if (el.tagName === "SELECT" && el.dataset.milestoneIdx !== undefined) {
+    const mi = parseInt(el.dataset.milestoneIdx, 10);
+    if (!isNaN(mi) && MILESTONES[mi]) {
+      MILESTONES[mi].status = el.value;
+      saveMilestones();
+      renderGantt();
+      renderPhases();
+      renderCategories();
+      renderKpis();
+    }
+    return;
+  }
+
+  // --- Category status change (on Milestones tab) ---
+  if (el.tagName === "SELECT" && el.dataset.category !== undefined) {
+    const cat = el.dataset.category;
+    if (cat) {
+      categoryStatus[cat] = el.value;
+      saveCategoryStatus();
+      renderCategories();
+    }
+    return;
+  }
+
+  // --- Task-row selects (Tasks tab) ---
+  const row = el.closest("tr.task-row");
+  if (!row) return;
+  const field = el.dataset.field;
+  if (!field) return;
+  if (el.tagName === "SELECT") {
+    commitCell(row, field, el.value);
+    if (needsRerenderAfter(field)) {
+      populateFilters();
+      renderKpis();
+      renderTasks();
+      // Milestones tab views also depend on status/priority (Gantt hides Done, colour-coded bars)
+      renderGantt();
+      renderPhases();
+      renderCategories();
+      renderUnscheduled();
+    }
+  }
+});
+
+// Delete via × button
+document.addEventListener("click", (e) => {
+  if (e.target.dataset.action === "delete") {
+    const row = e.target.closest("tr.task-row");
+    if (!row) return;
+    const idx = parseInt(row.dataset.idx, 10);
+    if (isNaN(idx)) return;
+    const t = tasks[idx];
+    if (!confirm(`Delete "${t.id || 'this row'} — ${(t.task || '').slice(0, 60)}…"?`)) return;
+    tasks.splice(idx, 1);
+    save();
+    render();
+  }
+});
+
+// Contenteditable — commit on blur if empty state changed; prevent Enter from adding newlines in
+// single-line cells (ID, Stakeholder, Target). Notes/Task can accept Shift-Enter.
+document.addEventListener("keydown", (e) => {
+  if (!e.target.classList.contains("cell-edit")) return;
+  const field = e.target.dataset.field;
+  const singleLine = ["id","stakeholder","target"].includes(field);
+  if (e.key === "Enter" && singleLine) {
+    e.preventDefault();
+    e.target.blur();
+  }
+});
+
+function addRow() {
+  const nextId = "NEW-" + (tasks.length + 1).toString().padStart(3,"0");
+  tasks.push({
+    id: nextId,
+    page: PAGE_ORDER[0] || "Menu Analytics",
+    task: "New task — click to edit",
+    priority: "Medium",
+    status: "Not started",
+    stakeholder: "",
+    target: "",
+    notes: "",
+    category: "",
+    start_date: "",
+    end_date: "",
+    sequence: null
+  });
+  // If the user has a filter on that would hide the new row, clear filters so they see it
+  const searchEl = document.getElementById("search");
+  const pageFilterEl = document.getElementById("filterPage");
+  const statusFilterEl = document.getElementById("filterStatus");
+  const prioFilterEl = document.getElementById("filterPriority");
+  if (searchEl.value) searchEl.value = "";
+  if (pageFilterEl.value) pageFilterEl.value = "";
+  if (statusFilterEl.value && statusFilterEl.value !== "Not started") statusFilterEl.value = "";
+  if (prioFilterEl.value && prioFilterEl.value !== "Medium") prioFilterEl.value = "";
+  const newIdx = tasks.length - 1;
+  save();
+  // Also switch to the Tasks tab in case the user was on Milestones
+  const tasksTabBtn = document.querySelector('.tab-btn[data-tab="tasks"]');
+  if (tasksTabBtn && !tasksTabBtn.classList.contains("active")) {
+    tasksTabBtn.click();
+  }
+  render();
+  // Focus the Task cell of the actual new row (looked up by data-idx, not "last row")
+  setTimeout(() => {
+    const row = document.querySelector(`tr.task-row[data-idx="${newIdx}"]`);
+    if (row) {
+      const taskCell = row.querySelector('[data-field="task"]');
+      if (taskCell) {
+        taskCell.focus();
+        row.scrollIntoView({behavior: "smooth", block: "center"});
+      }
+    }
+  }, 50);
+}
+
+function exportCsv() {
+  const headers = ["ID","Page","Task","Priority","Status","Stakeholder","Target","Notes"];
+  const rows = [headers.join(",")].concat(
+    tasks.map(t => [t.id, t.page, t.task, t.priority, t.status, t.stakeholder, t.target, t.notes]
+      .map(v => `"${(v||"").toString().replace(/"/g,'""')}"`).join(","))
+  );
+  const blob = new Blob([rows.join("\n")], {type: "text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "optimo_tasks.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetData() {
+  if (!confirm("Reset all tracker data to shipped defaults? This wipes your edits.")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(MILESTONES_KEY);
+  localStorage.removeItem(CATEGORY_STATUS_KEY);
+  tasks = DEFAULT_TASKS.map(t => ({...t}));
+  MILESTONES = DEFAULT_MILESTONES.map(m => ({...m}));
+  categoryStatus = {};
+  save();
+  render();
+}
+
+function render() {
+  populateFilters();
+  renderKpis();
+  renderTasks();
+  renderMilestones();
+}
+
+// Tab switching
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+  });
+});
+["search","filterPage","filterStatus","filterPriority"].forEach(id => {
+  document.getElementById(id).addEventListener("input", renderTasks);
+  document.getElementById(id).addEventListener("change", renderTasks);
+});
+document.getElementById("addRow").addEventListener("click", addRow);
+document.getElementById("exportCsv").addEventListener("click", exportCsv);
+document.getElementById("resetData").addEventListener("click", resetData);
+
+render();
+</script>
+</body>
+</html>
