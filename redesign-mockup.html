@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Optimo — Proposed UI (Wireframe Draft)</title>
+<style>
+  :root{
+    --ink:#1a1d21; --ink2:#4a5158; --ink3:#7b848d;
+    --line:#d8dde2; --line2:#eaeef1;
+    --bg:#f4f6f8; --panel:#ffffff;
+    --accent:#0b6b5e; --accent-soft:#e6f2f0;
+    --warn:#8a5a00; --warn-soft:#fdf3e0;
+    --bad:#8f2f2f; --bad-soft:#fbecec;
+    --off:#f7f8f9;
+    --new:#0b4f8a; --new-soft:#e8f1f9;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:40px 28px 90px}
+
+  /* ---------- document header ---------- */
+  .doc-head{margin-bottom:34px}
+  .doc-head h1{font-size:25px; margin:0 0 6px; letter-spacing:-.2px}
+  .doc-head p{margin:0; color:var(--ink2); max-width:760px}
+  .stamp{
+    display:inline-block; margin-bottom:14px; padding:4px 11px; border-radius:3px;
+    background:#fff5d6; border:1px solid #e8d48a; color:#6b5312;
+    font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase;
+  }
+
+  .legend{
+    display:flex; gap:22px; flex-wrap:wrap; margin-top:18px; padding:13px 16px;
+    background:var(--panel); border:1px solid var(--line); border-radius:6px; font-size:12.5px;
+  }
+  .legend div{display:flex; align-items:center; gap:7px; color:var(--ink2)}
+  .sw{width:13px; height:13px; border-radius:3px; border:1px solid rgba(0,0,0,.14); flex:none}
+
+  /* ---------- section rhythm ---------- */
+  .sec{margin-top:46px}
+  .sec-title{
+    font-size:11px; font-weight:800; letter-spacing:1.3px; text-transform:uppercase;
+    color:var(--ink3); padding-bottom:8px; border-bottom:2px solid var(--line);
+    margin-bottom:20px;
+  }
+
+  /* ---------- screen panel ---------- */
+  .screen{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    margin-bottom:22px; overflow:hidden;
+  }
+  .screen > header{
+    padding:12px 18px; border-bottom:1px solid var(--line);
+    background:linear-gradient(#fcfdfd,#f7f9fa);
+    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+  }
+  .screen > header h3{margin:0; font-size:15px}
+  .screen > header .q{color:var(--ink3); font-size:12.5px; font-style:italic}
+  .screen > header .tagr{margin-left:auto; display:flex; gap:6px}
+  .body{padding:18px}
+
+  .tag{
+    font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+    padding:3px 8px; border-radius:3px; white-space:nowrap;
+  }
+  .t-new{background:var(--new-soft); color:var(--new); border:1px solid #bcd6ea}
+  .t-merge{background:var(--accent-soft); color:var(--accent); border:1px solid #b9dbd5}
+  .t-keep{background:var(--off); color:var(--ink3); border:1px solid var(--line)}
+  .t-write{background:var(--warn-soft); color:var(--warn); border:1px solid #ead9ac}
+
+  /* ---------- app chrome ---------- */
+  .app{display:grid; grid-template-columns:196px 1fr; min-height:330px}
+  .side{background:#1e2429; padding:14px 0; color:#c8ced4}
+  .side .brandmark{
+    padding:0 15px 13px; margin-bottom:8px; border-bottom:1px solid #2f373e;
+    font-weight:700; color:#fff; font-size:13.5px;
+  }
+  .side .brandmark small{display:block; font-weight:400; color:#8a939b; font-size:10.5px; margin-top:2px}
+  .side .grp{
+    padding:13px 15px 5px; font-size:9.5px; font-weight:800;
+    letter-spacing:1.1px; text-transform:uppercase; color:#69737c;
+  }
+  .side a{
+    display:flex; align-items:center; gap:8px; padding:7px 15px;
+    color:#c8ced4; text-decoration:none; font-size:13px; border-left:3px solid transparent;
+  }
+  .side a.on{background:#2a333a; color:#fff; border-left-color:#39b39f; font-weight:600}
+  .side a .ic{width:14px; text-align:center; opacity:.75; font-size:12px}
+  .main{padding:16px 18px; background:#fdfdfe; min-width:0}
+
+  /* ---------- context bar ---------- */
+  .ctx{
+    border:1px solid var(--line); border-radius:6px; background:#fbfcfd;
+    padding:12px 14px; margin-bottom:14px;
+  }
+  .ctx-row{display:flex; gap:16px; align-items:flex-end; flex-wrap:wrap}
+  .fld{display:flex; flex-direction:column; gap:4px; min-width:0}
+  .fld label{font-size:10.5px; font-weight:700; color:var(--ink3); letter-spacing:.4px; text-transform:uppercase}
+  .inp{
+    border:1px solid #c4ccd3; border-radius:4px; background:#fff; padding:6px 9px;
+    font-size:12.5px; color:var(--ink); min-width:118px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .inp .cv{color:var(--ink3); font-size:10px}
+  .seg{display:flex; border:1px solid #c4ccd3; border-radius:4px; overflow:hidden}
+  .seg span{padding:6px 13px; font-size:12.5px; background:#fff; border-right:1px solid #dde3e8; color:var(--ink2)}
+  .seg span:last-child{border-right:0}
+  .seg span.on{background:var(--accent); color:#fff; font-weight:600}
+  .ctx-note{
+    margin-top:11px; padding:8px 11px; border-radius:4px; font-size:12px;
+    background:var(--warn-soft); border:1px solid #ead9ac; color:var(--warn);
+  }
+
+  /* ---------- tabs ---------- */
+  .tabs{display:flex; gap:2px; border-bottom:1px solid var(--line); margin-bottom:15px; flex-wrap:wrap}
+  .tabs span{
+    padding:8px 13px; font-size:12.5px; color:var(--ink2);
+    border:1px solid transparent; border-bottom:0; border-radius:5px 5px 0 0; margin-bottom:-1px;
+  }
+  .tabs span.on{background:#fff; border-color:var(--line); color:var(--ink); font-weight:600}
+
+  /* ---------- kpi tiles ---------- */
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(146px,1fr)); gap:10px; margin-bottom:15px}
+  .kpi{border:1px solid var(--line); border-radius:6px; padding:11px 12px; background:#fff}
+  .kpi .k{font-size:10.5px; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.4px}
+  .kpi .v{font-size:21px; font-weight:700; margin:3px 0 2px; letter-spacing:-.3px}
+  .kpi .s{font-size:11px; color:var(--ink3)}
+  .kpi.good .v{color:var(--accent)} .kpi.warn .v{color:var(--warn)} .kpi.bad .v{color:var(--bad)}
+  .kpi.na{background:var(--off); border-style:dashed}
+  .kpi.na .v{color:#b3bac1; font-size:16px; font-weight:600}
+  .kpi.na .s{color:#9aa2aa; font-style:italic}
+
+  /* ---------- generic blocks ---------- */
+  .ph{
+    border:1px dashed #c9d1d8; border-radius:6px; background:
+      repeating-linear-gradient(45deg,#fbfcfd,#fbfcfd 9px,#f4f7f9 9px,#f4f7f9 18px);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color:#98a1a9; font-size:12px; padding:14px;
+  }
+  table{width:100%; border-collapse:collapse; font-size:12px; background:#fff}
+  th{
+    text-align:left; padding:7px 9px; border-bottom:1.5px solid var(--line);
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--ink3); font-weight:700;
+    white-space:nowrap;
+  }
+  td{padding:6px 9px; border-bottom:1px solid var(--line2); color:var(--ink2); white-space:nowrap}
+  .num{text-align:right; font-variant-numeric:tabular-nums}
+  .muted{color:#b3bac1}
+
+  .pill{font-size:10.5px; padding:2px 7px; border-radius:9px; font-weight:600; white-space:nowrap}
+  .p-ok{background:var(--accent-soft); color:var(--accent)}
+  .p-warn{background:var(--warn-soft); color:var(--warn)}
+  .p-bad{background:var(--bad-soft); color:var(--bad)}
+  .p-off{background:var(--off); color:var(--ink3); border:1px solid var(--line)}
+
+  .flags{border:1px solid var(--line); border-radius:6px; overflow:hidden}
+  .flags div{padding:8px 11px; font-size:12px; border-bottom:1px solid var(--line2); display:flex; gap:9px; align-items:center}
+  .flags div:last-child{border-bottom:0}
+  .flags .b{border-left:3px solid var(--bad); background:var(--bad-soft); color:#6d2626}
+  .flags .a{border-left:3px solid var(--warn); background:var(--warn-soft); color:#6b4a08}
+  .flags .g{border-left:3px solid var(--accent); background:var(--accent-soft); color:#0a544a}
+
+  .cols{display:grid; gap:14px}
+  .c2{grid-template-columns:1fr 1fr}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .c21{grid-template-columns:2fr 1fr}
+
+  .sub{font-size:11px; font-weight:800; letter-spacing:.7px; text-transform:uppercase; color:var(--ink3); margin:0 0 8px}
+
+  /* ---------- annotation ---------- */
+  .note{
+    margin:0 0 18px; padding:12px 15px; border-left:3px solid var(--accent);
+    background:var(--accent-soft); border-radius:0 5px 5px 0; font-size:13px; color:#0a544a;
+  }
+  .note b{color:#083f38}
+  .note.q{border-left-color:#b8860b; background:#fdf6e3; color:#66512a}
+  .note.q b{color:#4a3a17}
+
+  /* ---------- cards ---------- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:10px}
+  .card{border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#fff}
+  .card .img{height:52px; background:repeating-linear-gradient(45deg,#eef1f4,#eef1f4 7px,#e7ebef 7px,#e7ebef 14px)}
+  .card .cb{padding:8px 9px}
+  .card .ct{font-size:11.5px; font-weight:600; line-height:1.3; margin-bottom:5px}
+  .card .cm{font-size:10.5px; color:var(--ink3); display:flex; justify-content:space-between; gap:6px}
+
+  /* ---------- before/after ---------- */
+  .ba{width:100%; border-collapse:collapse; font-size:12.5px; background:#fff}
+  .ba th{background:#f7f9fa}
+  .ba td{white-space:normal; vertical-align:top}
+  .ba td:first-child{color:var(--ink3)}
+  .arrow{color:var(--accent); font-weight:700}
+  .del{color:var(--bad); font-weight:600}
+
+  .footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); color:var(--ink3); font-size:12.5px}
+  @media print{ body{background:#fff} .screen{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="stamp">Wireframe draft — layout only, all numbers are placeholder</div>
+    <h1>Optimo — Proposed UI</h1>
+    <p>
+      A static walkthrough of the redesigned app: five sections following the menu-planning flow,
+      replacing current seven build-order pages. Every screen is shown. Figures are invented —
+      the purpose is to agree structure, naming, and where things live.
+    </p>
+    <div class="legend">
+      <div><span class="sw" style="background:var(--new-soft); border-color:#bcd6ea"></span> New capability</div>
+      <div><span class="sw" style="background:var(--accent-soft); border-color:#b9dbd5"></span> Merged from existing</div>
+      <div><span class="sw" style="background:var(--off)"></span> Kept as-is</div>
+      <div><span class="sw" style="background:var(--warn-soft); border-color:#ead9ac"></span> Writes to database</div>
+    </div>
+  </div>
+
+  <!-- ============================= NAV ============================= -->
+  <div class="sec">
+    <div class="sec-title">1 — Navigation</div>
+
+    <div class="note">
+      <b>Seven flat pages become five sections in flow order.</b>
+      : prepare (Recipe Pool and Menu Architecture), build the menu, review and sign it off.
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sidebar</h3>
+        <span class="q">where am I in the process?</span>
+      </header>
+      <div class="app">
+        <div class="side">
+          <div class="brandmark">Optimo<small>Menu Planning &amp; Review</small></div>
+          <div class="grp">Prepare</div>
+          <a href="#"><span class="ic">▤</span> Pool</a>
+          <a href="#"><span class="ic">▦</span> Architecture</a>
+          <div class="grp">Build</div>
+          <a href="#"><span class="ic">✎</span> Draft Menu</a>
+          <div class="grp">Sign off</div>
+          <a class="on" href="#"><span class="ic">◉</span> Review &amp; Sign-off</a>
+          <div class="grp">&nbsp;</div>
+          <a href="#"><span class="ic">?</span> Help</a>
+        </div>
+        <div class="main">
+          <p class="sub">What changed</p>
+          <table class="ba">
+            <tr><th style="width:38%">Currently</th><th>Proposed</th></tr>
+            <tr><td>Recipe Pool</td><td><span class="arrow">→</span> Pool ▸ Explorer</td></tr>
+            <tr><td>&nbsp;&nbsp;└ GAMP Recipe Pool <em>(stub)</em></td><td><span class="del">removed</span> — never built</td></tr>
+            <tr><td>Menu Architecture <em>(5 tabs)</em></td><td><span class="arrow">→</span> Architecture <em>(3 tabs)</em> — four assignment tabs become one</td></tr>
+            <tr><td>Recipe Validation <em>(3 tabs)</em></td><td><span class="arrow">→</span> folded into Architecture — Eligible/Ineligible were near-duplicates</td></tr>
+            <tr><td>Menu Validation <em>(6 tabs)</em></td><td><span class="arrow">→</span> split: Upload &amp; Swaps to Draft Menu, Review to Sign-off</td></tr>
+            <tr><td>Data Validation <em>(TBD page)</em></td><td><span class="del">removed</span> — placeholder only</td></tr>
+            <tr><td>Menu Analytics <em>(7 tabs)</em></td><td><span class="arrow">→</span> becomes Review &amp; Sign-off; Pool Health moves to Pool</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= CONTEXT BAR ============================= -->
+  <div class="sec">
+    <div class="sec-title">2 — Filtering: the shared context bar</div>
+
+    <div class="note">
+      <b>One filter bar, same position on every page, and your selection follows you.</b>
+      Currently each page has its own filters and forgets them when you navigate away.
+      The <b>Stage</b> selector replaces the GAMP-version dropdown — now that there is one
+      version per week, the useful axis is which stage of the menu you are looking at.
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Context bar — three stages of the same week's menu</h3>
+        <div class="tagr"><span class="tag t-new">New</span></div>
+      </header>
+      <div class="body">
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld">
+              <label>Stage</label>
+              <div class="seg"><span class="on">Planned</span><span>Post-swap draft</span><span>Delivered</span></div>
+            </div>
+            <div class="fld"><label>Preference</label><div class="inp">All <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Cost target</label><div class="inp">$12.00 <span class="cv">▴▾</span></div></div>
+            <div class="fld"><label>Low score cutoff</label><div class="inp">3.5 <span class="cv">▴▾</span></div></div>
+          </div>
+        </div>
+
+        <div class="cols c3">
+          <div>
+            <p class="sub">Planned</p>
+            <div class="ph" style="min-height:58px">GAMP output<br>as generated</div>
+          </div>
+          <div>
+            <p class="sub">Post-swap draft</p>
+            <div class="ph" style="min-height:58px">after planner swaps<br><em>Currently: "Final Menu"</em></div>
+          </div>
+          <div>
+            <p class="sub">Delivered</p>
+            <div class="ph" style="min-height:58px">what actually shipped<br><em>Currently: also "Final Menu"</em></div>
+          </div>
+        </div>
+
+        <!-- <div class="note q" style="margin:15px 0 0">
+          <b>Naming decision for the meeting.</b> Two different menus are both called
+          "Final Menu" today, on different pages, from different sources. The proposal names them
+          <b>Post-swap draft</b> and <b>Delivered</b>. Are those the right words?
+        </div> -->
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>When a metric isn't available</h3>
+        <span class="q">why is this blank?</span>
+        <div class="tagr"><span class="tag t-new">New</span></div>
+      </header>
+      <div class="body">
+        <div class="ctx" style="margin-bottom:12px">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld">
+              <label>Stage</label>
+              <div class="seg"><span>Planned</span><span>Post-swap draft</span><span class="on">Delivered</span></div>
+            </div>
+          </div>
+          <div class="ctx-note">
+            Delivered stage — aggregates are simple means (no GAMP weights exist here).
+            3 metrics unavailable. ▾
+          </div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi good"><div class="k">Menu RIS</div><div class="v">0.701</div><div class="s">simple mean · 28 recipes</div></div>
+          <div class="kpi"><div class="k">2P cost</div><div class="v">$11.82</div><div class="s">simple mean · 28 recipes</div></div>
+          <div class="kpi na"><div class="k">L1 uptake</div><div class="v">unavailable</div><div class="s">not recorded on Delivered</div></div>
+          <div class="kpi na"><div class="k">Skew risk</div><div class="v">unavailable</div><div class="s">needs SKU forecast</div></div>
+        </div>
+
+        <div class="note" style="margin:0">
+          <b>Two fixes in one pattern.</b> Currently an unavailable metric shows a bare "N/A", and a
+          metric whose maths changed quietly relabels itself from "Weighted" to "Avg" — the label moves,
+          so nobody notices. Here the <b>label never changes</b>; how it was calculated sits in the
+          small print, and anything unavailable states its reason.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= PREPARE ============================= -->
+  <div class="sec">
+    <div class="sec-title">3 — Prepare</div>
+
+    <div class="screen">
+      <header>
+        <h3>Pool ▸ Explorer</h3>
+        <span class="q">what can we plan from?</span>
+        <div class="tagr"><span class="tag t-keep">Kept</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span class="on">Explorer</span><span>Health</span></div>
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Protein</label><div class="inp">All <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Preference</label><div class="inp">All <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Max 2P cost</label><div class="inp">$14.00 <span class="cv">▴▾</span></div></div>
+            <div class="fld"><label>Data issues</label><div class="inp">Any <span class="cv">▾</span></div></div>
+          </div>
+          <div class="ctx-row" style="margin-top:10px">
+            <div class="fld" style="flex:1"><label>Advanced filters</label><div class="inp" style="min-width:100%">▸ Tags, cuisine, dish type, time, calories, last used…</div></div>
+          </div>
+        </div>
+
+        <div class="cols c21">
+          <div>
+            <p class="sub">Funnel — how many recipes survive each constraint</p>
+            <div class="ph" style="min-height:132px">Waterfall<br><span class="muted">total pool → filters applied → eligible</span></div>
+          </div>
+          <div>
+            <p class="sub">Pool summary</p>
+            <div class="kpis" style="grid-template-columns:1fr 1fr; gap:8px">
+              <div class="kpi"><div class="k">In pool</div><div class="v">3,946</div><div class="s">all brands</div></div>
+              <div class="kpi"><div class="k">Passing</div><div class="v">412</div><div class="s">current filters</div></div>
+              <div class="kpi warn"><div class="k">Missing price</div><div class="v">18</div><div class="s">cost under-stated</div></div>
+              <div class="kpi"><div class="k">New</div><div class="v">37</div><div class="s">no history</div></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="sub" style="margin-top:15px">Recipes</p>
+        <table>
+          <tr><th>Code</th><th>Title</th><th>Protein</th><th>Preference</th><th class="num">2P cost</th><th>Cost quality</th><th class="num">Score</th><th>Last used</th></tr>
+          <tr><td>R-1041</td><td>Placeholder recipe name</td><td>Chicken</td><td>Meat &amp; Veggie</td><td class="num">$11.40</td><td><span class="pill p-ok">complete</span></td><td class="num">4.21</td><td>W18</td></tr>
+          <tr><td>R-1102</td><td>Placeholder recipe name</td><td>Beef</td><td>Meat &amp; Veggie</td><td class="num">$13.95</td><td><span class="pill p-warn">2 SKUs unpriced</span></td><td class="num">3.88</td><td>W22</td></tr>
+          <tr><td>R-1188</td><td>Placeholder recipe name</td><td>Pork</td><td>Family</td><td class="num">$10.20</td><td><span class="pill p-ok">complete</span></td><td class="num">4.05</td><td>W09</td></tr>
+          <tr><td>R-1244</td><td>Placeholder recipe name</td><td>Veggie</td><td>Veggie</td><td class="num">$8.75</td><td><span class="pill p-ok">complete</span></td><td class="num">4.402</td><td>—</td></tr>
+          <tr><td>R-1290</td><td>Placeholder recipe name</td><td>Fish</td><td>Meat &amp; Veggie</td><td class="num">$12.60</td><td><span class="pill p-bad">5 SKUs unpriced</span></td><td class="num muted">no history</td><td>—</td></tr>
+        </table>
+        <div class="note" style="margin:14px 0 0">
+          <b>Cost quality is new.</b> Recipes with unpriced ingredients look cheaper than they are.
+          Currently that fact exists only as a raw list of SKU codes in a spare column — here it qualifies the cost.
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Pool ▸ Health</h3>
+        <span class="q">is the pool in good shape to plan from?</span>
+        <div class="tagr"><span class="tag t-merge">Moved from Analytics</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span>Explorer</span><span class="on">Health</span></div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">Pool size</div><div class="v">3,946</div><div class="s">vs 3,901 last week</div></div>
+          <div class="kpi good"><div class="k">Median score</div><div class="v">4.08</div><div class="s">pool-wide</div></div>
+          <div class="kpi warn"><div class="k">Ageing recipes</div><div class="v">126</div><div class="s">unused &gt; 40 weeks</div></div>
+          <div class="kpi"><div class="k">Variety index</div><div class="v">0.74</div><div class="s">protein spread</div></div>
+        </div>
+        <div class="cols c2">
+          <div><p class="sub">Score distribution</p><div class="ph" style="min-height:104px">Histogram</div></div>
+          <div><p class="sub">Protein / preference mix</p><div class="ph" style="min-height:104px">Stacked bars</div></div>
+        </div>
+        <div class="note" style="margin:14px 0 0">
+          <b>Why it moved.</b> Pool health describes the pool, not any one menu — it belongs beside
+          the pool it describes, not inside menu analytics.
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Architecture ▸ Slot Rules</h3>
+        <span class="q">what rules must the menu satisfy?</span>
+        <div class="tagr"><span class="tag t-merge">4 tabs → 1</span><span class="tag t-write">Writes</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span class="on">Slot Rules</span><span>Slot Plan</span><span>Eligibility</span></div>
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld">
+              <label>Attribute</label>
+              <div class="seg"><span class="on">Protein</span><span>Preference</span><span>Tag</span><span>Recipe type</span></div>
+            </div>
+            <div class="fld"><label>Slot preset</label><div class="inp">All slots <span class="cv">▾</span></div></div>
+          </div>
+        </div>
+        <table>
+          <tr><th>Slot</th><th>Required</th><th>Excluded</th><th>Eligible recipes</th><th></th></tr>
+          <tr><td>1001</td><td>Chicken</td><td>—</td><td class="num">84</td><td><span class="pill p-off">edit</span></td></tr>
+          <tr><td>1002</td><td>Beef | Pork</td><td>Fish</td><td class="num">61</td><td><span class="pill p-off">edit</span></td></tr>
+          <tr><td>1003</td><td>—</td><td>Beef</td><td class="num">203</td><td><span class="pill p-off">edit</span></td></tr>
+          <tr><td>1004</td><td>Veggie</td><td>—</td><td class="num">47</td><td><span class="pill p-off">edit</span></td></tr>
+        </table>
+        <div class="note" style="margin:14px 0 0">
+          <b>Four near-identical tabs become one.</b> Protein, Preference, Tag and Recipe Type Plan
+          are the same screen against different columns. The attribute becomes a switch, so a change
+          to the layout is made once instead of four times.
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Architecture ▸ Slot Plan</h3>
+        <span class="q">which recipes can go where?</span>
+        <div class="tagr"><span class="tag t-merge">2 tabs → 1</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span>Slot Rules</span><span class="on">Slot Plan</span><span>Eligibility</span></div>
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld"><label>View</label><div class="seg"><span class="on">Slot → recipes</span><span>Recipe → slots</span></div></div>
+          </div>
+        </div>
+        <table>
+          <tr><th>Slot</th><th>Rule summary</th><th class="num">Candidates</th><th>Sample</th></tr>
+          <tr><td>1001</td><td>Chicken, no nuts</td><td class="num">84</td><td class="muted">R-1041, R-1188, R-1290 …</td></tr>
+          <tr><td>1002</td><td>Beef or Pork</td><td class="num">61</td><td class="muted">R-1102, R-1244 …</td></tr>
+          <tr><td>1003</td><td>Any except Beef</td><td class="num">203</td><td class="muted">R-1041, R-1244 …</td></tr>
+        </table>
+        <div class="note" style="margin:14px 0 0">
+          <b>Slot Plan and Recipe Plan were the same question asked backwards.</b>
+          One table with a direction toggle replaces two ~60%-identical pages.
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Architecture ▸ Eligibility</h3>
+        <span class="q">what can I place, and what's blocked?</span>
+        <div class="tagr"><span class="tag t-merge">2 tabs → 1</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span>Slot Rules</span><span>Slot Plan</span><span class="on">Eligibility</span></div>
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Show</label><div class="seg"><span>Eligible</span><span class="on">Ineligible</span><span>All</span></div></div>
+            <div class="fld"><label>Slot preset</label><div class="inp">All slots <span class="cv">▾</span></div></div>
+          </div>
+        </div>
+        <p class="sub">Why recipes are blocked</p>
+        <div class="flags" style="margin-bottom:13px">
+          <div class="b"><span class="pill p-bad">61</span> Used too recently</div>
+          <div class="a"><span class="pill p-warn">28</span> Protein rule mismatch</div>
+          <div class="a"><span class="pill p-warn">14</span> Score below cutoff</div>
+          <div class="g"><span class="pill p-ok">9</span> Missing cost data</div>
+        </div>
+        <table>
+          <tr><th>Code</th><th>Title</th><th>Slot</th><th>Reason</th><th class="num">Score</th><th class="num">2P cost</th></tr>
+          <tr><td>R-1041</td><td>Placeholder recipe name</td><td>1001</td><td>Used W18 — within 20wk window</td><td class="num">4.21</td><td class="num">$11.40</td></tr>
+          <tr><td>R-1102</td><td>Placeholder recipe name</td><td>1002</td><td>Protein excluded for slot</td><td class="num">3.88</td><td class="num">$13.95</td></tr>
+          <tr><td>R-1290</td><td>Placeholder recipe name</td><td>1003</td><td>5 SKUs unpriced</td><td class="num muted">no history</td><td class="num">$12.60</td></tr>
+        </table>
+        <div class="note" style="margin:14px 0 0">
+          <b>Eligible and Ineligible were 63% the same file.</b> One list with a filter — and you can
+          now see both sides at once, which you currently cannot.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= BUILD ============================= -->
+  <div class="sec">
+    <div class="sec-title">4 — Build</div>
+
+    <div class="screen">
+      <header>
+        <h3>Draft Menu ▸ Upload</h3>
+        <span class="q">get the planned menu in</span>
+        <div class="tagr"><span class="tag t-keep">Kept</span><span class="tag t-write">Writes</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span class="on">Upload</span><span>Shortlist &amp; Swaps</span></div>
+        <div class="ph" style="min-height:66px; margin-bottom:13px">Drop CSV here, or browse</div>
+        <div class="cols c2">
+          <div>
+            <p class="sub">Upload check</p>
+            <div class="flags">
+              <div class="g">28 rows read · brand HelloFresh · week 2026-W34</div>
+              <div class="a">2 duplicate recipe codes</div>
+              <div class="b">1 recipe not in pool</div>
+            </div>
+          </div>
+          <div>
+            <p class="sub">Cost preview</p>
+            <div class="kpis" style="grid-template-columns:1fr 1fr; gap:8px">
+              <div class="kpi"><div class="k">Menu 2P cost</div><div class="v">$12.14</div><div class="s">vs $12.00 target</div></div>
+              <div class="kpi warn"><div class="k">Cost coverage</div><div class="v">89%</div><div class="s">3 recipes unpriced</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Draft Menu ▸ Shortlist &amp; Swaps</h3>
+        <span class="q">what should I swap, and what does it cost me?</span>
+        <div class="tagr"><span class="tag t-merge">+ Swap Log</span><span class="tag t-write">Writes</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span>Upload</span><span class="on">Shortlist &amp; Swaps</span></div>
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Slot</label><div class="inp">1002 <span class="cv">▾</span></div></div>
+            <div class="fld"><label>Sort candidates by</label><div class="inp">Score <span class="cv">▾</span></div></div>
+          </div>
+        </div>
+
+        <div class="cols c2">
+          <div>
+            <p class="sub">Currently in slot 1002</p>
+            <table>
+              <tr><th>Code</th><th>Title</th><th class="num">Score</th><th class="num">2P cost</th></tr>
+              <tr><td>R-1102</td><td>Placeholder recipe name</td><td class="num">3.88</td><td class="num">$13.95</td></tr>
+            </table>
+          </div>
+          <div>
+            <p class="sub">Candidates</p>
+            <table>
+              <tr><th>Code</th><th class="num">Score</th><th class="num">2P cost</th><th class="num">Δ menu cost</th></tr>
+              <tr><td>R-1188</td><td class="num">4.05</td><td class="num">$10.20</td><td class="num" style="color:var(--accent)">−$0.13</td></tr>
+              <tr><td>R-1244</td><td class="num">4.40</td><td class="num">$8.75</td><td class="num" style="color:var(--accent)">−$0.19</td></tr>
+              <tr><td>R-1290</td><td class="num muted">n/a</td><td class="num">$12.60</td><td class="num" style="color:var(--warn)">−$0.05 ?</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="note" style="margin:14px 0">
+          <b>The cost delta is new.</b> Currently you cannot see what a swap does to menu cost until
+          after you have made it. Here the effect is on the candidate row before you commit.
+          The "?" marks a candidate with unpriced ingredients, where the delta is not trustworthy.
+        </div>
+
+        <p class="sub">▸ Swap history <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink3)">— was its own tab</span></p>
+        <table>
+          <tr><th>When</th><th>Slot</th><th>Out</th><th>In</th><th>By</th></tr>
+          <tr><td>W34 · Mon</td><td>1004</td><td>R-1301</td><td>R-1244</td><td>planner@…</td></tr>
+          <tr><td>W34 · Mon</td><td>1007</td><td>R-1355</td><td>R-1188</td><td>planner@…</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= SIGN OFF ============================= -->
+  <div class="sec">
+    <div class="sec-title">5 — Review &amp; Sign-off</div>
+
+    <div class="note">
+      <b>One destination for "is this menu good enough to ship?"</b>
+      Today this is split between Menu Validation ▸ Review and the seven-tab Menu Analytics page,
+      which duplicate each other's KPIs and comparison views. The scorecard sits above the tabs so the
+      verdict is visible from every one of them.
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sign-off ▸ Composition</h3>
+        <span class="q">what is on this menu?</span>
+        <div class="tagr"><span class="tag t-merge">+ Final Menu</span></div>
+      </header>
+      <div class="app">
+        <div class="side">
+          <div class="brandmark">Optimo<small>Menu Planning &amp; Review</small></div>
+          <div class="grp">Prepare</div>
+          <a href="#"><span class="ic">▤</span> Pool</a>
+          <a href="#"><span class="ic">▦</span> Architecture</a>
+          <div class="grp">Build</div>
+          <a href="#"><span class="ic">✎</span> Draft Menu</a>
+          <div class="grp">Sign off</div>
+          <a class="on" href="#"><span class="ic">◉</span> Review &amp; Sign-off</a>
+          <div class="grp">&nbsp;</div>
+          <a href="#"><span class="ic">?</span> Help</a>
+        </div>
+        <div class="main">
+          <div class="ctx">
+            <div class="ctx-row">
+              <div class="fld"><label>Brand</label><div class="inp">HelloFresh <span class="cv">▾</span></div></div>
+              <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+              <div class="fld"><label>Stage</label><div class="seg"><span>Planned</span><span class="on">Post-swap draft</span><span>Delivered</span></div></div>
+              <div class="fld"><label>Preference</label><div class="inp">All <span class="cv">▾</span></div></div>
+            </div>
+          </div>
+
+          <p class="sub">Sign-off scorecard <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink3)">— pinned above every tab</span></p>
+          <div class="flags" style="margin-bottom:14px">
+            <div class="g">✓ &nbsp;Menu RIS 0.701 — above pool median</div>
+            <div class="a">! &nbsp;2P cost $12.14 — $0.14 over target <b>· 3 recipes unpriced, so cost may be understated</b></div>
+            <div class="b">✗ &nbsp;2 recipes below score cutoff 3.5</div>
+            <div class="g">✓ &nbsp;All slots filled · no duplicate recipes</div>
+          </div>
+
+          <div class="tabs">
+            <span class="on">Composition</span><span>Projected performance</span><span>Supply vs demand</span>
+            <span>Sourcing risk</span><span>Compare</span><span>Trends</span>
+          </div>
+
+          <div class="ctx-row" style="margin-bottom:11px">
+            <div class="fld"><label>View</label><div class="seg"><span class="on">Cards</span><span>Table</span></div></div>
+            <div class="fld"><label>Group by</label><div class="inp">Slot <span class="cv">▾</span></div></div>
+          </div>
+
+          <div class="cards">
+            <div class="card"><div class="img"></div><div class="cb"><div class="ct">Placeholder recipe</div><div class="cm"><span>1001</span><span>$11.40</span></div></div></div>
+            <div class="card"><div class="img"></div><div class="cb"><div class="ct">Placeholder recipe</div><div class="cm"><span>1002</span><span>$13.95</span></div></div></div>
+            <div class="card"><div class="img"></div><div class="cb"><div class="ct">Placeholder recipe</div><div class="cm"><span>1003</span><span>$10.20</span></div></div></div>
+            <div class="card"><div class="img"></div><div class="cb"><div class="ct">Placeholder recipe</div><div class="cm"><span>1004</span><span>$8.75</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sign-off ▸ Projected performance</h3>
+        <span class="q">how should this menu perform?</span>
+        <div class="tagr"><span class="tag t-merge">+ Menu Review</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs">
+          <span>Composition</span><span class="on">Projected performance</span><span>Supply vs demand</span>
+          <span>Sourcing risk</span><span>Compare</span><span>Trends</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi good"><div class="k">Menu RIS</div><div class="v">0.701</div><div class="s">+0.019 vs pool median</div></div>
+          <div class="kpi warn"><div class="k">2P cost</div><div class="v">$12.14</div><div class="s">+$0.14 vs target · 89% priced</div></div>
+          <div class="kpi"><div class="k">Score</div><div class="v">4.02</div><div class="s">volume-weighted</div></div>
+          <div class="kpi"><div class="k">L1 uptake</div><div class="v">6.8%</div><div class="s">simple mean</div></div>
+        </div>
+        <div class="cols c2">
+          <div><p class="sub">Score by slot</p><div class="ph" style="min-height:112px">Bar chart</div></div>
+          <div>
+            <p class="sub">Needs attention</p>
+            <div class="flags">
+              <div class="b">2 recipes below score 3.5</div>
+              <div class="a">3 recipes with unpriced ingredients</div>
+              <div class="a">1 recipe with no performance history</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sign-off ▸ Supply vs demand</h3>
+        <span class="q">can we actually deliver this menu?</span>
+        <div class="tagr"><span class="tag t-keep">Promoted</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs">
+          <span>Composition</span><span>Projected performance</span><span class="on">Supply vs demand</span>
+          <span>Sourcing risk</span><span>Compare</span><span>Trends</span>
+        </div>
+        <div class="cols c2">
+          <div><p class="sub">Forecast vs capacity by slot</p><div class="ph" style="min-height:118px">Grouped bars</div></div>
+          <div><p class="sub">Demand skew</p><div class="ph" style="min-height:118px">Scatter</div></div>
+        </div>
+        <div class="note" style="margin:14px 0 0">
+          <b>Moved up from fifth to third.</b> "Will this deliver?" is the question the review
+          capability was added for — it should sit near the top of the sign-off sequence, not below trends.
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sign-off ▸ Sourcing risk</h3>
+        <span class="q">where is the ingredient and cost risk?</span>
+        <div class="tagr"><span class="tag t-new">COGS detail</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs">
+          <span>Composition</span><span>Projected performance</span><span>Supply vs demand</span>
+          <span class="on">Sourcing risk</span><span>Compare</span><span>Trends</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">Menu 2P cost</div><div class="v">$12.14</div><div class="s">sum of recipe costs</div></div>
+          <div class="kpi warn"><div class="k">Cost coverage</div><div class="v">89%</div><div class="s">3 of 28 recipes unpriced</div></div>
+          <div class="kpi"><div class="k">Distinct SKUs</div><div class="v">184</div><div class="s">across menu</div></div>
+          <div class="kpi bad"><div class="k">Over-target recipes</div><div class="v">6</div><div class="s">above $14.00</div></div>
+        </div>
+        <div class="cols c2" style="margin-bottom:13px">
+          <div><p class="sub">Cost contribution by slot</p><div class="ph" style="min-height:104px">Bar chart — where the cost sits</div></div>
+          <div><p class="sub">Cost contribution by protein</p><div class="ph" style="min-height:104px">Bar chart</div></div>
+        </div>
+        <p class="sub">Recipes with incomplete cost</p>
+        <table>
+          <tr><th>Code</th><th>Title</th><th class="num">2P cost shown</th><th class="num">SKUs unpriced</th><th>Effect</th></tr>
+          <tr><td>R-1102</td><td>Placeholder recipe name</td><td class="num">$13.95</td><td class="num">2</td><td><span class="pill p-warn">understated</span></td></tr>
+          <tr><td>R-1290</td><td>Placeholder recipe name</td><td class="num">$12.60</td><td class="num">5</td><td><span class="pill p-bad">understated</span></td></tr>
+          <tr><td>R-1355</td><td>Placeholder recipe name</td><td class="num">$11.05</td><td class="num">1</td><td><span class="pill p-warn">understated</span></td></tr>
+        </table>
+        <div class="note q" style="margin:14px 0 0">
+          <b>Two COGS questions for the meeting.</b>
+          (1) Cost is blended across distribution centres at fixed ON 65 / BC 15 / AB 20 weights —
+          are those correct, and the same for Chef's Plate?
+          (2) Should the cost gate <em>pass</em>, <em>fail</em>, or <em>abstain</em> when prices are
+          incomplete? Today it passes on understated data.
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sign-off ▸ Compare</h3>
+        <span class="q">how does this differ from last week — and from what shipped?</span>
+        <div class="tagr"><span class="tag t-new">Stage axis</span><span class="tag t-merge">2 screens → 1</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs">
+          <span>Composition</span><span>Projected performance</span><span>Supply vs demand</span>
+          <span>Sourcing risk</span><span class="on">Compare</span><span>Trends</span>
+        </div>
+        <div class="ctx">
+          <div class="ctx-row">
+            <div class="fld"><label>Compare</label><div class="seg"><span>Across weeks</span><span class="on">Across stages</span></div></div>
+            <div class="fld"><label>Week</label><div class="inp">2026-W34 <span class="cv">▾</span></div></div>
+            <div class="fld"><label>View</label><div class="seg"><span class="on">Table</span><span>Cards</span></div></div>
+          </div>
+          <div class="ctx-note">Comparing across stages — shown as simple means on all sides, since Delivered has no GAMP weights.</div>
+        </div>
+        <table>
+          <tr><th>Metric</th><th class="num">Planned</th><th class="num">Post-swap draft</th><th class="num">Delivered</th><th class="num">Plan → Delivered</th></tr>
+          <tr><td>Recipes</td><td class="num">28</td><td class="num">28</td><td class="num">27</td><td class="num" style="color:var(--bad)">−1</td></tr>
+          <tr><td>Menu RIS</td><td class="num">0.688</td><td class="num">0.701</td><td class="num">0.694</td><td class="num" style="color:var(--accent)">+0.006</td></tr>
+          <tr><td>2P cost</td><td class="num">$12.31</td><td class="num">$12.14</td><td class="num">$12.40</td><td class="num" style="color:var(--warn)">+$0.09</td></tr>
+          <tr><td>Score</td><td class="num">3.96</td><td class="num">4.02</td><td class="num">3.99</td><td class="num" style="color:var(--accent)">+0.03</td></tr>
+          <tr><td>Below cutoff</td><td class="num">4</td><td class="num">2</td><td class="num">2</td><td class="num" style="color:var(--accent)">−2</td></tr>
+        </table>
+        <div class="note" style="margin:14px 0 0">
+          <b>This comparison does not exist today.</b> Both current comparison screens diff versions or
+          weeks — neither shows plan against delivery. This is what "see how the menu we're planning is
+          going to be delivered" looks like: did the plan survive execution, and where did it drift?
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <header>
+        <h3>Sign-off ▸ Trends</h3>
+        <span class="q">how have menus moved over time?</span>
+        <div class="tagr"><span class="tag t-keep">Demoted to last</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs">
+          <span>Composition</span><span>Projected performance</span><span>Supply vs demand</span>
+          <span>Sourcing risk</span><span>Compare</span><span class="on">Trends</span>
+        </div>
+        <div class="cols c2">
+          <div><p class="sub">Menu RIS by week</p><div class="ph" style="min-height:104px">Line chart</div></div>
+          <div><p class="sub">2P cost by week</p><div class="ph" style="min-height:104px">Line chart</div></div>
+        </div>
+        <div class="note" style="margin:14px 0 0">
+          <b>Context, not a gate.</b> Useful background, but it does not decide whether this week's
+          menu ships — so it sits last rather than third.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= HELP ============================= -->
+  <div class="sec">
+    <div class="sec-title">6 — Help</div>
+    <div class="screen">
+      <header>
+        <h3>Help</h3>
+        <span class="q">what does this metric mean?</span>
+        <div class="tagr"><span class="tag t-merge">+ manual, video</span></div>
+      </header>
+      <div class="body">
+        <div class="tabs"><span class="on">About</span><span>Metric definitions</span><span>Walkthrough video</span><span>Change log</span></div>
+        <div class="ph" style="min-height:80px">Metric definitions, data sources, and known gaps</div>
+        <div class="note" style="margin:13px 0 0">
+          <b>The manual already exists but is unreachable from the app.</b> A detailed dashboard manual
+          sits in the repo where no user will find it. Same for the walkthrough video.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= DECISIONS =============================
+  <div class="sec">
+    <div class="sec-title">7 — Decisions needed</div>
+    <div class="screen">
+      <div class="body">
+        <table class="ba">
+          <tr><th style="width:46%">Question</th><th>Why it matters</th></tr>
+          <tr><td><b>Are the three stages right, and are those the names?</b> Planned / Post-swap draft / Delivered</td><td>The spine of the redesign — everything else follows. Two screens are both called "Final Menu" today.</td></tr>
+          <tr><td><b>Are ON 65 / BC 15 / AB 20 the correct cost weights, and the same for Chef's Plate?</b></td><td>Every cost figure in the app depends on them. The source is a code comment, not a system.</td></tr>
+          <tr><td><b>Is our computed 2P cost the same as the published 2P Recipe COGS?</b></td><td>If a governed COGS metric exists we should consume it, not recompute it. Needs an owner.</td></tr>
+          <tr><td><b>What should the cost gate do when prices are incomplete?</b></td><td>Today it passes on understated data — the worst of the three options.</td></tr>
+          <tr><td><b>Can Data Validation and the GAMP Recipe Pool tab be removed?</b></td><td>Both are placeholders shown to users as real pages.</td></tr>
+          <tr><td><b>Does Chef's Plate need Architecture and Eligibility?</b></td><td>CP doesn't go through GAMP. If not, brand should hide them.</td></tr>
+          <tr><td><b>Where should sign-off be recorded?</b></td><td>Nothing persists an approval today — the scorecard is advisory only.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="footer">
+    Wireframe draft for discussion — layout and structure only. All figures are placeholder;
+    no live data is used. Not connected to the application.
+  </div>
+
+</div>
+</body>
+</html>
