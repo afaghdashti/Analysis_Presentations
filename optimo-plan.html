@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Optimo — Project Plan (Sep–Nov 2026)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --ink: #1a1f2b;
+    --ink-2: #4a5567;
+    --ink-3: #8a94a6;
+    --line: #e5e8ee;
+    --accent: #22a06b;    /* HF-ish green */
+    --accent-ink: #0e6f45;
+    --warn: #d97706;
+    --risk: #dc2626;
+    --e1: #22a06b;        /* Redesign */
+    --e2: #2563eb;        /* Enhancements */
+    --e4: #6b7280;        /* BAU */
+    --e5: #a855f7;        /* Future */
+    --shadow: 0 1px 2px rgba(15,23,42,.06), 0 4px 10px rgba(15,23,42,.05);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; line-height: 1.45; }
+  a { color: var(--accent-ink); }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 24px 20px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 15px; margin: 0 0 12px; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  h3 { font-size: 14px; margin: 0 0 8px; }
+  .muted { color: var(--ink-2); }
+  .tiny { font-size: 12px; color: var(--ink-3); }
+
+  /* Header */
+  header.hero {
+    background: linear-gradient(180deg, #ffffff 0%, #f2f7f4 100%);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--accent); color: white; display: grid; place-items: center;
+    font-weight: 800; letter-spacing: -0.02em;
+  }
+  .hero h1 span.subtle { color: var(--ink-3); font-weight: 500; }
+  .kpis { display: flex; gap: 10px; flex-wrap: wrap; }
+  .kpi {
+    background: white; border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 12px; min-width: 100px;
+  }
+  .kpi .n { font-size: 20px; font-weight: 700; line-height: 1.1; }
+  .kpi .l { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .vision { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .vision > div { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .vision .label { font-size: 11px; text-transform: uppercase; color: var(--ink-3); letter-spacing: 0.04em; margin-bottom: 4px; }
+  .vision .val { font-size: 14px; }
+  [contenteditable="true"]:focus { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  @media (max-width: 720px) { .vision { grid-template-columns: 1fr; } }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .tabs { display: flex; background: white; border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+  .tab {
+    padding: 7px 14px; border: 0; background: transparent; cursor: pointer;
+    border-radius: 7px; font-size: 13px; color: var(--ink-2); font-weight: 500;
+  }
+  .tab.active { background: var(--ink); color: white; }
+  .btn {
+    padding: 7px 12px; background: white; border: 1px solid var(--line);
+    border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--ink);
+    font-weight: 500;
+  }
+  .btn:hover { background: #f2f4f8; }
+  .btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent-ink); }
+  .btn.danger { color: var(--risk); }
+  .spacer { flex: 1; }
+  select, input[type=text], textarea {
+    font: inherit; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink);
+  }
+  .filter { display: flex; gap: 8px; align-items: center; }
+  .filter label { font-size: 12px; color: var(--ink-3); }
+  .source-badge { font-size: 11px; padding: 4px 8px; border-radius: 999px; font-weight: 600; letter-spacing: 0.02em; background: #f1f5f9; color: #64748b; }
+  .source-badge.file { background: #dcfce7; color: #166534; }
+  .source-badge.local { background: #fef3c7; color: #92400e; }
+  .source-badge.seed { background: #f1f5f9; color: #64748b; }
+
+  /* Sprint board */
+  .board { display: grid; grid-template-columns: repeat(6, minmax(220px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+  .sprint {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px; display: flex; flex-direction: column; min-height: 400px;
+  }
+  .sprint.current { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,160,107,0.12); }
+  .sprint-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 10px;
+  }
+  .sprint-title { font-weight: 700; font-size: 14px; }
+  .sprint-dates { font-size: 11px; color: var(--ink-3); }
+  .sprint-goal { font-size: 12px; color: var(--ink-2); margin-bottom: 10px; font-style: italic; }
+  .sprint-goal[contenteditable="true"]:hover { background: #fafcff; border-radius: 4px; }
+  .story-list { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .sprint-foot { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line); font-size: 11px; color: var(--ink-3); }
+
+  /* Story cards */
+  .card {
+    background: white; border: 1px solid var(--line); border-radius: 8px;
+    padding: 9px 10px; cursor: pointer; transition: transform .06s, border-color .06s;
+    border-left-width: 3px; position: relative;
+  }
+  .card:hover { border-color: #bcc3d0; transform: translateY(-1px); }
+  .card.e-E1 { border-left-color: var(--e1); }
+  .card.e-E2 { border-left-color: var(--e2); }
+  .card.e-E4 { border-left-color: var(--e4); }
+  .card.e-E5 { border-left-color: var(--e5); }
+  .card .title { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .card .meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .pill {
+    font-size: 10px; padding: 2px 7px; border-radius: 999px; font-weight: 600;
+    background: #f0f3f8; color: var(--ink-2); letter-spacing: 0.02em; text-transform: uppercase;
+  }
+  .pill.e-E1 { background: rgba(34,160,107,0.12); color: var(--e1); }
+  .pill.e-E2 { background: rgba(37,99,235,0.12); color: var(--e2); }
+  .pill.e-E4 { background: rgba(107,114,128,0.14); color: var(--e4); }
+  .pill.e-E5 { background: rgba(168,85,247,0.14); color: var(--e5); }
+  .pill.s-todo { background: #f1f5f9; color: #64748b; }
+  .pill.s-progress { background: #fef3c7; color: #92400e; }
+  .pill.s-done { background: #dcfce7; color: #166534; }
+  .pill.s-blocked { background: #fee2e2; color: #991b1b; }
+  .pill.p-high { background: #fee2e2; color: #991b1b; }
+  .pill.p-med { background: #fff7ed; color: #9a3412; }
+  .pill.p-low { background: #f1f5f9; color: #475569; }
+
+  /* Now/Next/Later view */
+  .horizons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .horizon { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .horizon h3 { display: flex; align-items: baseline; justify-content: space-between; }
+  .horizon .count { font-size: 12px; color: var(--ink-3); }
+  .horizon .now { color: var(--accent-ink); }
+
+  /* Swimlane view */
+  .swim { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: auto; }
+  .swim table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 900px; }
+  .swim th, .swim td { padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .swim th { background: #fafbfd; font-size: 11px; text-align: left; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; position: sticky; top: 0; z-index: 1; }
+  .swim th.epic-col, .swim td.epic-col { border-right: 1px solid var(--line); font-weight: 600; width: 200px; background: #fafbfd; position: sticky; left: 0; z-index: 2; }
+  .swim td .swim-card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; font-size: 12px; border-left-width: 3px; }
+  .swim td .swim-card.e-E1 { border-left-color: var(--e1); }
+  .swim td .swim-card.e-E2 { border-left-color: var(--e2); }
+  .swim td .swim-card.e-E4 { border-left-color: var(--e4); }
+  .swim td .swim-card.e-E5 { border-left-color: var(--e5); }
+  .swim td .swim-card.s-blocked { border-left-color: var(--risk); background: #fff7f7; }
+
+  /* Sections */
+  section.block {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px 20px; margin-top: 20px;
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } .board { grid-template-columns: repeat(6, 260px); } .horizons { grid-template-columns: 1fr; } }
+
+  ul.clean { margin: 0; padding-left: 18px; }
+  ul.clean li { margin-bottom: 6px; }
+  .ms-list { list-style: none; margin: 0; padding: 0; }
+  .ms-row {
+    position: relative;
+    display: grid; grid-template-columns: 150px 1fr auto; gap: 10px; align-items: center;
+    padding: 6px 8px 6px 8px; border-radius: 6px;
+  }
+  .ms-row:hover { background: #fafbfd; }
+  .ms-row .ms-date {
+    font: inherit; font-weight: 700; color: var(--accent-ink); font-size: 13px;
+    border: 1px solid transparent; background: transparent; padding: 2px 4px; border-radius: 4px;
+  }
+  .ms-row:hover .ms-date, .ms-row .ms-date:focus { border-color: var(--line); background: white; }
+  .ms-row .ms-label { font-size: 13px; }
+  .ms-row .ms-label[contenteditable="true"]:hover { background: #eef3f9; border-radius: 4px; padding: 0 4px; }
+  .ms-row .del {
+    opacity: 0; cursor: pointer; background: none; border: 0; padding: 2px 6px; font-size: 14px; color: var(--risk); border-radius: 4px;
+    transition: opacity .12s;
+  }
+  .ms-row:hover .del { opacity: 1; }
+  .ms-row .del:hover { background: #fee2e2; }
+  .risk { position: relative; border-left: 3px solid var(--risk); padding: 8px 32px 8px 12px; background: #fff5f5; border-radius: 6px; margin-bottom: 8px; }
+  .risk [contenteditable="true"]:hover { background: #ffecec; border-radius: 4px; }
+  .risk .del, .disc-row .del {
+    position: absolute; right: 6px; top: 6px; opacity: 0; cursor: pointer;
+    background: none; border: 0; padding: 2px 6px; font-size: 14px; color: var(--risk); border-radius: 4px;
+    transition: opacity .12s;
+  }
+  .risk:hover .del, .disc-row:hover .del { opacity: 1; }
+  .risk .del:hover, .disc-row .del:hover { background: #fee2e2; }
+  .add-row {
+    margin-top: 4px; padding: 8px 12px; background: white; border: 1px dashed var(--line); color: var(--ink-3);
+    border-radius: 6px; cursor: pointer; font-size: 13px; width: 100%; text-align: left;
+  }
+  .add-row:hover { border-color: var(--accent); color: var(--accent-ink); background: #f7faf8; }
+  .disc-row { position: relative; padding-right: 44px !important; }
+  .disc-row .status-toggle { cursor: pointer; user-select: none; }
+  .disc-row .team, .disc-row .note { }
+  .disc-row [contenteditable="true"]:hover { background: #f0f4f9; border-radius: 4px; }
+  .metric { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; background: #f7faf8; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid var(--accent); }
+  .metric .label { font-weight: 600; flex-shrink: 0; }
+  .metric .target { color: var(--ink-2); flex: 1; text-align: right; }
+  .metric [contenteditable="true"]:hover { background: #ecf5f0; border-radius: 4px; }
+  .metric .del {
+    opacity: 0; cursor: pointer; background: none; border: 0; padding: 2px 6px; font-size: 14px; color: var(--risk); border-radius: 4px;
+    transition: opacity .12s;
+  }
+  .metric:hover .del { opacity: 1; }
+  .metric .del:hover { background: #fee2e2; }
+  .add-metric {
+    margin-top: 4px; padding: 8px 12px; background: white; border: 1px dashed var(--line); color: var(--ink-3);
+    border-radius: 6px; cursor: pointer; font-size: 13px; width: 100%; text-align: left;
+  }
+  .add-metric:hover { border-color: var(--accent); color: var(--accent-ink); background: #f7faf8; }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(15,23,42,.4);
+    display: none; align-items: center; justify-content: center; z-index: 100;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: white; border-radius: 12px; padding: 20px; width: min(540px, 90vw);
+    box-shadow: 0 25px 50px rgba(15,23,42,.25);
+  }
+  .modal h3 { font-size: 16px; margin: 0 0 14px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12px; color: var(--ink-3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .field input, .field select, .field textarea { width: 100%; }
+  .field textarea { min-height: 68px; resize: vertical; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+  /* Legend */
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .legend .item { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--ink-2); }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .footer-note { text-align: center; color: var(--ink-3); font-size: 12px; margin-top: 30px; }
+
+  @media print {
+    .toolbar, .modal-bg, .no-print { display: none !important; }
+    .wrap { max-width: 100%; padding: 0; }
+    header.hero, section.block { box-shadow: none; border-color: #ccc; page-break-inside: avoid; }
+    .board { grid-template-columns: repeat(3, 1fr); }
+    .sprint { min-height: auto; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="hero-top">
+      <div class="brand">
+        <div class="logo">O</div>
+        <div>
+          <h1>Optimo — Project Plan <span class="subtle">/ Sep &nbsp;→&nbsp; Nov 2026</span></h1>
+          <div class="tiny">Owner: Afagh Dashti &nbsp;·&nbsp; Cadence: 2-week sprints &nbsp;·&nbsp; Horizon: 6 sprints &nbsp;·&nbsp; Jira: <a href="https://hellofresh.atlassian.net/browse/CDIA-2217">CDIA-2217</a></div>
+        </div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+    </div>
+    <div class="vision">
+      <div>
+        <div class="label">Vision</div>
+        <div class="val" contenteditable="true" data-field="vision">Optimo becomes the single hub for culinary, recipe & menu planning, and menu review at HelloFresh.</div>
+      </div>
+      <div>
+        <div class="label">Goal by end of November</div>
+        <div class="val" contenteditable="true" data-field="goal">Redesign shipped, tested, and pushed from staging to live. Priority feature enhancements delivered. Users onboarded onto the new experience.</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="toolbar no-print">
+    <div class="tabs">
+      <button class="tab active" data-view="board">Sprint board</button>
+      <button class="tab" data-view="horizons">Now / Next / Later</button>
+      <button class="tab" data-view="swimlane">Epic swimlane</button>
+    </div>
+    <div class="filter">
+      <label>Epic</label>
+      <select id="filter-epic">
+        <option value="">All</option>
+        <option value="E1">E1 · Redesign</option>
+        <option value="E2">E2 · Enhancements</option>
+        <option value="E4">E4 · BAU / bugs</option>
+        <option value="E5">E5 · Future backlog</option>
+      </select>
+    </div>
+    <div class="filter">
+      <label>Status</label>
+      <select id="filter-status">
+        <option value="">All</option>
+        <option value="todo">To do</option>
+        <option value="progress">In progress</option>
+        <option value="done">Done</option>
+        <option value="blocked">Blocked</option>
+      </select>
+    </div>
+    <div class="spacer"></div>
+    <span id="source-badge" class="source-badge" title="Where the current view came from">·</span>
+    <button class="btn primary" id="btn-add">+ Add story</button>
+    <button class="btn" id="btn-export" title="Download the current plan as plan-data.json — commit it to your repo to publish your edits">Export → plan-data.json</button>
+    <label class="btn" for="import-file" title="Load a JSON file from your computer">Import JSON</label>
+    <input type="file" id="import-file" accept=".json" style="display:none">
+    <button class="btn" id="btn-reload" title="Reload from the plan-data.json file next to this page (discards your local edits)">Reload from file</button>
+    <button class="btn" onclick="window.print()">Print / PDF</button>
+  </div>
+
+  <!-- Sprint board view -->
+  <div id="view-board" class="view active">
+    <div class="board" id="board"></div>
+    <div class="legend" style="margin-top:14px;">
+      <div class="item"><span class="swatch" style="background:var(--e1)"></span>E1 · Optimo Redesign</div>
+      <div class="item"><span class="swatch" style="background:var(--e2)"></span>E2 · Feature Enhancements</div>
+      <div class="item"><span class="swatch" style="background:var(--e4)"></span>E4 · BAU / Bugs</div>
+      <div class="item"><span class="swatch" style="background:var(--e5)"></span>E5 · Future capabilities (backlog)</div>
+    </div>
+  </div>
+
+  <!-- Now/Next/Later view -->
+  <div id="view-horizons" class="view">
+    <div class="horizons">
+      <div class="horizon">
+        <h3><span class="now">Now</span> <span class="count" id="cnt-now"></span></h3>
+        <div class="tiny" style="margin-bottom:10px;">Current sprint — committed &amp; in flight</div>
+        <div id="hz-now" class="story-list"></div>
+      </div>
+      <div class="horizon">
+        <h3>Next <span class="count" id="cnt-next"></span></h3>
+        <div class="tiny" style="margin-bottom:10px;">Sprints 2–3 — planned &amp; sized</div>
+        <div id="hz-next" class="story-list"></div>
+      </div>
+      <div class="horizon">
+        <h3>Later <span class="count" id="cnt-later"></span></h3>
+        <div class="tiny" style="margin-bottom:10px;">Sprints 4–6 + backlog — directional</div>
+        <div id="hz-later" class="story-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Swimlane view -->
+  <div id="view-swimlane" class="view">
+    <div class="swim">
+      <table>
+        <thead>
+          <tr id="swim-header"></tr>
+        </thead>
+        <tbody id="swim-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <section class="block">
+    <h2>Milestones</h2>
+    <div id="milestones"></div>
+  </section>
+
+  <!-- Success metrics + Risks -->
+  <div class="grid2">
+    <section class="block">
+      <h2>Success metrics — end of November</h2>
+      <div id="metrics"></div>
+    </section>
+    <section class="block">
+      <h2>Risks &amp; dependencies</h2>
+      <div id="risks"></div>
+    </section>
+  </div>
+
+  <!-- Backlog -->
+  <section class="block">
+    <h2>Backlog — future capabilities (E5)</h2>
+    <div class="tiny" style="margin-bottom:10px;">Not committed to Nov horizon. Directional. Move into a sprint by editing the card.</div>
+    <div id="backlog" class="story-list" style="gap:8px;"></div>
+  </section>
+
+  <!-- Discovery status -->
+  <section class="block">
+    <h2>Discovery status — redesign</h2>
+    <div id="discovery"></div>
+  </section>
+
+  <div class="footer-note">Edit inline · Click any card to update · Auto-saves to your browser · Export JSON to version-control the plan</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Edit story</h3>
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="m-title">
+    </div>
+    <div class="field">
+      <label>Description / notes</label>
+      <textarea id="m-desc"></textarea>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div class="field">
+        <label>Epic</label>
+        <select id="m-epic">
+          <option value="E1">E1 · Redesign</option>
+          <option value="E2">E2 · Enhancements</option>
+          <option value="E4">E4 · BAU / bugs</option>
+          <option value="E5">E5 · Future backlog</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sprint</label>
+        <select id="m-sprint">
+          <option value="1">Sprint 1</option>
+          <option value="2">Sprint 2</option>
+          <option value="3">Sprint 3</option>
+          <option value="4">Sprint 4</option>
+          <option value="5">Sprint 5</option>
+          <option value="6">Sprint 6</option>
+          <option value="backlog">Backlog</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="m-status">
+          <option value="todo">To do</option>
+          <option value="progress">In progress</option>
+          <option value="done">Done</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Priority</label>
+        <select id="m-priority">
+          <option value="high">High</option>
+          <option value="med">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="m-delete">Delete</button>
+      <div class="spacer"></div>
+      <button class="btn" id="m-cancel">Cancel</button>
+      <button class="btn primary" id="m-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ Data Model ============
+const SPRINTS = [
+  { n: 1, start: '2026-09-03', end: '2026-09-16', goal: 'Finish stakeholder discovery, lock the phased IA (Prepare/Build/Sign-Off/Performance Review), prep roadmap review deck.' },
+  { n: 2, start: '2026-09-17', end: '2026-09-30', goal: 'Post-roadmap-review kickoff of build. Ship "Prepare" module foundation + first low-risk feature enhancements.' },
+  { n: 3, start: '2026-10-01', end: '2026-10-14', goal: 'Build the "Build" module. Onboard Jesse/Patrick/Tim on architecture + contribution standards.' },
+  { n: 4, start: '2026-10-15', end: '2026-10-28', goal: 'Build the "Sign-Off" and "Performance Review" modules. Deliver pool-health dashboard.' },
+  { n: 5, start: '2026-10-29', end: '2026-11-11', goal: 'End-to-end user testing with menu planning + culinary. Iterate on feedback. Documentation.' },
+  { n: 6, start: '2026-11-12', end: '2026-11-25', goal: 'Push staging → live. Run user onboarding sessions. Post-launch fixes + retro.' }
+];
+
+const EPICS = {
+  E1: { name: 'Optimo Redesign', desc: 'Discovery, IA, build, testing, launch of the phased 4-module redesign.' },
+  E2: { name: 'Feature Enhancements', desc: 'Priority feature/fix asks from menu planning, culinary, and cross-team users.' },
+  E4: { name: 'BAU / Bugs',       desc: 'Maintenance, bug fixes, ongoing support.' },
+  E5: { name: 'Future Capabilities', desc: 'Beyond Nov 2026 — COGS page, Noodle, AI recs, pool health function.' }
+};
+
+const SEED_STORIES = [
+  // ===== Sprint 1 =====
+  { id: 's1',  title: 'Interview Ray (Menu Planning)',                 epic: 'E1', sprint: 1, status: 'todo',     priority: 'high', desc: 'Complete remaining Menu Planning interviews.' },
+  { id: 's2',  title: 'Interview Emma (Menu Planning)',                epic: 'E1', sprint: 1, status: 'todo',     priority: 'high', desc: 'Reconcile with Carlos-relayed feedback from Sep 1.' },
+  { id: 's3',  title: 'Schedule + interview director-level stakeholders for menu review', epic: 'E1', sprint: 1, status: 'todo', priority: 'high', desc: 'Sign-Off phase depends on their input.' },
+  { id: 's4',  title: 'Synthesize discovery findings into requirements doc', epic: 'E1', sprint: 1, status: 'todo', priority: 'high', desc: 'Consolidate Carlos, Irene, Niyanth, Ray, Emma, directors.' },
+  { id: 's5',  title: 'Finalize phased IA (Prepare / Build / Sign-Off / Performance Review)', epic: 'E1', sprint: 1, status: 'progress', priority: 'high', desc: 'Lock the 4-module structure. Foundation for build sprints.' },
+  { id: 's6',  title: 'Iterate mockup based on stakeholder feedback',  epic: 'E1', sprint: 1, status: 'progress', priority: 'high', desc: 'Draft: afaghdashti.github.io/Analysis_Presentations/redesign-mockup.html' },
+  { id: 's7',  title: 'Prepare roadmap review deck for 3rd week Sept', epic: 'E1', sprint: 1, status: 'todo',     priority: 'high', desc: 'Manager checkpoint — Aug 20 next step.' },
+  { id: 's8',  title: 'Feasibility check: developer-name field on recipe pool dataset', epic: 'E2', sprint: 1, status: 'todo', priority: 'med', desc: 'Aug 27 next step from Irene meeting.' },
+
+  // ===== Sprint 2 =====
+  { id: 's9',  title: 'Roadmap review with manager (3rd week Sept)',   epic: 'E1', sprint: 2, status: 'todo', priority: 'high', desc: 'Milestone — sign-off on the plan before build kickoff.' },
+  { id: 's10', title: 'Build "Prepare" module (Menu Architecture consolidation)', epic: 'E1', sprint: 2, status: 'todo', priority: 'high', desc: 'Consolidate tabs. Read from product sheet → data table. Fold in Recipe Validation + Data Validation. Retire obsolete family-preference constraints.' },
+  { id: 's11', title: 'Enhancement: heatmap adds main veggie + starch', epic: 'E2', sprint: 2, status: 'todo', priority: 'med', desc: 'Sep 1 ask from Carlos.' },
+  { id: 's12', title: 'Enhancement: multi-choice Preference filter',   epic: 'E2', sprint: 2, status: 'todo', priority: 'med', desc: 'Sep 1 ask from Carlos.' },
+  { id: 's13', title: 'Enhancement: Core vs Surcharge filter in Menu Analysis', epic: 'E2', sprint: 2, status: 'todo', priority: 'med', desc: 'Sep 1 ask from Carlos.' },
+  { id: 's14', title: 'Fix: Recipe Validation page (non-functional)',  epic: 'E4', sprint: 2, status: 'todo', priority: 'high', desc: 'Aug 27 — Irene flagged as broken.' },
+
+  // ===== Sprint 3 =====
+  { id: 's15', title: 'Build "Build" module',                          epic: 'E1', sprint: 3, status: 'todo', priority: 'high', desc: 'Menu construction workflow — for menu planners.' },
+  { id: 's16', title: 'Onboard Jesse, Patrick, Tim on new architecture', epic: 'E1', sprint: 3, status: 'todo', priority: 'high', desc: 'Aug 20 — Niyanth designated Optimo as a case study for scaling collaborative development. Contribution standards doc.' },
+  { id: 's17', title: 'Recipe Pool: filter by static recipe / LTO theme', epic: 'E2', sprint: 3, status: 'todo', priority: 'med', desc: 'Sep 1 — Carlos: currently exported to Sheets to filter.' },
+  { id: 's18', title: 'Recipe Pool: add developer-name field (if feasible)', epic: 'E2', sprint: 3, status: 'todo', priority: 'med', desc: 'Depends on s8 feasibility outcome.' },
+  { id: 's19', title: 'Menu Analytics: exact protein macros + granular metrics', epic: 'E2', sprint: 3, status: 'todo', priority: 'med', desc: 'Aug 27 — Irene requested granular metrics.' },
+
+  // ===== Sprint 4 =====
+  { id: 's20', title: 'Build "Sign-Off" module',                       epic: 'E1', sprint: 4, status: 'todo', priority: 'high', desc: 'Directors / leadership review flow.' },
+  { id: 's21', title: 'Build "Performance Review" module (post-shipment)', epic: 'E1', sprint: 4, status: 'todo', priority: 'high', desc: 'Aug 20 — Niyanth flagged as its own stage; COGS reporting + product analytics hooks.' },
+  { id: 's22', title: 'Pool-health dashboard: protein/cuisine breakdowns', epic: 'E2', sprint: 4, status: 'todo', priority: 'med', desc: 'Aug 27 — Irene: high-level dashboard for pool health.' },
+  { id: 's23', title: 'Segment filters + ingredient search for onboarding/offboarding', epic: 'E2', sprint: 4, status: 'todo', priority: 'med', desc: 'Aug 27 — Irene.' },
+  { id: 's24', title: 'Recipe Pool: performance metrics for new recipes', epic: 'E2', sprint: 4, status: 'todo', priority: 'low', desc: 'Sep 1 — Carlos.' },
+
+  // ===== Sprint 5 =====
+  { id: 's25', title: 'End-to-end user testing — menu planning + culinary', epic: 'E1', sprint: 5, status: 'todo', priority: 'high', desc: 'Task-based testing with Carlos, Ray, Emma, Irene.' },
+  { id: 's26', title: 'Bug-fix pass from testing feedback',            epic: 'E1', sprint: 5, status: 'todo', priority: 'high', desc: 'Reserve capacity for iteration.' },
+  { id: 's27', title: 'Write user documentation + change-summary',     epic: 'E1', sprint: 5, status: 'todo', priority: 'med', desc: 'For users onboarding to the new app.' },
+  { id: 's28', title: 'Prepare onboarding materials + comms plan',     epic: 'E1', sprint: 5, status: 'todo', priority: 'med', desc: 'Slack posts, walkthrough video, sessions.' },
+
+  // ===== Sprint 6 =====
+  { id: 's29', title: 'Push staging → live (production release)',      epic: 'E1', sprint: 6, status: 'todo', priority: 'high', desc: 'Coordinate with data infra / any deploy gates.' },
+  { id: 's30', title: 'User onboarding sessions (MP, culinary, leadership)', epic: 'E1', sprint: 6, status: 'todo', priority: 'high', desc: 'Live walkthroughs. Segmented by phase per Aug 20 discussion.' },
+  { id: 's31', title: 'Post-launch fixes + adoption monitoring',       epic: 'E1', sprint: 6, status: 'todo', priority: 'high', desc: 'Reserve capacity for issues in the first 2 weeks live.' },
+  { id: 's32', title: 'Retrospective + Q1 2027 planning kickoff',      epic: 'E1', sprint: 6, status: 'todo', priority: 'med', desc: 'What worked, what to change, roadmap for the future-capabilities backlog.' },
+
+  // ===== Backlog =====
+  { id: 'b1', title: 'COGS: dedicated page / accurate COGS for menu planning', epic: 'E5', sprint: 'backlog', status: 'todo', priority: 'high', desc: 'Called out Sep 1 (Carlos) + Aug 20 (Niyanth). Candidate for Q1 2027.' },
+  { id: 'b2', title: 'Noodle — integrate the recipe search tool',      epic: 'E5', sprint: 'backlog', status: 'todo', priority: 'med', desc: 'Future integration.' },
+  { id: 'b3', title: 'AI-based recipe recommendations',                epic: 'E5', sprint: 'backlog', status: 'todo', priority: 'med', desc: 'Exploratory. Needs scoping.' },
+  { id: 'b4', title: 'Recipe pool health assessment function',         epic: 'E5', sprint: 'backlog', status: 'todo', priority: 'med', desc: 'Automated pool health check, complement to s22 dashboard.' }
+];
+
+const SEED_META = {
+  vision: 'Optimo becomes the single hub for culinary, recipe & menu planning, and menu review at HelloFresh.',
+  goal: 'Redesign shipped, tested, and pushed from staging to live. Priority feature enhancements delivered. Users onboarded onto the new experience.',
+  milestones: [
+    { date: '2026-09-16', label: 'Sprint 1 close — Discovery done, IA locked, roadmap deck ready' },
+    { date: '2026-09-19', label: 'Manager roadmap review (3rd week of September)' },
+    { date: '2026-09-30', label: 'Sprint 2 close — "Prepare" module foundation shipped' },
+    { date: '2026-10-14', label: 'Sprint 3 close — "Build" module shipped, new devs onboarded' },
+    { date: '2026-10-28', label: 'Sprint 4 close — All 4 modules built (dev-complete)' },
+    { date: '2026-11-11', label: 'Sprint 5 close — User testing complete, ready-to-ship' },
+    { date: '2026-11-25', label: 'Sprint 6 close — Live in production, users onboarded' }
+  ],
+  metrics: [
+    { label: '4 phased modules', target: 'Prepare / Build / Sign-Off / Performance Review — all shipped' },
+    { label: 'Redesign live', target: 'Pushed from staging to production' },
+    { label: 'Feature enhancements', target: '≥ 8 of ~10 priority enhancements delivered' },
+    { label: 'User adoption', target: 'Menu Planning + Culinary teams onboarded and using the new app' },
+    { label: 'Stakeholder sign-off', target: 'Directors sign off on menu review workflow' },
+    { label: 'Collaborative dev', target: 'Jesse / Patrick / Tim onboarded, contributing under new standards' }
+  ],
+  risks: [
+    { label: 'Director interviews slip', detail: 'Blocks Sign-Off module design (Sprint 4). Mitigation: schedule now, aim for Sprint 1–2.' },
+    { label: 'Developer-name field feasibility unknown', detail: 'If dataset can\'t support it, scope changes. Mitigation: feasibility spike in Sprint 1 (s8).' },
+    { label: 'Solo owner — concentration risk', detail: 'PTO, illness, or competing asks would slip everything. Mitigation: onboard Jesse/Patrick/Tim (s16) so they can pick up small items in S3–S6.' },
+    { label: 'Scope creep from live feedback', detail: 'Post-launch fixes could balloon. Mitigation: reserve Sprint 6 capacity for post-launch only, defer new asks to backlog.' },
+    { label: 'Prod deploy gates', detail: 'Staging → live may require data infra sign-off. Mitigation: confirm the release process by end of Sprint 4.' }
+  ],
+  discovery: [
+    { team: 'Menu Planning — Carlos', status: 'done', note: 'Sep 1 — Optimo redesign feedback captured.' },
+    { team: 'Menu Planning — Ray',    status: 'todo', note: 'Scheduled / to schedule.' },
+    { team: 'Menu Planning — Emma',   status: 'todo', note: 'Reconcile with Carlos-relayed feedback.' },
+    { team: 'Culinary — Irene',       status: 'done', note: 'Aug 27 — pain points + pool-health requirements captured.' },
+    { team: 'Niyanth',                status: 'done', note: 'Aug 20 + Sep 1 — phased workflow + Menu Architecture direction.' },
+    { team: 'Directors / menu review leadership', status: 'todo', note: 'Not yet scheduled. Sign-Off phase depends on this.' }
+  ]
+};
+
+// ============ Persistence ============
+// Data source precedence on load:
+//   1. localStorage (user's in-progress edits, per-browser)
+//   2. plan-data.json fetched from same folder (the committed source-of-truth)
+//   3. Seed embedded in this file (offline / file:// fallback)
+// User workflow: edit in browser → click "Export → plan-data.json" → commit the file → push.
+// Others loading the page (fresh browser) will see whatever's in plan-data.json.
+const KEY = 'optimo-plan-v1';
+const DATA_URL = 'plan-data.json';
+let dataSource = 'seed'; // 'local' | 'file' | 'seed'
+
+function seedState() { return { stories: JSON.parse(JSON.stringify(SEED_STORIES)), meta: JSON.parse(JSON.stringify(SEED_META)) }; }
+function saveState() { localStorage.setItem(KEY, JSON.stringify(state)); dataSource = 'local'; updateSourceBadge(); }
+
+async function fetchDataFile() {
+  try {
+    const resp = await fetch(DATA_URL, { cache: 'no-cache' });
+    if (!resp.ok) return null;
+    const parsed = await resp.json();
+    if (!parsed || !parsed.stories || !parsed.meta) return null;
+    return parsed;
+  } catch (e) { return null; }
+}
+
+async function loadInitialState() {
+  // 1. localStorage
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const parsed = JSON.parse(raw); if (parsed && parsed.stories && parsed.meta) { dataSource = 'local'; return parsed; } }
+  } catch (e) {}
+  // 2. plan-data.json
+  const fromFile = await fetchDataFile();
+  if (fromFile) { dataSource = 'file'; return fromFile; }
+  // 3. Seed
+  dataSource = 'seed';
+  return seedState();
+}
+
+function updateSourceBadge() {
+  const el = document.getElementById('source-badge');
+  if (!el) return;
+  el.classList.remove('file', 'local', 'seed');
+  if (dataSource === 'file')  { el.classList.add('file');  el.textContent = '● plan-data.json'; el.title = 'Loaded from plan-data.json (the committed source-of-truth). Edits will move you to "local edits".'; }
+  if (dataSource === 'local') { el.classList.add('local'); el.textContent = '● local edits';    el.title = 'You have unsaved local edits. Click "Export → plan-data.json" and commit the file to publish them.'; }
+  if (dataSource === 'seed')  { el.classList.add('seed');  el.textContent = '● seed data';      el.title = 'plan-data.json not found (or blocked). Showing built-in seed data.'; }
+}
+
+let state = seedState(); // initialised before async load resolves — first render uses seed briefly
+
+// ============ Helpers ============
+const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+const today = new Date('2026-09-03T00:00:00'); // Anchor; can be replaced with new Date()
+function currentSprint() {
+  for (const s of SPRINTS) {
+    if (today >= new Date(s.start) && today <= new Date(s.end + 'T23:59:59')) return s.n;
+  }
+  return 1;
+}
+const CUR = currentSprint();
+
+function daysUntil(dstr) {
+  const ms = new Date(dstr + 'T00:00:00') - today;
+  return Math.ceil(ms / (1000*60*60*24));
+}
+
+function statusLabel(s) { return {todo:'To do', progress:'In progress', done:'Done', blocked:'Blocked'}[s] || s; }
+function priorityLabel(p) { return {high:'High', med:'Med', low:'Low'}[p] || p; }
+
+// ============ Rendering ============
+function renderKPIs() {
+  const el = document.getElementById('kpis');
+  const total = state.stories.length;
+  const done = state.stories.filter(s => s.status === 'done').length;
+  const progress = state.stories.filter(s => s.status === 'progress').length;
+  const cur = SPRINTS.find(s => s.n === CUR);
+  const daysLeft = cur ? Math.max(0, daysUntil(cur.end)) : 0;
+  el.innerHTML = `
+    <div class="kpi"><div class="n">S${CUR}/6</div><div class="l">Current sprint</div></div>
+    <div class="kpi"><div class="n">${daysLeft}d</div><div class="l">Left in sprint</div></div>
+    <div class="kpi"><div class="n">${progress}</div><div class="l">In progress</div></div>
+    <div class="kpi"><div class="n">${done}/${total}</div><div class="l">Stories done</div></div>
+  `;
+}
+
+function applyFilter(list) {
+  const fe = document.getElementById('filter-epic').value;
+  const fs = document.getElementById('filter-status').value;
+  return list.filter(s => (!fe || s.epic === fe) && (!fs || s.status === fs));
+}
+
+function cardHTML(s) {
+  return `
+    <div class="card e-${s.epic}" data-id="${s.id}">
+      <div class="title">${escapeHTML(s.title)}</div>
+      <div class="meta">
+        <span class="pill e-${s.epic}">${s.epic}</span>
+        <span class="pill s-${s.status}">${statusLabel(s.status)}</span>
+        <span class="pill p-${s.priority}">${priorityLabel(s.priority)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderBoard() {
+  const board = document.getElementById('board');
+  const list = applyFilter(state.stories);
+  board.innerHTML = SPRINTS.map(s => {
+    const items = list.filter(x => x.sprint === s.n);
+    return `
+      <div class="sprint ${s.n === CUR ? 'current' : ''}">
+        <div class="sprint-head">
+          <div>
+            <div class="sprint-title">Sprint ${s.n}${s.n === CUR ? ' · current' : ''}</div>
+            <div class="sprint-dates">${fmt(s.start)} – ${fmt(s.end)}</div>
+          </div>
+        </div>
+        <div class="sprint-goal" contenteditable="true" data-sprint-goal="${s.n}">${escapeHTML((state.meta.sprintGoals && state.meta.sprintGoals[s.n]) || s.goal)}</div>
+        <div class="story-list">${items.map(cardHTML).join('')}</div>
+        <div class="sprint-foot">${items.length} ${items.length === 1 ? 'story' : 'stories'}</div>
+      </div>
+    `;
+  }).join('');
+  document.querySelectorAll('[data-sprint-goal]').forEach(el => {
+    el.addEventListener('blur', () => {
+      const n = parseInt(el.getAttribute('data-sprint-goal'));
+      if (!state.meta.sprintGoals) state.meta.sprintGoals = {};
+      state.meta.sprintGoals[n] = el.innerText.trim();
+      saveState();
+    });
+  });
+}
+
+function renderHorizons() {
+  const list = applyFilter(state.stories);
+  const now = list.filter(s => s.sprint === CUR);
+  const next = list.filter(s => s.sprint > CUR && s.sprint <= CUR + 2);
+  const later = list.filter(s => (typeof s.sprint === 'number' && s.sprint > CUR + 2) || s.sprint === 'backlog');
+  document.getElementById('hz-now').innerHTML = now.map(cardHTML).join('') || '<div class="tiny">None.</div>';
+  document.getElementById('hz-next').innerHTML = next.map(cardHTML).join('') || '<div class="tiny">None.</div>';
+  document.getElementById('hz-later').innerHTML = later.map(cardHTML).join('') || '<div class="tiny">None.</div>';
+  document.getElementById('cnt-now').textContent = now.length;
+  document.getElementById('cnt-next').textContent = next.length;
+  document.getElementById('cnt-later').textContent = later.length;
+}
+
+function renderSwim() {
+  const header = document.getElementById('swim-header');
+  header.innerHTML = '<th class="epic-col">Epic</th>' + SPRINTS.map(s => `<th>S${s.n} · ${fmt(s.start)}</th>`).join('');
+  const body = document.getElementById('swim-body');
+  const epicKeys = ['E1','E2','E4'];
+  const list = applyFilter(state.stories);
+  body.innerHTML = epicKeys.map(ek => {
+    const cells = SPRINTS.map(s => {
+      const items = list.filter(x => x.epic === ek && x.sprint === s.n);
+      return `<td>${items.map(i => `<div class="swim-card e-${i.epic} s-${i.status}" data-id="${i.id}">${escapeHTML(i.title)}</div>`).join('') || '<span class="tiny">—</span>'}</td>`;
+    }).join('');
+    return `<tr><td class="epic-col">${ek} · ${EPICS[ek].name}</td>${cells}</tr>`;
+  }).join('');
+}
+
+function renderMilestones() {
+  const el = document.getElementById('milestones');
+  // Sort by date so reordering just works when the user edits a date
+  const sorted = state.meta.milestones
+    .map((m, i) => ({ m, i }))
+    .sort((a, b) => (a.m.date || '').localeCompare(b.m.date || ''));
+  el.innerHTML = `<div class="ms-list">` + sorted.map(({ m, i }) => `
+    <div class="ms-row" data-mi="${i}">
+      <input type="date" class="ms-date" data-ms-date="${i}" value="${escapeHTML(m.date || '')}">
+      <div class="ms-label" contenteditable="true" data-ms-label="${i}">${escapeHTML(m.label)}</div>
+      <button class="del" title="Delete milestone" data-ms-del="${i}">×</button>
+    </div>
+  `).join('') + `</div><button class="add-row" id="add-ms-btn" style="margin-top:8px;">+ Add milestone</button>`;
+
+  el.querySelectorAll('[data-ms-date]').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const idx = parseInt(inp.getAttribute('data-ms-date'));
+      if (state.meta.milestones[idx]) {
+        state.meta.milestones[idx].date = inp.value;
+        saveState();
+        renderMilestones(); // re-sort
+      }
+    });
+  });
+  el.querySelectorAll('[data-ms-label]').forEach(node => {
+    node.addEventListener('blur', () => {
+      const idx = parseInt(node.getAttribute('data-ms-label'));
+      if (state.meta.milestones[idx]) {
+        state.meta.milestones[idx].label = node.innerText.trim();
+        saveState();
+      }
+    });
+    node.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); node.blur(); }
+    });
+  });
+  el.querySelectorAll('[data-ms-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-ms-del'));
+      if (!confirm('Delete this milestone?')) return;
+      state.meta.milestones.splice(idx, 1);
+      saveState();
+      renderMilestones();
+    });
+  });
+  document.getElementById('add-ms-btn').addEventListener('click', () => {
+    // Default new milestone to end of current sprint if we can find it, else today
+    const cur = SPRINTS.find(s => s.n === CUR);
+    const defaultDate = cur ? cur.end : new Date().toISOString().slice(0, 10);
+    state.meta.milestones.push({ date: defaultDate, label: 'New milestone' });
+    saveState();
+    renderMilestones();
+    // Focus the label of the newly added item — find it by matching original index
+    const idx = state.meta.milestones.length - 1;
+    const lbl = el.querySelector(`[data-ms-label="${idx}"]`);
+    if (lbl) {
+      lbl.focus();
+      const range = document.createRange(); range.selectNodeContents(lbl);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    }
+  });
+}
+
+function renderMetrics() {
+  const el = document.getElementById('metrics');
+  el.innerHTML = state.meta.metrics.map((m, i) => `
+    <div class="metric" data-mi="${i}">
+      <span class="label" contenteditable="true" data-metric-field="label">${escapeHTML(m.label)}</span>
+      <span class="target" contenteditable="true" data-metric-field="target">${escapeHTML(m.target)}</span>
+      <button class="del" title="Delete metric" data-metric-del="${i}">×</button>
+    </div>
+  `).join('') + `<button class="add-metric" id="add-metric-btn">+ Add success metric</button>`;
+
+  // Inline edit save
+  el.querySelectorAll('[data-metric-field]').forEach(node => {
+    node.addEventListener('blur', () => {
+      const idx = parseInt(node.closest('.metric').getAttribute('data-mi'));
+      const field = node.getAttribute('data-metric-field');
+      if (state.meta.metrics[idx]) {
+        state.meta.metrics[idx][field] = node.innerText.trim();
+        saveState();
+      }
+    });
+    // Prevent line breaks
+    node.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); node.blur(); }
+    });
+  });
+
+  // Delete
+  el.querySelectorAll('[data-metric-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-metric-del'));
+      if (!confirm('Delete this metric?')) return;
+      state.meta.metrics.splice(idx, 1);
+      renderMetrics();
+      saveState();
+    });
+  });
+
+  // Add
+  document.getElementById('add-metric-btn').addEventListener('click', () => {
+    state.meta.metrics.push({ label: 'New metric', target: 'Describe the target…' });
+    renderMetrics();
+    saveState();
+    // Focus the new label
+    const nodes = el.querySelectorAll('.metric');
+    const last = nodes[nodes.length - 1];
+    if (last) {
+      const lbl = last.querySelector('[data-metric-field="label"]');
+      if (lbl) {
+        lbl.focus();
+        // Select all
+        const range = document.createRange();
+        range.selectNodeContents(lbl);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }
+  });
+}
+
+function renderRisks() {
+  const el = document.getElementById('risks');
+  el.innerHTML = state.meta.risks.map((r, i) => `
+    <div class="risk" data-ri="${i}">
+      <strong contenteditable="true" data-risk-field="label">${escapeHTML(r.label)}</strong>
+      <div class="tiny" style="margin-top:2px;" contenteditable="true" data-risk-field="detail">${escapeHTML(r.detail)}</div>
+      <button class="del" title="Delete risk" data-risk-del="${i}">×</button>
+    </div>
+  `).join('') + `<button class="add-row" id="add-risk-btn">+ Add risk or dependency</button>`;
+
+  el.querySelectorAll('[data-risk-field]').forEach(node => {
+    node.addEventListener('blur', () => {
+      const idx = parseInt(node.closest('.risk').getAttribute('data-ri'));
+      const field = node.getAttribute('data-risk-field');
+      if (state.meta.risks[idx]) {
+        state.meta.risks[idx][field] = node.innerText.trim();
+        saveState();
+      }
+    });
+    node.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && node.tagName === 'STRONG') { e.preventDefault(); node.blur(); }
+    });
+  });
+  el.querySelectorAll('[data-risk-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-risk-del'));
+      if (!confirm('Delete this risk?')) return;
+      state.meta.risks.splice(idx, 1);
+      renderRisks();
+      saveState();
+    });
+  });
+  document.getElementById('add-risk-btn').addEventListener('click', () => {
+    state.meta.risks.push({ label: 'New risk', detail: 'Describe the risk and mitigation…' });
+    renderRisks();
+    saveState();
+    const rows = el.querySelectorAll('.risk');
+    const last = rows[rows.length - 1];
+    if (last) {
+      const lbl = last.querySelector('[data-risk-field="label"]');
+      if (lbl) {
+        lbl.focus();
+        const range = document.createRange(); range.selectNodeContents(lbl);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      }
+    }
+  });
+}
+
+function renderBacklog() {
+  const list = state.stories.filter(s => s.sprint === 'backlog');
+  document.getElementById('backlog').innerHTML = list.map(cardHTML).join('') || '<div class="tiny">Empty.</div>';
+}
+
+function renderDiscovery() {
+  const el = document.getElementById('discovery');
+  el.innerHTML = state.meta.discovery.map((d, i) => `
+    <div class="disc-row" data-di="${i}" style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:8px 10px; border-bottom:1px solid var(--line);">
+      <div style="flex:1;">
+        <strong contenteditable="true" data-disc-field="team">${escapeHTML(d.team)}</strong>
+        <div class="tiny" contenteditable="true" data-disc-field="note">${escapeHTML(d.note)}</div>
+      </div>
+      <span class="pill status-toggle ${d.status === 'done' ? 's-done' : 's-todo'}" data-disc-toggle="${i}" title="Click to toggle">${d.status === 'done' ? 'Done' : 'To do'}</span>
+      <button class="del" title="Delete row" data-disc-del="${i}">×</button>
+    </div>
+  `).join('') + `<button class="add-row" id="add-disc-btn" style="margin-top:8px;">+ Add stakeholder</button>`;
+
+  el.querySelectorAll('[data-disc-field]').forEach(node => {
+    node.addEventListener('blur', () => {
+      const idx = parseInt(node.closest('.disc-row').getAttribute('data-di'));
+      const field = node.getAttribute('data-disc-field');
+      if (state.meta.discovery[idx]) {
+        state.meta.discovery[idx][field] = node.innerText.trim();
+        saveState();
+      }
+    });
+    node.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && node.tagName === 'STRONG') { e.preventDefault(); node.blur(); }
+    });
+  });
+  el.querySelectorAll('[data-disc-toggle]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const idx = parseInt(pill.getAttribute('data-disc-toggle'));
+      const cur = state.meta.discovery[idx];
+      cur.status = cur.status === 'done' ? 'todo' : 'done';
+      renderDiscovery();
+      saveState();
+    });
+  });
+  el.querySelectorAll('[data-disc-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-disc-del'));
+      if (!confirm('Delete this stakeholder?')) return;
+      state.meta.discovery.splice(idx, 1);
+      renderDiscovery();
+      saveState();
+    });
+  });
+  document.getElementById('add-disc-btn').addEventListener('click', () => {
+    state.meta.discovery.push({ team: 'New stakeholder', status: 'todo', note: 'Notes…' });
+    renderDiscovery();
+    saveState();
+    const rows = el.querySelectorAll('.disc-row');
+    const last = rows[rows.length - 1];
+    if (last) {
+      const lbl = last.querySelector('[data-disc-field="team"]');
+      if (lbl) {
+        lbl.focus();
+        const range = document.createRange(); range.selectNodeContents(lbl);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      }
+    }
+  });
+}
+
+function renderAll() {
+  renderKPIs();
+  renderBoard();
+  renderHorizons();
+  renderSwim();
+  renderMilestones();
+  renderMetrics();
+  renderRisks();
+  renderBacklog();
+  renderDiscovery();
+  // NOTE: no saveState() here — persistence happens in edit handlers.
+  // renderAll is called on boot and on filter change too, which shouldn't
+  // mark the plan as "local edits" against plan-data.json.
+}
+
+// ============ Modal / editing ============
+let editingId = null;
+function openModal(id) {
+  editingId = id;
+  const s = id ? state.stories.find(x => x.id === id) : { title: '', desc: '', epic: 'E1', sprint: CUR, status: 'todo', priority: 'med' };
+  document.getElementById('modal-title').textContent = id ? 'Edit story' : 'New story';
+  document.getElementById('m-title').value = s.title || '';
+  document.getElementById('m-desc').value = s.desc || '';
+  document.getElementById('m-epic').value = s.epic;
+  document.getElementById('m-sprint').value = s.sprint;
+  document.getElementById('m-status').value = s.status;
+  document.getElementById('m-priority').value = s.priority;
+  document.getElementById('m-delete').style.display = id ? '' : 'none';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() {
+  editingId = null;
+  document.getElementById('modal').classList.remove('open');
+}
+function saveModal() {
+  const data = {
+    title: document.getElementById('m-title').value.trim(),
+    desc: document.getElementById('m-desc').value.trim(),
+    epic: document.getElementById('m-epic').value,
+    sprint: (function(v){ return v === 'backlog' ? 'backlog' : parseInt(v); })(document.getElementById('m-sprint').value),
+    status: document.getElementById('m-status').value,
+    priority: document.getElementById('m-priority').value
+  };
+  if (!data.title) { alert('Title required'); return; }
+  if (editingId) {
+    const s = state.stories.find(x => x.id === editingId);
+    Object.assign(s, data);
+  } else {
+    data.id = 'n' + Date.now();
+    state.stories.push(data);
+  }
+  closeModal();
+  saveState();
+  renderAll();
+}
+function deleteStory() {
+  if (!editingId) return;
+  if (!confirm('Delete this story?')) return;
+  state.stories = state.stories.filter(x => x.id !== editingId);
+  closeModal();
+  saveState();
+  renderAll();
+}
+
+// ============ Events ============
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('view-' + t.dataset.view).classList.add('active');
+  });
+});
+document.getElementById('filter-epic').addEventListener('change', renderAll);
+document.getElementById('filter-status').addEventListener('change', renderAll);
+document.getElementById('btn-add').addEventListener('click', () => openModal(null));
+document.getElementById('m-cancel').addEventListener('click', closeModal);
+document.getElementById('m-save').addEventListener('click', saveModal);
+document.getElementById('m-delete').addEventListener('click', deleteStory);
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+// Card click delegation
+document.body.addEventListener('click', e => {
+  const c = e.target.closest('.card, .swim-card');
+  if (c && c.dataset.id) openModal(c.dataset.id);
+});
+
+// Editable meta
+document.querySelectorAll('[data-field]').forEach(el => {
+  el.addEventListener('blur', () => {
+    state.meta[el.dataset.field] = el.innerText.trim();
+    saveState();
+  });
+});
+
+// Export: download the current state as plan-data.json (drop-in for the file next to this page)
+document.getElementById('btn-export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'plan-data.json';
+  a.click();
+});
+document.getElementById('import-file').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const parsed = JSON.parse(await f.text());
+    if (!parsed.stories || !parsed.meta) throw new Error('Invalid file');
+    state = parsed;
+    saveState(); // marks as local edits
+    renderAll();
+  } catch (err) { alert('Could not import: ' + err.message); }
+  e.target.value = '';
+});
+document.getElementById('btn-reload').addEventListener('click', async () => {
+  if (!confirm('Reload from plan-data.json? This will discard any local edits you\'ve made in this browser.')) return;
+  const fromFile = await fetchDataFile();
+  if (!fromFile) {
+    alert('Could not load plan-data.json.\n\nThis usually means:\n  • the file isn\'t next to this HTML, or\n  • you opened the page as a local file (file://) — some browsers block fetch in that mode. Serve the folder (e.g. python3 -m http.server) or view via GitHub Pages.');
+    return;
+  }
+  localStorage.removeItem(KEY);
+  state = fromFile;
+  dataSource = 'file';
+  updateSourceBadge();
+  renderAll();
+});
+
+// Utilities
+function escapeHTML(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// Boot: load state (localStorage → plan-data.json → seed), then render.
+(async () => {
+  state = await loadInitialState();
+  updateSourceBadge();
+  renderAll();
+})();
+</script>
+</body>
+</html>
