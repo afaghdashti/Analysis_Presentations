@@ -1,0 +1,492 @@
+{
+  "stories": [
+    {
+      "id": "s1",
+      "title": "Interview Ray (Menu Planning)",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Complete remaining Menu Planning interviews."
+    },
+    {
+      "id": "s2",
+      "title": "Interview Emma (Menu Planning)",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Reconcile with Carlos-relayed feedback from Sep 1."
+    },
+    {
+      "id": "s4",
+      "title": "Synthesize discovery findings into requirements doc",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Consolidate Carlos, Irene, Niyanth, Ray, Emma, directors."
+    },
+    {
+      "id": "s5",
+      "title": "Finalize phased IA (Prepare / Build / Sign-Off / Performance Review)",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "progress",
+      "priority": "high",
+      "desc": "Lock the 4-module structure. Foundation for build sprints."
+    },
+    {
+      "id": "s6",
+      "title": "Iterate mockup based on stakeholder feedback",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Draft: afaghdashti.github.io/Analysis_Presentations/redesign-mockup.html"
+    },
+    {
+      "id": "s7",
+      "title": "Prepare roadmap review deck for 3rd week Sept",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Manager checkpoint — Aug 20 next step."
+    },
+    {
+      "id": "s8",
+      "title": "Feasibility check: developer-name field on recipe pool dataset",
+      "epic": "E2",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Aug 27 next step from Irene meeting."
+    },
+    {
+      "id": "s9",
+      "title": "Roadmap review with manager (3rd week Sept)",
+      "epic": "E1",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Milestone — sign-off on the plan before build kickoff."
+    },
+    {
+      "id": "s10",
+      "title": "Develope \"Prepare\" module (Menu Architecture consolidation)",
+      "epic": "E1",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Consolidate tabs. Read from product sheet → data table. Fold in Recipe Validation + Data Validation. Retire obsolete family-preference constraints."
+    },
+    {
+      "id": "s11",
+      "title": "Enhancement: heatmap adds main veggie + starch",
+      "epic": "E2",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Sep 1 ask from Carlos."
+    },
+    {
+      "id": "s12",
+      "title": "Enhancement: multi-choice Preference filter",
+      "epic": "E2",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Sep 1 ask from Carlos."
+    },
+    {
+      "id": "s13",
+      "title": "Enhancement: Core vs Surcharge filter in Menu Analysis",
+      "epic": "E2",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Sep 1 ask from Carlos."
+    },
+    {
+      "id": "s14",
+      "title": "Rebuild Menu Architecture and Recipe Validation page (non-functional)",
+      "epic": "E1",
+      "sprint": 2,
+      "status": "blocked",
+      "priority": "high",
+      "desc": "Niyanth discussion - needs a new data source build to read from product sheet"
+    },
+    {
+      "id": "s15",
+      "title": "Develope \"Build\" module",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Menu construction workflow — for menu planners."
+    },
+    {
+      "id": "s16",
+      "title": "Onboard Users on new architecture of \"Prepare\" part",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "todo",
+      "priority": "high",
+      "desc": ""
+    },
+    {
+      "id": "s17",
+      "title": "Recipe Pool: filter by static recipe / LTO theme",
+      "epic": "E2",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Sep 1 — Carlos: currently exported to Sheets to filter."
+    },
+    {
+      "id": "s18",
+      "title": "Recipe Pool: add developer-name field (if feasible)",
+      "epic": "E2",
+      "sprint": 3,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Depends on s8 feasibility outcome."
+    },
+    {
+      "id": "s19",
+      "title": "Menu Analytics: exact protein macros + granular metrics",
+      "epic": "E2",
+      "sprint": 3,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Aug 27 — Irene requested granular metrics."
+    },
+    {
+      "id": "s20",
+      "title": "Build \"Sign-Off\" module",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Already built - Implement the improvements and new features. Directors / leadership review flow."
+    },
+    {
+      "id": "s21",
+      "title": "Build \"Performance Review\" module (post-shipment)",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Aug 20 — Niyanth flagged as its own stage; COGS reporting + product analytics hooks."
+    },
+    {
+      "id": "s22",
+      "title": "Pool-health dashboard: protein/cuisine breakdowns",
+      "epic": "E2",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Aug 27 — Irene: high-level dashboard for pool health."
+    },
+    {
+      "id": "s23",
+      "title": "Segment filters + ingredient search for onboarding/offboarding",
+      "epic": "E2",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Aug 27 — Irene."
+    },
+    {
+      "id": "s24",
+      "title": "Recipe Pool: performance metrics for new recipes",
+      "epic": "E2",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "low",
+      "desc": "Sep 1 — Carlos."
+    },
+    {
+      "id": "s25",
+      "title": "End-to-end user testing — menu planning + culinary",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Task-based testing with Carlos, Ray, Emma, Irene."
+    },
+    {
+      "id": "s26",
+      "title": "Bug-fix pass from testing feedback",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Reserve capacity for iteration."
+    },
+    {
+      "id": "s27",
+      "title": "Write user documentation + change-summary",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "med",
+      "desc": "For users onboarding to the new app."
+    },
+    {
+      "id": "s28",
+      "title": "Prepare onboarding materials + comms plan",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Slack posts, walkthrough video, sessions."
+    },
+    {
+      "id": "s29",
+      "title": "Push staging → live (production release)",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Coordinate with data infra / any deploy gates."
+    },
+    {
+      "id": "s30",
+      "title": "User onboarding sessions (MP, culinary, leadership)",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Live walkthroughs. Segmented by phase per Aug 20 discussion."
+    },
+    {
+      "id": "s31",
+      "title": "Post-launch fixes + adoption monitoring",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Reserve capacity for issues in the first 2 weeks live."
+    },
+    {
+      "id": "s32",
+      "title": "Retrospective + Q1 2027 planning kickoff",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "med",
+      "desc": "What worked, what to change, roadmap for the future-capabilities backlog."
+    },
+    {
+      "id": "b1",
+      "title": "COGS: dedicated page / accurate COGS for menu planning",
+      "epic": "E5",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "high",
+      "desc": "Called out Sep 1 (Carlos) + Aug 20 (Niyanth). Candidate for Q1 2027."
+    },
+    {
+      "id": "b2",
+      "title": "Noodle — integrate the recipe search tool",
+      "epic": "E5",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "med",
+      "desc": "Future integration. Talk to Amelyn in advance to make sure we can integrate this in future. aligned on the attributes, etc."
+    },
+    {
+      "id": "b3",
+      "title": "AI-based recipe recommendations",
+      "epic": "E5",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "med",
+      "desc": "Exploratory. Needs scoping."
+    },
+    {
+      "id": "b4",
+      "title": "Recipe pool health assessment function",
+      "epic": "E5",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "med",
+      "desc": "Automated pool health check, complement to s22 dashboard."
+    },
+    {
+      "title": "Test and improve the new \"Prepare\" part",
+      "desc": "using UAT framework",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788533298935"
+    },
+    {
+      "title": "Test and Improve \"Build\" part",
+      "desc": "",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788533332712"
+    },
+    {
+      "title": "Build \"data validation\" page",
+      "desc": "",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788533641443"
+    },
+    {
+      "title": "Discuss the data source for menu architecture with engineering",
+      "desc": "",
+      "epic": "E1",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788533685724"
+    },
+    {
+      "title": "Create a UAT framework",
+      "desc": "how they're gonna test? functions, questions, responses? break the tool down and see what fixes are needed. \ngiving specific directions to user - and expectations on deadline - Can be meetings booked in advance\nAsk engineers or others for examples",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788536519404"
+    },
+    {
+      "title": "Discuss COGS logic with Jessie/Tom",
+      "desc": "",
+      "epic": "E1",
+      "sprint": 1,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788537023546"
+    },
+    {
+      "title": "Executive Deck build",
+      "desc": "",
+      "epic": "E1",
+      "sprint": 2,
+      "status": "todo",
+      "priority": "med",
+      "id": "n1788537387648"
+    }
+  ],
+  "meta": {
+    "vision": "Optimo becomes the single hub for culinary, recipe & menu planning, and menu review at HelloFresh.",
+    "goal": "Redesign shipped, tested, and pushed from staging to live. Priority feature enhancements delivered. Users onboarded onto the new experience.",
+    "milestones": [
+      {
+        "date": "2026-09-16",
+        "label": "Sprint 1 close — Discovery done, Design done"
+      },
+      {
+        "date": "2026-09-30",
+        "label": "Sprint 2 close — \"Prepare\" module foundation shipped"
+      },
+      {
+        "date": "2026-10-14",
+        "label": "Sprint 3 close — \"Build\" module shipped"
+      },
+      {
+        "date": "2026-10-28",
+        "label": "Sprint 4 close — All 4 modules built (dev-complete)"
+      },
+      {
+        "date": "2026-11-11",
+        "label": "Sprint 5 close — User testing complete, ready-to-ship"
+      },
+      {
+        "date": "2026-11-25",
+        "label": "Sprint 6 close — Live in production, users onboarded"
+      },
+      {
+        "date": "2026-10-16",
+        "label": "Review the requirements"
+      },
+      {
+        "date": "2026-09-11",
+        "label": "Heince sign off on the project plan"
+      }
+    ],
+    "metrics": [
+      {
+        "label": "4 phased modules",
+        "target": "Prepare / Build / Sign-Off / Performance Review — all shipped"
+      },
+      {
+        "label": "Push to live",
+        "target": "Pushed from staging to production"
+      },
+      {
+        "label": "Feature enhancements",
+        "target": "≥ 8 of ~10 priority enhancements delivered"
+      },
+      {
+        "label": "User adoption",
+        "target": "Menu Planning + Culinary teams onboarded and using the new app"
+      },
+      {
+        "label": "Stakeholder sign-off",
+        "target": "Directors sign off on menu review workflow"
+      },
+      {
+        "label": "Collaborative dev",
+        "target": "Jesse / Patrick / Tim onboarded if confirmed, contributing under new standards"
+      }
+    ],
+    "risks": [
+      {
+        "label": "Developer-name field feasibility unknown",
+        "detail": "If dataset can't support it, scope changes. Mitigation: feasibility spike in Sprint 1 (s8)."
+      },
+      {
+        "label": "Scope creep from live feedback",
+        "detail": "Post-launch fixes could balloon. Mitigation: reserve Sprint 6 capacity for post-launch only, defer new asks to backlog."
+      },
+      {
+        "label": "New Data source build is needed for Menu Architecture and Recipe Validation pages",
+        "detail": "Discuss with Engineering"
+      }
+    ],
+    "discovery": [
+      {
+        "team": "Menu Planning — Carlos",
+        "status": "done",
+        "note": "Sep 1 — Optimo redesign feedback captured."
+      },
+      {
+        "team": "Menu Planning — Ray",
+        "status": "todo",
+        "note": "Scheduled / to schedule."
+      },
+      {
+        "team": "Menu Planning — Emma",
+        "status": "todo",
+        "note": "Reconcile with Carlos-relayed feedback."
+      },
+      {
+        "team": "Culinary — Irene",
+        "status": "done",
+        "note": "Aug 27 — pain points + pool-health requirements captured."
+      },
+      {
+        "team": "Niyanth",
+        "status": "done",
+        "note": "Aug 20 + Sep 1 — phased workflow + Menu Architecture direction."
+      },
+      {
+        "team": "Directors / menu review leadership",
+        "status": "todo",
+        "note": "Not yet scheduled. Sign-Off phase depends on this."
+      }
+    ]
+  }
+}
