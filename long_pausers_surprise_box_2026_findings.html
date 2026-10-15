@@ -51,6 +51,7 @@
          padding:10px 8px 4px;margin:22px 0 8px}
   .cap{font-size:12.5px;color:var(--mute);margin:0 0 26px;padding-left:4px;max-width:900px}
   table{width:100%;border-collapse:collapse;margin:20px 0 8px;font-size:14.2px}
+  .ttl{font-size:15px;font-weight:700;color:var(--ink);margin:26px 0 -12px}
   th{text-align:right;font-size:11.5px;color:var(--mute);border-bottom:2px solid var(--ink2);
      padding:9px 10px;font-weight:700;vertical-align:bottom;line-height:1.3}
   th:first-child{text-align:left}
@@ -106,7 +107,7 @@ add an add-on or customize anything. For a customer who also had a box the week 
 no-action rate is 19.7%. A first box after a long pause is about 2.3 times as likely to go
 untouched, and the longer the pause, the higher the share: 40.1% after 6–12 weeks, 60.5% after
 a year or more. Only 3.0% of surprise boxes followed an unpause (a paused delivery switched back on),
-against 50.1% of boxes the customer acted on.</p>
+against 50.1% of boxes the customer acted on. </p>
 
 <div class="hero">
   <figure>
@@ -136,18 +137,19 @@ week the customer was no longer paused) fell between 2025-W41 and 2026-W40. That
 pause endings across the whole year, not a snapshot of one week. Pauses still running at 2026-W40 are
 not included.</p>
 <p>73.6% of these pauses ended with a box. 21.0% ended in a cancellation with no box, and 5.4% ended with the customer back on the base but no box shipped
-(section 06 explains why). The orange segments are the surprise boxes.</p>
+(section 07 explains why). The orange segments are the surprise boxes.</p>
 
 <div class="chart"><div id="c1" style="height:250px"></div></div>
 <p class="cap">Figure 1. How each long pause ended, as a share of all long pauses that ended in the window.
 The per-customer bar counts each customer once, using their first long pause that ended in the window.
 Hover for counts. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, main query and Query 3.</p>
 
+<p class="ttl">Table 1. How long pauses ended, per pause and per customer</p>
 <table>
   <thead><tr><th>Exit outcome</th><th>Per pause</th><th>Per customer<br>(first long pause)</th></tr></thead>
   <tbody><tr><td>Long pauses that ended in the window</td><td>256,139</td><td>171,885</td></tr><tr><td>Ended with a box</td><td>188,505 (73.6%)</td><td>121,251 (70.5%)</td></tr><tr><td class="ind">of which the customer was still on the base</td><td>170,691</td><td>107,348</td></tr><tr><td class="ind">of which the customer cancelled that week</td><td>17,814</td><td>13,903</td></tr><tr><td>Cancelled, no box</td><td>53,800 (21.0%)</td><td>41,536 (24.2%)</td></tr><tr><td>Still on the base, no box</td><td>13,834 (5.4%)</td><td>9,098 (5.3%)</td></tr><tr class="tot"><td>Surprise share, first boxes on the base</td><td>44.8%</td><td>46.5%</td></tr><tr><td>Surprise share, all first boxes</td><td>48.6%</td><td>50.9%</td></tr></tbody>
 </table>
-<p class="cap">Table 1. Pause level and customer level side by side. They differ because 34.5% of customers
+<p class="cap">Pause level and customer level side by side. They differ because 34.5% of customers
 had two or more long pauses end within the 12 months, and those repeat cyclers account for 56.1% of all
 long pauses. The surprise share is almost the same either way, so the result is not driven by a small
 group of customers cycling in and out.</p>
@@ -155,7 +157,7 @@ group of customers cycling in and out.</p>
 <div class="def"><p><b>Why the headline uses customers still on the base.</b> 17,814 of the 188,505 box exits
 (9.5%) were delivered in a week when the customer cancelled, and 84.9% of
 those were surprise boxes. Including them lifts the surprise share to 48.6%. They are real shipped boxes
-(section 06), but they would also distort the next-week view in section 05, so the conservative on-base
+(section 07), but they would also distort the next-week view in section 05, so the conservative on-base
 share of 44.8% is used as the headline throughout.</p></div>
 
 <h2><span class="n">02</span>Untouched boxes are twice as common after a long pause</h2>
@@ -238,6 +240,7 @@ are read against 2026-W41, which may not be fully settled.</p>
 
 
 
+<p class="ttl">Table 2. What customers did the week after their first box, and how many had unpaused</p>
 <table>
   <thead>
     <tr><th class="blank"></th><th class="grp" colspan="2">Box again</th><th class="grp" colspan="2">Paused again</th><th class="grp" colspan="2">Cancelled</th><th class="grp" colspan="2">Active unpause</th></tr>
@@ -245,11 +248,53 @@ are read against 2026-W41, which may not be fully settled.</p>
   </thead>
   <tbody><tr><td>Long, surprise box</td><td>15.2%</td><td>15.6%</td><td>81.6%</td><td>80.7%</td><td>2.3%</td><td>2.7%</td><td>3.0%</td><td>2.8%</td></tr><tr><td>Long, customer acted</td><td>23.5%</td><td>27.0%</td><td>74.9%</td><td>71.0%</td><td>1.3%</td><td>1.6%</td><td>50.1%</td><td>47.9%</td></tr><tr><td>Short, surprise box</td><td>37.6%</td><td>39.6%</td><td>59.3%</td><td>55.8%</td><td>2.2%</td><td>3.2%</td><td>2.8%</td><td>2.7%</td></tr><tr><td>Short, customer acted</td><td>44.0%</td><td>51.7%</td><td>54.0%</td><td>45.3%</td><td>1.5%</td><td>2.4%</td><td>21.3%</td><td>20.6%</td></tr></tbody>
 </table>
-<p class="cap">Table 2. Next-week state and active-unpause rate, pause level and customer level. Rows do not sum to 100%
+<p class="cap">Next-week state and active-unpause rate, pause level and customer level. Rows do not sum to 100%
 across the first three pairs because a small "other" state (on the base, not paused, no box) is not shown. Active
 unpause is measured in the exit week.</p>
 
-<h2><span class="n">06</span>Two edge cases</h2>
+<h2><span class="n">06</span>Discounts: most first boxes after a long pause are full price</h2>
+<p>Most long pausers come back without a discount. 81.2% of first boxes after a long pause were full
+price, against 71.3% of boxes in an ordinary week. Surprise boxes were the least often discounted
+(12.9%, against 23.6% for boxes the customer acted on). When a discount was used, it was about the
+same size as in an ordinary week: 20.2% off on average, against 17.7%.</p>
+<p>The type of discount shows where the difference comes from. New-customer vouchers are much rarer on long-pause
+first boxes (4.2% against 15.6%). Reactivation offers, the closest thing to a come-back offer, are
+slightly more common (10.8% against 8.6%), and mostly on boxes the customer acted on (14.1%,
+against 6.8% of surprise boxes).</p>
+
+<div class="chart"><div id="c7" style="height:290px"></div></div>
+<p class="cap">Figure 6. Discount on the first box after a long pause, by type, customers still on the base, per pause.
+Ordinary week = boxes of customers who also had a box the week before. A box counts as discounted if it had a coupon or
+a shipping discount. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, Query 9 and 10, on
+<code>bob_mealboxes_tis_enriched</code> and <code>redeemed_discounts</code>.</p>
+
+<p>Most discounts on a first box were already running before the pause. When the customer's last box before the pause
+was discounted, 49.5% of first boxes after it were discounted too. When it was full price, only 6.1% were.
+Just 7,357 first boxes (4.3%) carried a discount that the box before the pause did not have, and those
+customers behaved like full-price returners the week after (77.7% paused again and 21.1% took a box,
+against 77.1% and 21.3%).</p>
+
+<p class="ttl">Table 3. What customers did the week after their first box, by the discount on that box</p>
+<table>
+  <thead><tr><th>First box</th><th>Boxes</th><th>Share of<br>first boxes</th><th>Average discount</th><th>Box again</th><th>Paused again</th><th>Cancelled</th></tr></thead>
+  <tbody><tr><td>Reactivation offer</td><td>18,478</td><td>10.8%</td><td>21.2%</td><td>16.1%</td><td>80.4%</td><td>3.1%</td></tr><tr><td>New-customer voucher</td><td>7,092</td><td>4.2%</td><td>20.0%</td><td>15.1%</td><td>80.6%</td><td>2.9%</td></tr><tr><td>Retention offer</td><td>1,779</td><td>1.0%</td><td>21.9%</td><td>24.4%</td><td>72.6%</td><td>2.3%</td></tr><tr><td>Other discount</td><td>4,765</td><td>2.8%</td><td>16.2%</td><td>19.9%</td><td>78.6%</td><td>1.1%</td></tr><tr class="tot"><td>Full price</td><td>138,578</td><td>81.2%</td><td>–</td><td>20.4%</td><td>77.4%</td><td>1.5%</td></tr></tbody>
+</table>
+<p class="cap">Long pauses, customers still on the base, per pause. Share of first boxes is out of all 170,692. Rows do not sum to 100% because a small "other" state is not shown.</p>
+
+<p>Customers who came back on a reactivation offer pause again slightly more often than full-price returners
+(80.4% against 77.4%), take a second box less often (16.1% against 20.4%), and cancel
+more often, from a small base (3.1% against 1.5%). Among the 41,957 customers who had two or
+more long pauses end in a box during the year, 74.4% never had a discount on any of those first boxes and
+9.0% had one every time. 2,761 customers (6.6% of this group) had a discount
+every time and paused again straight after each one.</p>
+
+<div class="note"><b>Read with care.</b> This is descriptive. Reactivation offers are sent to customers the business
+already sees as at risk, so the gaps above cannot be read as the effect of the discount. Discount amounts were checked
+against <code>redeemed_discounts</code>: 99.99% of the 28,225 coupon-discounted first boxes match to the cent.
+Discounts on add-ons are not counted. These figures were run on 15 October 2026 and include one more first box
+(170,692) than sections 01 to 05, because the data refreshed in between.</div>
+
+<h2><span class="n">07</span>Two edge cases</h2>
 <div class="pair">
   <div class="def"><p><b>Boxes delivered in the week the customer cancelled.</b> 17,814 first boxes went to customers who
   cancelled that same week. 84.9% of them were surprise boxes, the highest rate of any
@@ -263,11 +308,11 @@ unpause is measured in the exit week.</p>
 </div>
 
 <div class="chart"><div id="c6" style="height:260px"></div></div>
-<p class="cap">Figure 6. What happened to the exit-week order for the 13,666 long pauses that ended with the customer running
+<p class="cap">Figure 7. What happened to the exit-week order for the 13,666 long pauses that ended with the customer running
 but no box. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, Query 4, on
 <code>bob_mealboxes_tis_enriched</code>.</p>
 
-<h2><span class="n">07</span>What this suggests</h2>
+<h2><span class="n">08</span>What this suggests</h2>
 <p>After a long pause, 44.8% of first boxes go untouched, 2.3 times the 19.7% of an ordinary
 week. The share rises with the length of the pause, from 40.1% after 6–12 weeks to 60.5% after a year or more,
 and it is about twice the ordinary rate whatever the customer's number of past boxes. After a surprise box,
@@ -276,13 +321,10 @@ acted on their first box.</p>
 <p>This is descriptive, not causal. A surprise box is a signal that the restart may not have been planned, not
 proof: some customers will have been happy with the defaults, and some pauses were meant to end when they did. The natural next step is a test rather than more
 cuts of this data. For example, a reminder a few days before a pause of 13+ weeks ends, with a randomised
-holdout, measured on second-box rate and on cancellation in the following four weeks. Volume is not a constraint.
-Pauses of 13 weeks or more end with about 1,300 first boxes on the base a week, so there is enough volume for a
-test with a holdout. A power calculation should be part of the test design.</p>
-<p>The second question of this deep dive, how much of the rise in pausing is customers pausing instead of
-cancelling, is not covered here.</p>
+holdout, measured on second-box rate and on cancellation in the following four weeks.
 
-<h2><span class="n">08</span>Definitions</h2>
+
+<h2><span class="n">09</span>Definitions</h2>
 <div class="def">
 <p><b>Long pause.</b> Six or more consecutive weeks as Active User Paused or Active Interval Paused on
 <code>aca_customer_base_pause_unpause_customer_cluster_granular</code> (CA, HF), using the same streak logic as the
@@ -295,6 +337,13 @@ delivered in a cancellation week, and all 2,968 next-week cancellations in secti
 <p><b>Surprise box.</b> A box where <code>recipes_swapped_in</code> and <code>recipes_swapped_out</code> are empty
 on every mealbox row, there are no add-on rows, and there are no <code>item_category = 'Customization'</code> rows.
 Premium surcharge rows do not count as an action, because without a swap they can be assigned by the system.</p>
+<p><b>Discount.</b> A first box counts as discounted if <code>coupon_money_value</code> or
+<code>shipping_discount_amount</code> is above zero in <code>bob_mealboxes_tis_enriched</code>. Discount depth = discount
+divided by list price, where list price = paid price + coupon + shipping. Type is <code>campaign_type</code> from
+<code>redeemed_discounts</code>, joined on the box. New-customer vouchers = Demand Conversion, Demand Generation and
+Acquisition. Other discount = Referral, Non Marketing (for example customer care apologies), shipping-only discounts
+and the few boxes with no campaign record. Retention offers are shown on their own in Table 3 and grouped into other
+discounts in Figure 6.</p>
 <p><b>Lifetime boxes.</b> <code>clv_loyalty</code> at the last paused week, so the first box itself is not counted.</p>
 <p><b>Baseline.</b> The same no-action rule applied to every HF Canada mealbox order with a delivery week from 2025-W41
 to 2026-W40 (4,211,728 boxes), split by whether the customer had a box the week before. The continuing-customer
@@ -312,6 +361,10 @@ pause level. Query 2a and 2b: baselines. Query 3: customer level. Query 4: order
 Query 6: cancellations from <code>glue.public_edw_business_mart_live.customer_cancellation_recency_weekly</code>. Pause spells:
 <code>glue.marketing_analytics_main.aca_customer_base_pause_unpause_customer_cluster_granular</code>, panel from 2023-W01 so
 that year-plus pauses are not cut short. Orders: <code>glue.public_one_product_meal_live.facts_recipes_ordered_enriched</code>.</p>
+<p><b>Discounts.</b> Query 9: discount flag and depth from <code>glue.public_ffdp_finance_tis_live.bob_mealboxes_tis_enriched</code>
+(not test orders). Query 10: discount type from <code>glue.public_edw_business_mart_live.redeemed_discounts</code>, joined on
+<code>order_line_items_id</code> = <code>box_id</code>, mealbox lines only. The orders fact's own discount flag is never set for
+Canada, so it is not used. Both queries were run on 15 October 2026.</p>
 <p><b>Unpause flag.</b> <code>is_unpaused</code> has no description in <code>delivery_status_weekly</code>. The same column in
 related tables is described as "the customer previously paused and then reactivated their delivery". In the data it is
 only set on deliveries that ended up planned after at least two status changes. A one-week check (2026-W30) against app
@@ -325,7 +378,7 @@ this cannot be checked for the full 12 months.</p>
 </div>
 <script>
 (function(){
-var D = {"segP": [76542, 94149, 15122, 2692, 53800, 13834], "segC": [49943, 57405, 11790, 2113, 41536, 9098], "nP": 256139, "nC": 171885, "bench": [["Continuing customer (box last week too)", 518628, 2631023], ["All HF Canada boxes in the 12 months", 904303, 4211728], ["First box after a short pause (1–5w)", 195485, 855570], ["First box after a long pause (6w+)", 76542, 170691]], "depths": ["6–12w", "13–26w", "27–52w", "53w+"], "depP": [[102647, 41160], [46816, 23391], [16434, 9091], [4794, 2900]], "depC": [[60545, 25161], [28720, 14546], [13289, 7336], [4794, 2900]], "base": [2631023, 518628], "bands": ["[1]", "[2-5]", "[6-10]", "[11-20]", "[21-50]", "[+51]"], "bandP": [[3337, 1910], [20012, 11056], [23090, 12101], [33701, 16130], [50579, 21089], [39606, 14110]], "bandBase": [[136400, 38081], [313450, 65885], [229784, 47744], [298821, 61084], [501716, 97448], [1136547, 200859]], "nx": [["Long pause, surprise box", [76542, 11626, 62435, 1781, 700, 2319]], ["Long pause, customer acted", [94149, 22087, 70484, 1187, 391, 47197]], ["Short pause, surprise box", [195485, 73455, 115828, 4278, 1924, 5459]], ["Short pause, customer acted", [660085, 290733, 356205, 9927, 3220, 140521]]], "run": [["Payment failed (dunning)", 5392], ["Other payment cancellation", 1173], ["Not shipped, refunded", 886], ["Not shipped, other", 3912], ["No order created", 2090], ["Shipped (missing from orders fact)", 213]], "runN": 13666};
+var D = {"segP": [76542, 94149, 15122, 2692, 53800, 13834], "segC": [49943, 57405, 11790, 2113, 41536, 9098], "nP": 256139, "nC": 171885, "bench": [["Continuing customer (box last week too)", 518628, 2631023], ["All HF Canada boxes in the 12 months", 904303, 4211728], ["First box after a short pause (1–5w)", 195485, 855570], ["First box after a long pause (6w+)", 76542, 170691]], "depths": ["6–12w", "13–26w", "27–52w", "53w+"], "depP": [[102647, 41160], [46816, 23391], [16434, 9091], [4794, 2900]], "depC": [[60545, 25161], [28720, 14546], [13289, 7336], [4794, 2900]], "base": [2631023, 518628], "bands": ["[1]", "[2-5]", "[6-10]", "[11-20]", "[21-50]", "[+51]"], "bandP": [[3337, 1910], [20012, 11056], [23090, 12101], [33701, 16130], [50579, 21089], [39606, 14110]], "bandBase": [[136400, 38081], [313450, 65885], [229784, 47744], [298821, 61084], [501716, 97448], [1136547, 200859]], "nx": [["Long pause, surprise box", [76542, 11626, 62435, 1781, 700, 2319]], ["Long pause, customer acted", [94149, 22087, 70484, 1187, 391, 47197]], ["Short pause, surprise box", [195485, 73455, 115828, 4278, 1924, 5459]], ["Short pause, customer acted", [660085, 290733, 356205, 9927, 3220, 140521]]], "run": [["Payment failed (dunning)", 5392], ["Other payment cancellation", 1173], ["Not shipped, refunded", 886], ["Not shipped, other", 3912], ["No order created", 2090], ["Shipped (missing from orders fact)", 213]], "runN": 13666, "dmix": [["Surprise box", [5207, 3540, 1148, 66647]], ["Customer acted", [13271, 3552, 5396, 71931]], ["All long-pause first boxes", [18478, 7092, 6544, 138578]], ["Ordinary week", [227159, 409214, 117981, 1876662]]]};
 if (typeof Plotly === 'undefined') {
   document.querySelectorAll('.chart').forEach(function(el){
     el.innerHTML = '<div class="fallback">Charts need an internet connection to load. The tables below each chart hold the same numbers.</div>';
@@ -432,7 +485,25 @@ function base(extra){
     yaxis:{automargin:true}, legend:{orientation:'h', y:-0.22, x:0, traceorder:'normal'}}), CFG);
 })();
 
-// Figure 6: running, no box
+// Figure 6 (discounts): type of discount on the first box
+(function(){
+  var rows = D.dmix.slice().reverse();
+  var y = rows.map(function(r){return r[0];});
+  var parts = [['Reactivation offer',0,C.warn,'#fff'],['New-customer voucher',1,C.cool,'#fff'],['Other discount',2,C.warnL,'#1b2114'],['Full price',3,C.greyL,'#1b2114']];
+  var tr = parts.map(function(pt){
+    var x = rows.map(function(r){var t=r[1].reduce(function(a,b){return a+b;},0); return 100*r[1][pt[1]]/t;});
+    return {type:'bar', orientation:'h', name:pt[0], y:y, x:x, marker:{color:pt[2]},
+      text:x.map(function(v){return v>=4 ? v.toFixed(1)+'%' : '';}), textposition:'inside', insidetextanchor:'middle',
+      textfont:{color:pt[3], size:12},
+      customdata:rows.map(function(r){var t=r[1].reduce(function(a,b){return a+b;},0); return fmt(r[1][pt[1]])+' of '+fmt(t);}),
+      hovertemplate:'%{y}<br>'+pt[0]+': %{customdata} (%{x:.1f}%)<extra></extra>'};
+  });
+  Plotly.newPlot('c7', tr, base({barmode:'stack', margin:{l:10,r:20,t:6,b:70},
+    xaxis:{range:[0,100], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false},
+    yaxis:{automargin:true}, legend:{orientation:'h', y:-0.22, x:0, traceorder:'normal'}}), CFG);
+})();
+
+// Figure 7: running, no box
 (function(){
   var r = D.run.slice().reverse();
   var x = r.map(function(v){return 100*v[1]/D.runN;});
