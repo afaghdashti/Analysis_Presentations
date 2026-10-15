@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HelloFresh CA — Surprise boxes at the end of a long pause</title>
+<!-- Open this file in a web browser (Chrome / Safari / Edge).
+     Do NOT open it in TextEdit: TextEdit converts HTML to rich text and, on save,
+     strips the chart code and stylesheet. A _MASTER copy sits next to this file. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<style>
+  :root{
+    --ink:#1b2114; --ink2:#454f3c; --mute:#6f7a65;
+    --line:#dfe3d9; --paper:#fbfcfa; --card:#ffffff;
+    --hf:#3d7a1f; --hf2:#91c11e; --warn:#b4531b; --cool:#2f6f8f;
+    --warn-l:#e8b493; --hf-l:#cfe0c4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:16px/1.62 "Helvetica Neue",Helvetica,Arial,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1020px;margin:0 auto;padding:56px 32px 96px}
+  .narrow{max-width:760px}
+  header{border-bottom:3px solid var(--hf);padding-bottom:22px;margin-bottom:34px}
+  .kicker{font-size:13px;color:var(--hf);font-weight:700;margin-bottom:10px}
+  h1{font-size:34px;line-height:1.16;margin:0 0 12px;letter-spacing:-.5px;font-weight:700;max-width:820px}
+  .sub{color:var(--mute);font-size:14px}
+  h2{font-size:21px;margin:56px 0 6px;letter-spacing:-.2px;font-weight:700;max-width:820px}
+  h2 .n{color:var(--hf2);font-weight:700;margin-right:10px}
+  h3{font-size:15.5px;margin:30px 0 6px;font-weight:700;color:var(--ink2)}
+  p{margin:12px 0;max-width:760px}
+  .lede{font-size:17.5px;line-height:1.6;color:var(--ink2)}
+
+  /* hero: two headline numbers */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:30px 0 10px;
+        background:var(--card);border:1px solid var(--line);border-radius:12px;padding:28px 30px 22px}
+  .hero figure{margin:0}
+  .hero .big{font-size:52px;font-weight:700;letter-spacing:-1.6px;line-height:1;margin:0 0 4px}
+  .hero .big.s{color:var(--warn)} .hero .big.b{color:var(--cool)}
+  .hero figcaption{font-size:14.5px;color:var(--ink2);margin:0;max-width:360px;line-height:1.45}
+
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:16px 16px 15px}
+  .card .lab{font-size:12.5px;color:var(--mute);font-weight:700;margin-bottom:8px;line-height:1.35}
+  .card .val{font-size:27px;font-weight:700;letter-spacing:-.8px;line-height:1}
+  .card .yoy{font-size:12.5px;margin-top:7px;color:var(--mute);line-height:1.4}
+  .w{color:var(--warn);font-weight:700}
+  .c{color:var(--cool);font-weight:700}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:9px;
+         padding:10px 8px 4px;margin:22px 0 8px}
+  .cap{font-size:12.5px;color:var(--mute);margin:0 0 26px;padding-left:4px;max-width:900px}
+  table{width:100%;border-collapse:collapse;margin:20px 0 8px;font-size:14.2px}
+  th{text-align:right;font-size:11.5px;color:var(--mute);border-bottom:2px solid var(--ink2);
+     padding:9px 10px;font-weight:700;vertical-align:bottom;line-height:1.3}
+  th:first-child{text-align:left}
+  td{text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);
+     font-variant-numeric:tabular-nums}
+  td:first-child{text-align:left;font-weight:600}
+  td.ind{padding-left:28px;font-weight:400;color:var(--ink2)}
+  tr.tot td{border-top:2px solid var(--ink2);border-bottom:none;font-weight:700;background:#f4f6f1}
+  th.grp{text-align:center;border-bottom:1px solid var(--line)}
+  th.blank{border-bottom:none}
+  .note{background:#fff8ef;border:1px solid #f0dcc0;border-left:4px solid var(--warn);
+        border-radius:7px;padding:16px 18px;margin:24px 0;font-size:14.4px;line-height:1.58;max-width:860px}
+  .note b{color:var(--warn)}
+  .check{background:#f0f5f8;border:1px solid #cfdfe8;border-left:4px solid var(--cool);
+        border-radius:7px;padding:16px 18px;margin:24px 0;font-size:14.4px;line-height:1.58;max-width:860px}
+  .check b{color:var(--cool)}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
+  .pair .def{margin:0}
+  .def{background:#f4f6f1;border:1px solid var(--line);border-radius:7px;
+       padding:16px 18px;margin:22px 0;font-size:14.2px;line-height:1.58}
+  .def p{max-width:none}
+  code{background:#eef1ea;padding:1.5px 5px;border-radius:4px;font-size:12.8px;
+       font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .src{font-size:13px;color:var(--mute);border-top:1px solid var(--line);
+       margin-top:54px;padding-top:22px}
+  .src h3{margin-top:0;color:var(--ink2)}
+  .src p{max-width:none}
+  ul{margin:10px 0;padding-left:22px;max-width:780px}
+  li{margin:7px 0}
+  .fallback{font-size:13px;color:var(--warn);padding:14px}
+  @media(max-width:520px){.hero{grid-template-columns:1fr}}
+  @media(max-width:760px){
+    .cards{grid-template-columns:repeat(2,1fr)} .wrap{padding:32px 18px 60px}
+    .pair{grid-template-columns:1fr} .hero{gap:20px;padding:22px 20px 18px} .hero .big{font-size:40px}
+    .hero figcaption{font-size:13.5px}
+    table{font-size:12.5px} th,td{padding:7px 6px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">HelloFresh Canada, HF brand, Product Operations Analytics</div>
+  <h1>When a long pause ends, almost half of the first boxes are ones the customer never touched</h1>
+  <div class="sub">Long-pauser deep dive, question 1. Pauses of 6+ weeks that ended between 2025-W41 and 2026-W40. Afagh Dashti, October 2026</div>
+</header>
+
+<p class="lede">Over the last 12 months, 256,139 pauses of six weeks or more came to an end in HF Canada,
+across 171,885 customers. Three in four ended with a box. Among customers still on the active base
+that week, 44.8% of those first boxes were surprise boxes: the customer did not swap a recipe,
+add an add-on or customize anything. For a customer who also had a box the week before, the same
+no-action rate is 19.7%. A first box after a long pause is about 2.3 times as likely to go
+untouched, and the longer the pause, the higher the share: 40.1% after 6–12 weeks, 60.5% after
+a year or more. Only 3.0% of surprise boxes followed an unpause (a paused delivery switched back on),
+against 50.1% of boxes the customer acted on. Almost all surprise boxes came from a pause that simply
+ended. The data does not show whether the customer meant it to end then.</p>
+
+<div class="hero">
+  <figure>
+    <div class="big s">44.8%</div>
+    <figcaption>of first boxes after a long pause were surprise boxes (76,542 of the 170,691 first boxes delivered to customers still on the base).</figcaption>
+  </figure>
+  <figure>
+    <div class="big b">19.7%</div>
+    <figcaption>of boxes were untouched in an ordinary week, for customers who also had a box the week before.</figcaption>
+  </figure>
+</div>
+
+<div class="cards">
+  <div class="card"><div class="lab">Surprise share, counted per customer</div><div class="val">46.5%</div>
+    <div class="yoy">first long pause per customer. Per pause: 44.8%</div></div>
+  <div class="card"><div class="lab">Gap to an ordinary week</div><div class="val">2.3×</div>
+    <div class="yoy">44.8% vs 19.7% for continuing customers</div></div>
+  <div class="card"><div class="lab">Surprise boxes after a long pause</div><div class="val">76.5k</div>
+    <div class="yoy">in 12 months, about 1,472 a week, customers still on the base</div></div>
+  <div class="card"><div class="lab">Paused again the next week</div><div class="val">81.6%</div>
+    <div class="yoy">after a surprise box. Long-pause customers whose first box they acted on: 74.9%</div></div>
+</div>
+
+<h2><span class="n">01</span>How long pauses end</h2>
+<p>A pause is in scope if it lasted six or more consecutive weeks and its exit week (the first
+week the customer was no longer paused) fell between 2025-W41 and 2026-W40. That makes this a flow of
+pause endings across the whole year, not a snapshot of one week. Pauses still running at 2026-W40 are
+not included.</p>
+<p>73.6% of these pauses ended with a box. 21.0% ended in a cancellation with no box, and 5.4% ended with the customer back on the base but no box shipped
+(section 06 explains why). The orange segments are the surprise boxes.</p>
+
+<div class="chart"><div id="c1" style="height:250px"></div></div>
+<p class="cap">Figure 1. How each long pause ended, as a share of all long pauses that ended in the window.
+The per-customer bar counts each customer once, using their first long pause that ended in the window.
+Hover for counts. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, main query and Query 3.</p>
+
+<table>
+  <thead><tr><th>Exit outcome</th><th>Per pause</th><th>Per customer<br>(first long pause)</th></tr></thead>
+  <tbody><tr><td>Long pauses that ended in the window</td><td>256,139</td><td>171,885</td></tr><tr><td>Ended with a box</td><td>188,505 (73.6%)</td><td>121,251 (70.5%)</td></tr><tr><td class="ind">of which the customer was still on the base</td><td>170,691</td><td>107,348</td></tr><tr><td class="ind">of which the customer cancelled that week</td><td>17,814</td><td>13,903</td></tr><tr><td>Cancelled, no box</td><td>53,800 (21.0%)</td><td>41,536 (24.2%)</td></tr><tr><td>Still on the base, no box</td><td>13,834 (5.4%)</td><td>9,098 (5.3%)</td></tr><tr class="tot"><td>Surprise share, first boxes on the base</td><td>44.8%</td><td>46.5%</td></tr><tr><td>Surprise share, all first boxes</td><td>48.6%</td><td>50.9%</td></tr></tbody>
+</table>
+<p class="cap">Table 1. Pause level and customer level side by side. They differ because 34.5% of customers
+had two or more long pauses end within the 12 months, and those repeat cyclers account for 56.1% of all
+long pauses. The surprise share is almost the same either way, so the result is not driven by a small
+group of customers cycling in and out.</p>
+
+<div class="def"><p><b>Why the headline uses customers still on the base.</b> 17,814 of the 188,505 box exits
+(9.5%) were delivered in a week when the customer cancelled, and 84.9% of
+those were surprise boxes. Including them lifts the surprise share to 48.6%. They are real shipped boxes
+(section 06), but they would also distort the next-week view in section 05, so the conservative on-base
+share of 44.8% is used as the headline throughout.</p></div>
+
+<h2><span class="n">02</span>Untouched boxes are twice as common after a long pause</h2>
+<p>Some boxes go untouched in any week. Plenty of continuing customers are happy with the default
+recipes. The fair comparison is therefore the no-action rate for other boxes in the same 12 months,
+using exactly the same definition.</p>
+
+<div class="chart"><div id="c2" style="height:265px"></div></div>
+<p class="cap">Figure 2. Share of boxes with no swap, no add-on and no customization, 2025-W41 to 2026-W40.
+Continuing customer = had a box the previous week. All HF Canada boxes = every CA mealbox order in the same
+12 months (4,211,728 boxes), whatever the customer did the week before. Short and long pause bars are first boxes for customers
+still on the base. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, main query and Query 2a,
+on <code>facts_recipes_ordered_enriched</code>.</p>
+
+<p>A first box after a short pause (1–5 weeks) is untouched at 22.8%, close to an ordinary week. The
+jump comes with the long pause: 44.8%, or 2.3 times the continuing-customer rate. When a
+long-pause customer does act on their first box, it is almost always a recipe swap. Of the 188,505 box exits,
+95,143 had a swap, 1,567 had only an add-on and 131 had only a customization.</p>
+
+<div class="check"><b>Check on the definition.</b> If a surprise box really reflects no customer action, it should
+rarely follow an unpause, where a paused delivery is switched back on. The delivery status table agrees. Only
+3.0% of long-pause surprise boxes followed an unpause, against 50.1% of boxes where the customer acted
+(2.8% vs 47.9% per customer). The other half of actioned boxes came from a pause that simply ended, after
+which the customer still went in and picked recipes. Two limits: this table does not record who switched the delivery
+back on, and a pause that simply ends may well have been planned by the customer. So the flag supports the
+surprise-box definition but does not measure intent. Source: <code>delivery_status_weekly.is_unpaused</code>
+(documented in related tables as "the customer previously paused and then reactivated their delivery"), Query 5.</div>
+
+<h2><span class="n">03</span>The longer the pause, the less likely the customer touches the box</h2>
+<p>The surprise share rises steadily with pause length, from 40.1% after 6–12 weeks to 60.5%
+after 53 weeks or more, three times the ordinary-week rate. Counting each customer once gives
+the same pattern.</p>
+
+<div class="chart"><div id="c3" style="height:330px"></div></div>
+<p class="cap">Figure 3. Surprise share of first boxes for customers still on the base, by how long the pause
+lasted. The dashed line is the 19.7% continuing-customer rate. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>,
+main query and Query 3.</p>
+
+
+<h2><span class="n">04</span>Long pausers leave about twice as many boxes untouched, whatever their number of past boxes</h2>
+<p>Could the high surprise share just come from newer customers, who touch their boxes less in any week? The data
+says no. Each long pauser is compared with ordinary customers (box the week before too) who had received the same
+number of boxes:</p>
+<ul>
+  <li>In every group, the first box after a long pause is left untouched 2.0 to 2.6 times as often as in an ordinary week.
+  For example, 57.2% against 27.9% for customers with one previous box, and 35.6% against 17.7% for
+  customers with more than 50.</li>
+  <li>If long pausers behaved like ordinary customers with the same number of boxes, about 19.8% of their first
+  boxes would be untouched, almost the same as the 19.7% ordinary-week rate. So being newer explains almost none of
+  the gap.</li>
+</ul>
+<p>Within long pausers, the untouched share is lower for customers with more boxes (57.2% down to 35.6%). About
+half of that drop (10.2 points of 21.6) also shows up in ordinary weeks, and the rest may be
+survivorship (see the note below). So this chart does not show that loyalty makes customers more likely to engage
+with their first box. Counting each customer once gives the same picture.</p>
+
+<div class="chart"><div id="c4" style="height:350px"></div></div>
+<p class="cap">Figure 4. Share of boxes left untouched, by how many boxes the customer had received before the pause ended
+(<code>clv_loyalty</code> at the last paused week). Orange: first box after a long pause, customers still on the base, per pause.
+Blue: an ordinary week for customers with the same number of boxes (box the week before too). Labels show the gap in
+percentage points. Customers with no boxes yet are left out. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, main query and Query 2b.</p>
+
+
+<div class="note"><b>Read the loyalty pattern with care.</b> Lifetime boxes go hand in hand with tenure. A customer
+with more than 50 boxes has already been through many pause cycles and stayed, so the lower rate in that group may be
+partly survivorship. It is not evidence that loyalty makes customers engage with their first box. Separating the two
+would need a tenure-controlled cut.</div>
+
+<h2><span class="n">05</span>The week after: most customers pause again, whether or not they touched the box</h2>
+<p>What customers do next is one clue to whether the restart was planned. After a surprise box,
+81.6% are paused again the following week, and only 15.2% take a second box. But long-pause customers who
+did act on their first box (swapped, added or customized) also mostly re-pause (74.9%). A long pause usually ends in a single box either way. The
+difference is in who stays: customers who acted are about 1.5 times as likely to take a second box (23.5% vs
+15.2%).</p>
+
+<div class="chart"><div id="c5" style="height:300px"></div></div>
+<p class="cap">Figure 5. What the customer did in the week after their first box, customers on the base only, per pause.
+Short pauses are shown for comparison. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, Query 5. Exits in 2026-W40
+are read against 2026-W41, which may not be fully settled.</p>
+
+
+
+<table>
+  <thead>
+    <tr><th class="blank"></th><th class="grp" colspan="2">Box again</th><th class="grp" colspan="2">Paused again</th><th class="grp" colspan="2">Cancelled</th><th class="grp" colspan="2">Active unpause</th></tr>
+    <tr><th>First box</th><th>Pause</th><th>Customer</th><th>Pause</th><th>Customer</th><th>Pause</th><th>Customer</th><th>Pause</th><th>Customer</th></tr>
+  </thead>
+  <tbody><tr><td>Long, surprise box</td><td>15.2%</td><td>15.6%</td><td>81.6%</td><td>80.7%</td><td>2.3%</td><td>2.7%</td><td>3.0%</td><td>2.8%</td></tr><tr><td>Long, customer acted</td><td>23.5%</td><td>27.0%</td><td>74.9%</td><td>71.0%</td><td>1.3%</td><td>1.6%</td><td>50.1%</td><td>47.9%</td></tr><tr><td>Short, surprise box</td><td>37.6%</td><td>39.6%</td><td>59.3%</td><td>55.8%</td><td>2.2%</td><td>3.2%</td><td>2.8%</td><td>2.7%</td></tr><tr><td>Short, customer acted</td><td>44.0%</td><td>51.7%</td><td>54.0%</td><td>45.3%</td><td>1.5%</td><td>2.4%</td><td>21.3%</td><td>20.6%</td></tr></tbody>
+</table>
+<p class="cap">Table 2. Next-week state and active-unpause rate, pause level and customer level. Rows do not sum to 100%
+across the first three pairs because a small "other" state (on the base, not paused, no box) is not shown. Active
+unpause is measured in the exit week.</p>
+
+<h2><span class="n">06</span>Two edge cases</h2>
+<div class="pair">
+  <div class="def"><p><b>Boxes delivered in the week the customer cancelled.</b> 17,814 first boxes went to customers who
+  cancelled that same week. 84.9% of them were surprise boxes, the highest rate of any
+  group in this analysis. The finance table confirms they are real: 97.9% shipped and 92.4% shipped and not
+  refunded. The cancellation record confirms all of them cancelled in that week. The most likely story is a
+  customer who was resumed, did not engage, and cancelled after the cutoff, so the box still went out.</p></div>
+  <div class="def"><p><b>Back on the base but no box.</b> 13,666 long pauses ended with the customer running
+  but no box in the orders fact. The finance table shows 83.1% of these were orders that were created and
+  then not shipped, most often because the payment failed (39.5%). Another 15.3% had no order at all.
+  The delivery stayed planned, so these are not late skips. They are kept as their own exit type.</p></div>
+</div>
+
+<div class="chart"><div id="c6" style="height:260px"></div></div>
+<p class="cap">Figure 6. What happened to the exit-week order for the 13,666 long pauses that ended with the customer running
+but no box. Source: <code>long_pausers_surprise_box_TEMPLATE.sql</code>, Query 4, on
+<code>bob_mealboxes_tis_enriched</code>.</p>
+
+<h2><span class="n">07</span>What this suggests</h2>
+<p>After a long pause, 44.8% of first boxes go untouched, 2.3 times the 19.7% of an ordinary
+week. The share rises with the length of the pause, from 40.1% after 6–12 weeks to 60.5% after a year or more,
+and it is about twice the ordinary rate whatever the customer's number of past boxes. After a surprise box,
+81.6% pause again the following week and only 15.2% take a second box, against 23.5% for customers who
+acted on their first box.</p>
+<p>This is descriptive, not causal. A surprise box is a signal that the restart may not have been planned, not
+proof: some customers will have been happy with the defaults, and some pauses were meant to end when they did. The natural next step is a test rather than more
+cuts of this data. For example, a reminder a few days before a pause of 13+ weeks ends, with a randomised
+holdout, measured on second-box rate and on cancellation in the following four weeks. Volume is not a constraint.
+Pauses of 13 weeks or more end with about 1,300 first boxes on the base a week, so there is enough volume for a
+test with a holdout. A power calculation should be part of the test design.</p>
+<p>The second question of this deep dive, how much of the rise in pausing is customers pausing instead of
+cancelling, is not covered here.</p>
+
+<h2><span class="n">08</span>Definitions</h2>
+<div class="def">
+<p><b>Long pause.</b> Six or more consecutive weeks as Active User Paused or Active Interval Paused on
+<code>aca_customer_base_pause_unpause_customer_cluster_granular</code> (CA, HF), using the same streak logic as the
+W29 paused-customer analysis. Short pause: 1–5 weeks.</p>
+<p><b>Exit week.</b> The first week after the last paused week. In scope when it falls between 2025-W41 and 2026-W40.</p>
+<p><b>Exit outcome.</b> Box: a mealbox exists in <code>facts_recipes_ordered_enriched</code> that week. Cancelled:
+no box and no row on the granular table, which holds active statuses only. All 53,800 of these, all 17,814 boxes
+delivered in a cancellation week, and all 2,968 next-week cancellations in section 05 show <code>customer_status = 'Former'</code> with <code>cancellation_recency = 0</code> in
+<code>customer_cancellation_recency_weekly</code>, so they are plan cancellations in that week. On the base, no box: everything else.</p>
+<p><b>Surprise box.</b> A box where <code>recipes_swapped_in</code> and <code>recipes_swapped_out</code> are empty
+on every mealbox row, there are no add-on rows, and there are no <code>item_category = 'Customization'</code> rows.
+Premium surcharge rows do not count as an action, because without a swap they can be assigned by the system.</p>
+<p><b>Lifetime boxes.</b> <code>clv_loyalty</code> at the last paused week, so the first box itself is not counted.</p>
+<p><b>Baseline.</b> The same no-action rule applied to every HF Canada mealbox order with a delivery week from 2025-W41
+to 2026-W40 (4,211,728 boxes), split by whether the customer had a box the week before. The continuing-customer
+baseline (2,631,023 boxes) is the subset with a box the previous week too.</p>
+<p><b>Per customer.</b> Each customer's first long pause that ended in the window.</p>
+</div>
+
+<div class="src">
+<h3>Sources and method notes</h3>
+<p>All figures come from <code>~/hf-analytics/Long_Puase_Customers/long_pausers_surprise_box_TEMPLATE.sql</code>, run on
+Databricks on 13 October 2026, and every percentage was recomputed independently from the raw counts. Main query:
+pause level. Query 2a and 2b: baselines. Query 3: customer level. Query 4: order and payment outcome from
+<code>glue.public_ffdp_finance_tis_live.bob_mealboxes_tis_enriched</code>. Query 5: next-week state, and the unpause flag
+<code>is_unpaused</code> from <code>glue.public_edw_business_mart_live.delivery_status_weekly</code> in the exit week.
+Query 6: cancellations from <code>glue.public_edw_business_mart_live.customer_cancellation_recency_weekly</code>. Pause spells:
+<code>glue.marketing_analytics_main.aca_customer_base_pause_unpause_customer_cluster_granular</code>, panel from 2023-W01 so
+that year-plus pauses are not cut short. Orders: <code>glue.public_one_product_meal_live.facts_recipes_ordered_enriched</code>.</p>
+<p><b>Unpause flag.</b> <code>is_unpaused</code> has no description in <code>delivery_status_weekly</code>. The same column in
+related tables is described as "the customer previously paused and then reactivated their delivery". In the data it is
+only set on deliveries that ended up planned after at least two status changes. A one-week check (2026-W30) against app
+and website unpause clicks in
+<code>glue.private_behavioral_data_products_processed_derived_live.unified_events_reduced</code> found the customer's own
+click for 86.6% of flagged deliveries, against 6.9% of other planned deliveries. Click tracking only starts in April 2026, so
+this cannot be checked for the full 12 months.</p>
+
+</div>
+
+</div>
+<script>
+(function(){
+var D = {"segP": [76542, 94149, 15122, 2692, 53800, 13834], "segC": [49943, 57405, 11790, 2113, 41536, 9098], "nP": 256139, "nC": 171885, "bench": [["Continuing customer (box last week too)", 518628, 2631023], ["All HF Canada boxes in the 12 months", 904303, 4211728], ["First box after a short pause (1–5w)", 195485, 855570], ["First box after a long pause (6w+)", 76542, 170691]], "depths": ["6–12w", "13–26w", "27–52w", "53w+"], "depP": [[102647, 41160], [46816, 23391], [16434, 9091], [4794, 2900]], "depC": [[60545, 25161], [28720, 14546], [13289, 7336], [4794, 2900]], "base": [2631023, 518628], "bands": ["[1]", "[2-5]", "[6-10]", "[11-20]", "[21-50]", "[+51]"], "bandP": [[3337, 1910], [20012, 11056], [23090, 12101], [33701, 16130], [50579, 21089], [39606, 14110]], "bandBase": [[136400, 38081], [313450, 65885], [229784, 47744], [298821, 61084], [501716, 97448], [1136547, 200859]], "nx": [["Long pause, surprise box", [76542, 11626, 62435, 1781, 700, 2319]], ["Long pause, customer acted", [94149, 22087, 70484, 1187, 391, 47197]], ["Short pause, surprise box", [195485, 73455, 115828, 4278, 1924, 5459]], ["Short pause, customer acted", [660085, 290733, 356205, 9927, 3220, 140521]]], "run": [["Payment failed (dunning)", 5392], ["Other payment cancellation", 1173], ["Not shipped, refunded", 886], ["Not shipped, other", 3912], ["No order created", 2090], ["Shipped (missing from orders fact)", 213]], "runN": 13666};
+if (typeof Plotly === 'undefined') {
+  document.querySelectorAll('.chart').forEach(function(el){
+    el.innerHTML = '<div class="fallback">Charts need an internet connection to load. The tables below each chart hold the same numbers.</div>';
+  });
+  return;
+}
+var C = {warn:'#b4531b', warnL:'#e8b493', hf:'#3d7a1f', hfL:'#a9c99a', cool:'#2f6f8f', grey:'#b9c0b1', greyL:'#dfe3d9', ink2:'#454f3c', mute:'#6f7a65'};
+var FONT = {family:'"Helvetica Neue", Helvetica, Arial, sans-serif', size:13, color:'#1b2114'};
+var CFG = {displayModeBar:false, responsive:true};
+function fmt(x){ return x.toLocaleString('en-US'); }
+function pct(a,b,d){ return (100*a/b).toFixed(d===undefined?1:d); }
+function base(extra){
+  var L = {font:FONT, paper_bgcolor:'#fff', plot_bgcolor:'#fff', margin:{l:10,r:20,t:10,b:40},
+           hoverlabel:{font:{family:FONT.family,size:12}}, bargap:0.32};
+  for (var k in extra) L[k] = extra[k];
+  return L;
+}
+
+// Figure 1: exit outcomes
+(function(){
+  var names = ['Surprise box, active','Customer acted, active','Surprise box, cancelled same week','Customer acted, cancelled same week','Cancelled, no box','Active, no box'];
+  var cols = [C.warn, C.hf, C.warnL, C.hfL, C.grey, C.greyL];
+  var ys = ['Per customer', 'Per pause'];
+  var tr = names.map(function(nm,i){
+    var vals = [D.segC[i], D.segP[i]], tots = [D.nC, D.nP];
+    var p = vals.map(function(v,j){ return 100*v/tots[j]; });
+    return {type:'bar', orientation:'h', name:nm, y:ys, x:p, marker:{color:cols[i]},
+      text:p.map(function(v){ return v>=5 ? v.toFixed(1)+'%' : ''; }), textposition:'inside', insidetextanchor:'middle',
+      textfont:{color: i<2 ? '#fff' : '#1b2114', size:12},
+      customdata:vals.map(fmt), hovertemplate:'%{y}<br>'+nm+': %{customdata} (%{x:.1f}%)<extra></extra>'};
+  });
+  Plotly.newPlot('c1', tr, base({barmode:'stack', margin:{l:100,r:20,t:6,b:70},
+    xaxis:{range:[0,100], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false},
+    yaxis:{automargin:true},
+    legend:{orientation:'h', y:-0.32, x:0, font:{size:12}, traceorder:'normal'}}), CFG);
+})();
+
+// Figure 2: benchmarks
+(function(){
+  var b = D.bench, y = b.map(function(r){return r[0];}), x = b.map(function(r){return 100*r[1]/r[2];});
+  Plotly.newPlot('c2', [{type:'bar', orientation:'h', y:y, x:x,
+    marker:{color:[C.cool, C.cool, C.grey, C.warn]},
+    text:x.map(function(v){return v.toFixed(1)+'%';}), textposition:'outside', cliponaxis:false,
+    customdata:b.map(function(r){return fmt(r[1])+' of '+fmt(r[2]);}),
+    hovertemplate:'%{y}<br>%{customdata} boxes untouched<extra></extra>'}],
+    base({margin:{l:10,r:50,t:6,b:36}, showlegend:false,
+      xaxis:{range:[0,52], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false},
+      yaxis:{automargin:true}}), CFG);
+})();
+
+// Figure 3: by depth
+(function(){
+  var p = D.depP.map(function(r){return 100*r[1]/r[0];}), c = D.depC.map(function(r){return 100*r[1]/r[0];});
+  var bl = 100*D.base[1]/D.base[0];
+  Plotly.newPlot('c3', [
+    {type:'bar', name:'Per pause', x:D.depths, y:p, marker:{color:C.warn},
+     text:p.map(function(v){return v.toFixed(1)+'%';}), textposition:'outside', cliponaxis:false,
+     customdata:D.depP.map(function(r){return fmt(r[1])+' of '+fmt(r[0]);}), hovertemplate:'%{x}, per pause<br>%{customdata} first boxes<extra></extra>'},
+    {type:'bar', name:'Per customer', x:D.depths, y:c, marker:{color:C.warnL},
+     text:c.map(function(v){return v.toFixed(1)+'%';}), textposition:'outside', cliponaxis:false,
+     customdata:D.depC.map(function(r){return fmt(r[1])+' of '+fmt(r[0]);}), hovertemplate:'%{x}, per customer<br>%{customdata} first boxes<extra></extra>'}],
+    base({barmode:'group', margin:{l:50,r:20,t:24,b:44},
+      xaxis:{title:{text:'Pause length', font:{size:12,color:C.mute}}},
+      yaxis:{range:[0,70], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false},
+      legend:{orientation:'h', y:1.1, x:0},
+      shapes:[{type:'line', xref:'paper', x0:0, x1:1, y0:bl, y1:bl, line:{color:C.cool, width:2, dash:'dash'}}],
+      annotations:[{xref:'paper', x:1, y:bl, yshift:10, xanchor:'right', showarrow:false,
+        text:'Continuing customers '+bl.toFixed(1)+'%', font:{color:C.cool, size:12}}]}), CFG);
+})();
+
+// Figure 4: by lifetime band vs baseline
+(function(){
+  var p = D.bandP.map(function(r){return 100*r[1]/r[0];}), q = D.bandBase.map(function(r){return 100*r[1]/r[0];});
+  var ann = D.bands.map(function(bd,i){ return {x:bd, y:Math.max(p[i],q[i])+7, showarrow:false,
+      text:'+'+(p[i]-q[i]).toFixed(1)+'pp', font:{size:12, color:C.ink2}}; });
+  Plotly.newPlot('c4', [
+    {type:'bar', name:'First box after a long pause', x:D.bands, y:p, marker:{color:C.warn},
+     text:p.map(function(v){return v.toFixed(1)+'%';}), textposition:'inside', insidetextanchor:'end', textfont:{color:'#fff'},
+     customdata:D.bandP.map(function(r){return fmt(r[1])+' of '+fmt(r[0]);}), hovertemplate:'%{x} lifetime boxes<br>Long pause: %{customdata}<extra></extra>'},
+    {type:'bar', name:'Continuing customers', x:D.bands, y:q, marker:{color:C.cool},
+     text:q.map(function(v){return v.toFixed(1)+'%';}), textposition:'inside', insidetextanchor:'end', textfont:{color:'#fff'},
+     customdata:D.bandBase.map(function(r){return fmt(r[1])+' of '+fmt(r[0]);}), hovertemplate:'%{x} lifetime boxes<br>Continuing: %{customdata}<extra></extra>'}],
+    base({barmode:'group', margin:{l:50,r:20,t:24,b:50}, annotations:ann,
+      xaxis:{title:{text:'Lifetime boxes before the pause ended', font:{size:12,color:C.mute}}},
+      yaxis:{range:[0,72], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false},
+      legend:{orientation:'h', y:1.1, x:0}}), CFG);
+})();
+
+// Figure 5: next week
+(function(){
+  var rows = D.nx.slice().reverse();
+  var y = rows.map(function(r){return r[0];});
+  var parts = [['Box again',1,C.hf,'#fff'],['Paused again',2,C.grey,'#1b2114'],['Cancelled',3,C.ink2,'#fff'],['Other',4,C.greyL,'#1b2114']];
+  var tr = parts.map(function(pt){
+    var x = rows.map(function(r){return 100*r[1][pt[1]]/r[1][0];});
+    return {type:'bar', orientation:'h', name:pt[0], y:y, x:x, marker:{color:pt[2]},
+      text:x.map(function(v){return v>=6 ? v.toFixed(1)+'%' : '';}), textposition:'inside', insidetextanchor:'middle',
+      textfont:{color:pt[3], size:12},
+      customdata:rows.map(function(r){return fmt(r[1][pt[1]])+' of '+fmt(r[1][0]);}),
+      hovertemplate:'%{y}<br>'+pt[0]+': %{customdata} (%{x:.1f}%)<extra></extra>'};
+  });
+  Plotly.newPlot('c5', tr, base({barmode:'stack', margin:{l:10,r:20,t:6,b:70},
+    xaxis:{range:[0,100], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false},
+    yaxis:{automargin:true}, legend:{orientation:'h', y:-0.22, x:0, traceorder:'normal'}}), CFG);
+})();
+
+// Figure 6: running, no box
+(function(){
+  var r = D.run.slice().reverse();
+  var x = r.map(function(v){return 100*v[1]/D.runN;});
+  var col = r.map(function(v){ return /payment|refunded|Not shipped/i.test(v[0]) ? C.warn : C.grey; });
+  Plotly.newPlot('c6', [{type:'bar', orientation:'h', y:r.map(function(v){return v[0];}), x:x, marker:{color:col},
+    text:x.map(function(v){return v.toFixed(1)+'%';}), textposition:'outside', cliponaxis:false,
+    customdata:r.map(function(v){return fmt(v[1]);}), hovertemplate:'%{y}<br>%{customdata} pauses (%{x:.1f}%)<extra></extra>'}],
+    base({showlegend:false, margin:{l:10,r:50,t:6,b:36},
+      xaxis:{range:[0,46], ticksuffix:'%', gridcolor:'#eef1ea', zeroline:false}, yaxis:{automargin:true}}), CFG);
+})();
+})();
+</script>
+</body>
+</html>
