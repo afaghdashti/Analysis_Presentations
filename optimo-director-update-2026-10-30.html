@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optimo redesign: director update, Oct 30, 2026</title>
+<style>
+  :root {
+    --paper: #F6F7F2;
+    --ink: #1F2A22;
+    --ink-2: #4A574D;
+    --ink-3: #7A867C;
+    --basil: #2E6B45;
+    --basil-soft: #DDE9DF;
+    --lime: #A3C93A;
+    --tomato: #C8462F;
+    --line: #CDD4C8;
+    --mist: #E9EDE4;
+    --sans: "Avenir Next", "Avenir", "Segoe UI", system-ui, sans-serif;
+    --serif: "Iowan Old Style", "Charter", "Georgia", serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #DADFD5; color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  body { overflow: hidden; }
+
+  /* ---------- stage: fixed 1280×720 slides, scaled to fit ---------- */
+  .viewport { position: fixed; inset: 0; overflow: hidden; }
+  .stage { width: 1280px; height: 720px; position: absolute; left: 50%; top: 50%; transform-origin: center center; }
+  .slide {
+    position: absolute; inset: 0; background: var(--paper);
+    padding: 64px 80px 72px; display: none; flex-direction: column;
+    box-shadow: 0 2px 30px rgba(31,42,34,.12);
+  }
+  .slide.active { display: flex; }
+  .foot {
+    position: absolute; left: 80px; right: 80px; bottom: 26px;
+    display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-3);
+  }
+
+  h1, h2, h3, p { margin: 0; }
+  h2 { font-size: 40px; line-height: 1.12; font-weight: 700; letter-spacing: -0.015em; max-width: 22em; }
+  .lede { font-size: 19px; line-height: 1.5; color: var(--ink-2); margin-top: 14px; max-width: 46em; }
+  h3 { font-size: 18px; font-weight: 700; line-height: 1.3; }
+  .small { font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+  ul.plain { list-style: none; margin: 0; padding: 0; }
+
+  /* ---------- status marks (shared across slides) ---------- */
+  .mark { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .dot.built { background: var(--basil); }
+  .dot.nov { background: var(--paper); border: 2.5px solid var(--basil); }
+  .dot.dec { background: var(--paper); border: 2px dashed var(--ink-3); }
+  .dot.patrick { background: var(--paper); border: 2.5px solid var(--ink-3); }
+
+  /* ---------- slide 1: title ---------- */
+  .s-title { justify-content: space-between; padding-top: 88px; }
+  .s-title .name { font-size: 104px; font-weight: 700; letter-spacing: -0.035em; line-height: .95; }
+  .s-title .name span { display: block; font-weight: 400; color: var(--basil); }
+  .s-title .promise { font-size: 24px; line-height: 1.45; color: var(--ink-2); margin-top: 30px; max-width: 30em; }
+  .s-title .meta { display: flex; gap: 56px; font-size: 15px; color: var(--ink-2); border-top: 1px solid var(--line); padding-top: 18px; margin-bottom: 18px; }
+  .s-title .meta b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 2px; }
+
+  /* ---------- slide 2: why ---------- */
+  .why { display: grid; grid-template-columns: 330px 1fr; gap: 56px; margin-top: 34px; flex: 1; }
+  .who { border-right: 1px solid var(--line); padding-right: 40px; }
+  .who p.what { font-size: 16.5px; line-height: 1.5; color: var(--ink); margin-bottom: 22px; }
+  .who li { padding: 10px 0; border-top: 1px solid var(--line); }
+  .who li b { display: block; font-size: 15.5px; }
+  .who li span { font-size: 14px; color: var(--ink-2); }
+  .pains { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 44px; align-content: start; }
+  .pain h3 { margin-bottom: 8px; }
+  .pain blockquote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1.45; color: var(--ink); border-left: 3px solid var(--lime); padding-left: 14px; }
+  .pain cite { display: block; font-style: normal; font-family: var(--sans); font-size: 13px; color: var(--ink-3); margin-top: 6px; padding-left: 17px; }
+
+  /* ---------- slide 3: the line (memorable element) ---------- */
+  .line-wrap { margin-top: 46px; position: relative; flex: 1; }
+  .rail { position: absolute; left: 0; right: 0; top: 86px; height: 4px; background: var(--basil); border-radius: 2px; }
+  .rail::after { content: ""; position: absolute; right: -2px; top: -6px; border-left: 12px solid var(--basil); border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+  .stations { display: grid; grid-template-columns: repeat(6, 1fr); gap: 22px; position: relative; }
+  .station .step { font-size: 14px; color: var(--ink-3); font-weight: 600; height: 22px; }
+  .station .sname { font-size: 21px; font-weight: 700; line-height: 1.15; height: 52px; letter-spacing: -0.01em; }
+  .station .node { width: 26px; height: 26px; border-radius: 50%; margin: 2px 0 22px; position: relative; z-index: 1; }
+  .node.built { background: var(--basil); box-shadow: 0 0 0 6px var(--paper); }
+  .node.nov { background: var(--paper); border: 4px solid var(--basil); box-shadow: 0 0 0 6px var(--paper); }
+  .node.dec { background: var(--paper); border: 3px dashed var(--ink-3); box-shadow: 0 0 0 6px var(--paper); }
+  .station p { font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+  .station .when { margin-top: 12px; font-size: 13.5px; font-weight: 700; color: var(--basil); }
+  .station .when.later { color: var(--ink-3); }
+  .station .owner { font-size: 13px; color: var(--ink-3); margin-top: 4px; }
+  .legend { display: flex; gap: 26px; margin-top: 8px; }
+
+  /* ---------- slide 4: done ---------- */
+  .done-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; margin-top: 34px; }
+  .done-col h3 { font-size: 15px; color: var(--ink-3); font-weight: 600; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  .done-col li { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .done-col li .d { font-size: 13.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .done-col li b { display: block; font-size: 16.5px; margin-bottom: 3px; }
+  .done-col li span { font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
+
+  /* ---------- slide 5: Excelsior ---------- */
+  .exc { display: grid; grid-template-columns: 300px 1fr; gap: 48px; margin-top: 30px; }
+  .owner-col > h3 { font-size: 15px; color: var(--ink-3); font-weight: 600; margin-bottom: 14px; }
+  .patrick-box { border: 1.5px solid var(--ink-3); border-radius: 6px; padding: 22px 24px; }
+  .patrick-box b { font-size: 19px; display: block; margin-bottom: 10px; }
+  .patrick-box li { font-size: 14.5px; line-height: 1.5; color: var(--ink-2); padding: 6px 0; border-top: 1px solid var(--line); }
+  .patrick-box .tim { font-size: 13.5px; color: var(--ink-3); margin-top: 12px; }
+  .chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .link { padding: 20px 20px 22px; background: var(--mist); border-right: 2px solid var(--paper); position: relative; display: flex; flex-direction: column; }
+  .link:first-child { background: var(--basil-soft); border-radius: 6px 0 0 6px; }
+  .link:last-child { border-right: 0; border-radius: 0 6px 6px 0; }
+  .link .n { font-size: 30px; font-weight: 700; color: var(--basil); line-height: 1; }
+  .link b { display: block; font-size: 17px; line-height: 1.25; margin: 10px 0 8px; min-height: 42px; }
+  .link p { font-size: 14px; line-height: 1.48; color: var(--ink-2); }
+  .link .st { margin-top: auto; padding-top: 12px; }
+  .shared { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .shared p { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+  .shared p b { color: var(--ink); }
+
+  /* ---------- slide 6: plan ---------- */
+  .tl { margin-top: 48px; }
+  .bar { display: grid; grid-template-columns: 14fr 14fr 28fr; height: 54px; position: relative; }
+  .bar > div { display: flex; align-items: center; padding: 0 16px; font-weight: 700; font-size: 16px; border-right: 3px solid var(--paper); }
+  .bar .s5 { background: var(--basil); color: #fff; border-radius: 6px 0 0 6px; }
+  .bar .s6 { background: #4F8A63; color: #fff; }
+  .bar .buf { background: repeating-linear-gradient(135deg, var(--mist), var(--mist) 9px, #DCE2D6 9px, #DCE2D6 18px); color: var(--ink-2); border-radius: 0 6px 6px 0; border-right: 0; }
+  .bar small { font-weight: 500; font-size: 13.5px; margin-left: 10px; opacity: .85; }
+  .bar > .today { position: absolute; display: block; top: -30px; height: 30px; left: calc(1.5 / 56 * 100%); width: 0; padding: 0; border-right: 0; border-left: 2px solid var(--tomato); }
+  .bar > .today::after { content: ""; position: absolute; bottom: -1px; left: -6px; border-top: 7px solid var(--tomato); border-left: 5px solid transparent; border-right: 5px solid transparent; }
+  .today span { position: absolute; top: 0; left: 6px; font-size: 12.5px; font-weight: 700; color: var(--tomato); white-space: nowrap; }
+  .cols { display: grid; grid-template-columns: 14fr 14fr 28fr; margin-top: 18px; }
+  .cols > div { padding: 0 22px 0 16px; border-left: 1px solid var(--line); }
+  .cols > div:first-child { border-left: 0; padding-left: 0; }
+  .cols li { font-size: 14.5px; line-height: 1.4; padding: 7px 0 7px 16px; position: relative; color: var(--ink); }
+  .cols li::before { content: ""; position: absolute; left: 0; top: 14px; width: 7px; height: 7px; border-radius: 50%; background: var(--basil); }
+  .cols .buffer-col li::before { background: transparent; border: 1.5px solid var(--ink-3); }
+  .cols li i { font-style: normal; color: var(--ink-3); }
+  .ms { margin-top: 10px; font-size: 13.5px; font-weight: 700; color: var(--basil); }
+  .buffer-col .ms { color: var(--ink-3); }
+  .buffer-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+
+  /* ---------- slide 7: risks + after ---------- */
+  .end { display: grid; grid-template-columns: 1.15fr 1fr; gap: 60px; margin-top: 34px; }
+  .end h3.col { font-size: 15px; color: var(--ink-3); font-weight: 600; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  .risk { padding: 12px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; }
+  .risk b { font-size: 16px; line-height: 1.35; }
+  .risk span { font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
+  .later li { padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .later li b { font-size: 15.5px; display: block; }
+  .later li span { font-size: 14px; color: var(--ink-2); }
+  .how { margin-top: 22px; font-size: 15px; line-height: 1.5; color: var(--ink-2); background: var(--mist); padding: 16px 20px; border-radius: 6px; }
+  .how b { color: var(--ink); }
+
+  /* ---------- controls ---------- */
+  .controls { position: fixed; right: 18px; bottom: 16px; display: flex; gap: 8px; align-items: center; z-index: 5; }
+  .controls button { font: 600 14px var(--sans); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+  .controls button:hover { border-color: var(--basil); }
+  .controls button:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+  .controls .count { font-size: 13px; color: var(--ink-2); min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    html, body { background: #fff; overflow: visible; height: auto; }
+    .viewport { position: static; display: block; }
+    .stage { transform: none !important; position: static; width: 1280px; height: auto; }
+    .slide { display: flex !important; position: relative; width: 1280px; height: 720px; box-shadow: none; page-break-after: always; break-after: page; }
+    .controls { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="viewport">
+<main class="stage" id="stage">
+
+  <!-- 1 · Title -->
+  <section class="slide s-title" aria-label="Title">
+    <div>
+      <div class="name">Optimo<span>redesign</span></div>
+      <p class="promise">One place to go from the recipe pool to a signed-off menu, and with Excelsior, to see what the menu costs before it's locked.</p>
+    </div>
+    <div class="meta">
+      <div><b>Status update for Heince</b>October 30, 2026</div>
+      <div><b>Afagh Dashti</b>Owner and developer</div>
+      <div><b>Where we are</b>Build started Oct 21, aiming to be live by end of November</div>
+    </div>
+  </section>
+
+  <!-- 2 · Why -->
+  <section class="slide" aria-label="Why we're redesigning it">
+    <h2>Optimo is used every week, but parts of it no longer match how we plan menus</h2>
+    <div class="why">
+      <div class="who">
+        <p class="what">Optimo is our Streamlit app for the recipe pool, menu rules, recipe and menu checks, and the review we use at sign-off.</p>
+        <ul class="plain">
+          <li><b>Culinary and Menu Strategy</b><span>Irene: pool health, seasonality, sign-off</span></li>
+          <li><b>Menu Planning</b><span>Emma, Ray, Carlos: rules, uploads, swaps, review</span></li>
+          <li><b>Menu sign-off</b><span>Leadership: Final Menu and Menu Analytics</span></li>
+        </ul>
+      </div>
+      <div class="pains">
+        <div class="pain">
+          <h3>Menu rules are out of date and slow</h3>
+          <blockquote>“family isn't even a preference anymore”</blockquote>
+          <cite>Irene, Culinary</cite>
+        </div>
+        <div class="pain">
+          <h3>Recipe checks show the wrong weeks</h3>
+          <blockquote>“it's in CPS. We signed off on it already”</blockquote>
+          <cite>Irene, on Recipe Validation for week 45</cite>
+        </div>
+        <div class="pain">
+          <h3>Recipe cost doesn't match finance</h3>
+          <blockquote>“this cost is not … what Jesse and Patrick have”</blockquote>
+          <cite>Emma, Menu Planning</cite>
+        </div>
+        <div class="pain">
+          <h3>Swaps are made without seeing the cost</h3>
+          <blockquote>“when I make a swap I know nothing about … how it's going to affect cost”</blockquote>
+          <cite>Emma, Excelsior scoping</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · The line -->
+  <section class="slide" aria-label="The redesign follows how a menu gets made">
+    <h2>The redesign follows the order a menu gets made in</h2>
+    <p class="lede">The pages are regrouped into the steps planners already follow, and I'm rebuilding them one at a time in that order.</p>
+    <div class="line-wrap">
+      <div class="rail" aria-hidden="true"></div>
+      <div class="stations">
+        <div class="station">
+          <div class="step">Step 1</div>
+          <div class="sname">Recipe Pool</div>
+          <div class="node built" aria-hidden="true"></div>
+          <p>One week at a time, SKU search, protein cut and grams, and a pool health dashboard.</p>
+          <div class="when">Built, going live now</div>
+        </div>
+        <div class="station">
+          <div class="step">Step 2</div>
+          <div class="sname">Menu rules</div>
+          <div class="node nov" aria-hidden="true"></div>
+          <p>One master plan from the Product Calendar and GAMP sheets, copied per week and GAMP version.</p>
+          <div class="when">November</div>
+        </div>
+        <div class="station">
+          <div class="step">Step 3</div>
+          <div class="sname">Recipe and data checks</div>
+          <div class="node nov" aria-hidden="true"></div>
+          <p>Recipe Validation on the new rules, plus Data Validation as its own page.</p>
+          <div class="when">November</div>
+        </div>
+        <div class="station">
+          <div class="step">Step 4</div>
+          <div class="sname">Upload and swaps</div>
+          <div class="node nov" aria-hidden="true"></div>
+          <p>Upload a GAMP version, compare swap options with their cost impact, and test scenarios.</p>
+          <div class="when">November</div>
+        </div>
+        <div class="station">
+          <div class="step">Step 5</div>
+          <div class="sname">Review and sign-off</div>
+          <div class="node nov" aria-hidden="true"></div>
+          <p>Review, Final Menu and Menu Analytics on the GAMP version plus swaps. Analytics already loads faster.</p>
+          <div class="when">November</div>
+        </div>
+        <div class="station">
+          <div class="step">Step 6</div>
+          <div class="sname">COGS tracking</div>
+          <div class="node dec" aria-hidden="true"></div>
+          <p>Patrick's Excelsior COGS page: how cost moves from sign-off to lock.</p>
+          <div class="when later">December</div>
+          <div class="owner">Built by Patrick</div>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      <span class="mark"><span class="dot built"></span>Built</span>
+      <span class="mark"><span class="dot nov"></span>Building in November</span>
+      <span class="mark"><span class="dot dec"></span>December buffer</span>
+    </div>
+  </section>
+
+  <!-- 4 · Done -->
+  <section class="slide" aria-label="What's done">
+    <h2>Since August: the design is agreed and the build has started</h2>
+    <div class="done-grid">
+      <div class="done-col">
+        <h3>Understand and design</h3>
+        <ul class="plain">
+          <li><span class="d">Aug – Sep</span><div><b>User interviews and Excelsior scoping</b><span>Irene, Emma, Ray and Carlos (HF and Chef's Plate), Niyanth, and the Excelsior group</span></div></li>
+          <li><span class="d">Oct 1</span><div><b>52 requirements approved</b><span>Every item traced to a meeting and a person</span></div></li>
+          <li><span class="d">Oct 1 – 9</span><div><b>Design, user stories and a working draft</b><span>The draft runs on real week 45 data, so users can click through it</span></div></li>
+          <li><span class="d">Oct 9</span><div><b>Green light to build</b><span>Bi-weekly review with you and Niyanth set the build order</span></div></li>
+        </ul>
+      </div>
+      <div class="done-col">
+        <h3>Built in the app</h3>
+        <ul class="plain">
+          <li><span class="d">Oct 21</span><div><b>Menu Analytics loads faster</b><span>About 50 seconds less on the first load of the day, after removing the Trends and Supply vs demand tabs</span></div></li>
+          <li><span class="d">Oct 28</span><div><b>Recipe Pool redesigned</b><span>One week at a time, new filters and columns, and a Pool Dashboard for Irene's pool health view</span></div></li>
+          <li><span class="d">Oct 29</span><div><b>Recipe cost fixed across the app</b><span>Cost uses the forecast DC demand mix, not a fixed 65/20/15. Picking two weeks no longer doubles it</span></div></li>
+          <li><span class="d">Sep – Oct</span><div><b>Smaller asks from planners</b><span>Veggie and starch on the heatmap, multi-select preference filter</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Excelsior -->
+  <section class="slide" aria-label="Excelsior COGS in Optimo">
+    <h2>Excelsior COGS comes into Optimo, split between Patrick and me</h2>
+    <p class="lede">Excelsior scoping chose Optimo for the menu-planning side of COGS.</p>
+    <div class="exc">
+      <div class="owner-col">
+        <h3>Patrick builds</h3>
+        <div class="patrick-box">
+          <b>The COGS page</b>
+          <ul class="plain">
+            <li>Waterfall of menu cost from 12 weeks out to lock</li>
+            <li>Comparison one week after shipping: static price vs expected price</li>
+          </ul>
+          <p class="tim">Added to Optimo when it's ready, planned in the December buffer</p>
+        </div>
+      </div>
+      <div class="owner-col">
+        <h3>I build, in this order</h3>
+        <div class="chain">
+          <div class="link">
+            <div class="n">1</div>
+            <b>Recipe cost logic</b>
+            <p>Patrick's static prices for every pool recipe, weighted by DC demand.</p>
+            <div class="st"><span class="mark"><span class="dot built"></span>Built Oct 29</span></div>
+          </div>
+          <div class="link">
+            <div class="n">2</div>
+            <b>Same cost on every page</b>
+            <p>One cost logic, per plate, on every page that shows cost.</p>
+            <div class="st"><span class="mark"><span class="dot nov"></span>November</span></div>
+          </div>
+          <div class="link">
+            <div class="n">3</div>
+            <b>Cost impact of a swap</b>
+            <p>Menu cost per plate and the change in weekly dollars, before the swap.</p>
+            <div class="st"><span class="mark"><span class="dot nov"></span>November</span></div>
+          </div>
+          <div class="link">
+            <div class="n">4</div>
+            <b>Scenario Sandbox</b>
+            <p>Change volume, cost or a SKU per slot and see menu COGS.</p>
+            <div class="st"><span class="mark"><span class="dot nov"></span>November</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="shared">
+      <p><b>Same numbers in both places.</b> Optimo and Patrick's page share static prices, DC mix and cost per plate, so planners and finance see one cost.</p>
+      <p><b>Answers Emma's ask.</b> Compare two or three swap options and see how each moves the menu cost before choosing.</p>
+    </div>
+  </section>
+
+  <!-- 6 · Plan -->
+  <section class="slide" aria-label="Plan to end of November">
+    <h2>Plan: live by end of November, with December only as a buffer</h2>
+    <div class="tl">
+      <div class="bar">
+        <div class="s5">Sprint 5<small>Oct 29 – Nov 11</small></div>
+        <div class="s6">Sprint 6<small>Nov 12 – 25</small></div>
+        <div class="buf">Buffer, only if needed<small>Nov 26 – Dec 23</small></div>
+        <div class="today" aria-hidden="true"><span>Today</span></div>
+      </div>
+      <div class="cols">
+        <div>
+          <ul class="plain">
+            <li>Recipe Pool + cost logic live</li>
+            <li>Data Validation page</li>
+            <li>Menu rules + Recipe Validation</li>
+            <li>Storage decision (engineering)</li>
+            <li>Cost impact of swaps</li>
+            <li>User testing plan</li>
+            <li>Seasonality score fix</li>
+          </ul>
+          <div class="ms">Nov 11: cost logic live, first new pages built</div>
+        </div>
+        <div>
+          <ul class="plain">
+            <li>Upload &amp; swaps + Sandbox</li>
+            <li>Review and Final Menu</li>
+            <li>Same cost on every page</li>
+            <li>Core vs surcharge filter</li>
+            <li>2027 week fix in pool chart</li>
+            <li>Testing with planners + Culinary</li>
+            <li>Release the redesign</li>
+          </ul>
+          <div class="ms">Nov 25: redesign live</div>
+        </div>
+        <div class="buffer-col">
+          <div class="buffer-split">
+            <ul class="plain">
+              <li>Onboarding sessions and user guide</li>
+              <li>Patrick's COGS page added to Optimo</li>
+              <li>Fixes from the first weeks live</li>
+            </ul>
+            <ul class="plain">
+              <li>Protein macros in Menu Analytics</li>
+              <li>Anything that slipped from November</li>
+              <li>Retro and 2027 planning</li>
+            </ul>
+          </div>
+          <div class="ms">Dec 23: buffer ends</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Risks and after -->
+  <section class="slide" aria-label="Risks and what comes after">
+    <h2>What could move the dates, and what comes after</h2>
+    <div class="end">
+      <div>
+        <h3 class="col">Watching</h3>
+        <div class="risk"><b>Where the menu rules are stored</b><span>The rules rebuild waits on engineering, who are moving off Snowflake in 2027.</span></div>
+        <div class="risk"><b>Timing of Patrick's COGS page</b><span>Not set yet, so it's in the buffer. Shared cost rules keep the numbers aligned.</span></div>
+        <div class="risk"><b>Sprint 6 is full</b><span>If it runs over, the Scenario Sandbox moves to December first.</span></div>
+        <div class="risk"><b>New asks after launch</b><span>December is for fixes; new requests go to the 2027 backlog.</span></div>
+        <p class="how"><b>How we build it.</b> I own the app. Others, like Patrick and Tom, add pages through GitHub, so Optimo doesn't depend on one person.</p>
+      </div>
+      <div>
+        <h3 class="col">2027 candidates</h3>
+        <ul class="plain later">
+          <!-- <li><b>Tag and data-quality upkeep</b><span>Out of scope for the redesign</span></li> -->
+          <!-- <li><b>Collections planning</b><span>Google Sheets trial first, then maybe Optimo</span></li> -->
+          <li><b>Global GAMP pool health</b><span>Looking at the global Databricks app</span></li>
+          <li><b>Menu analysis by segment</b><span>Potential 2027 plan</span></li>
+          <li><b>Noodle recipe search</b><span>Talk to Amelyn early about the attributes</span></li>
+          <li><b>AI recipe recommendations</b><span>Exploratory</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<nav class="controls" aria-label="Slide controls">
+  <button id="prev" aria-label="Previous slide">Back</button>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button id="next" aria-label="Next slide">Next</button>
+</nav>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const stage = document.getElementById('stage');
+  const total = slides.length;
+  let i = 0;
+
+  // footer on every slide but the title
+  slides.forEach((s, n) => {
+    if (n === 0) return;
+    const f = document.createElement('div');
+    f.className = 'foot';
+    f.innerHTML = '<span>Optimo redesign, status update, Oct 30, 2026</span><span>' + (n + 1) + ' of ' + total + '</span>';
+    s.appendChild(f);
+  });
+
+  function fit() {
+    const k = Math.min(window.innerWidth / 1280, (window.innerHeight - 70) / 720) * 0.96;
+    stage.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    document.getElementById('count').textContent = (i + 1) + ' / ' + total;
+    document.getElementById('prev').disabled = i === 0;
+    document.getElementById('next').disabled = i === total - 1;
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  document.getElementById('prev').addEventListener('click', () => show(i - 1));
+  document.getElementById('next').addEventListener('click', () => show(i + 1));
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(i + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(total - 1);
+  });
+  window.addEventListener('resize', fit);
+  fit();
+  show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+</script>
+</body>
+</html>
