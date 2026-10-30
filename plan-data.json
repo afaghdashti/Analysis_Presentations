@@ -7,7 +7,7 @@
       "sprint": 1,
       "status": "done",
       "priority": "high",
-      "desc": "Complete remaining Menu Planning interviews."
+      "desc": "Sep 9 — interview done."
     },
     {
       "id": "s2",
@@ -16,25 +16,25 @@
       "sprint": 1,
       "status": "done",
       "priority": "high",
-      "desc": "Reconcile with Carlos-relayed feedback from Sep 1."
+      "desc": "Sep 9 — interview done. Reconciled with Carlos-relayed feedback from Sep 1."
     },
     {
       "id": "s4",
-      "title": "Synthesize discovery findings into requirements doc",
+      "title": "Requirements v1 (52 requirements) — approved",
       "epic": "E1",
       "sprint": 1,
       "status": "done",
       "priority": "high",
-      "desc": "Consolidate Carlos, Irene, Niyanth, Ray, Emma, directors."
+      "desc": "Consolidates Carlos, Irene, Niyanth, Ray, Emma + Excelsior scoping (Sep 28). Approved Oct 1. File: optimo-requirements-v1.md"
     },
     {
       "id": "s5",
-      "title": "Finalize phased IA (Prepare / Build / Sign-Off / Performance Review)",
+      "title": "Finalize IA",
       "epic": "E1",
       "sprint": 1,
       "status": "done",
       "priority": "high",
-      "desc": "Lock the 4-module structure. Foundation for build sprints."
+      "desc": "First drafted as 4 modules (Prepare / Build / Sign-Off / Performance Review). Replaced on Oct 9 by the page build order."
     },
     {
       "id": "s6",
@@ -55,15 +55,6 @@
       "desc": "Manager checkpoint"
     },
     {
-      "id": "s8",
-      "title": "Feasibility check: developer-name field on recipe pool dataset",
-      "epic": "E2",
-      "sprint": 2,
-      "status": "todo",
-      "priority": "med",
-      "desc": "Aug 27 next step from Irene meeting."
-    },
-    {
       "id": "s9",
       "title": "Roadmap review with manager (3rd week Sept)",
       "epic": "E1",
@@ -73,13 +64,328 @@
       "desc": "Milestone — sign-off on the plan before build kickoff."
     },
     {
-      "id": "s10",
-      "title": "Develope \"Prepare\" module (Menu Architecture consolidation)",
+      "id": "n1788533685724",
+      "title": "Discuss the data source for menu architecture with engineering",
       "epic": "E1",
       "sprint": 2,
+      "status": "done",
+      "priority": "med",
+      "desc": ""
+    },
+    {
+      "id": "n1792694884014",
+      "title": "Build Databricks table for slot breakdown",
+      "epic": "E1",
+      "sprint": 2,
+      "status": "done",
+      "priority": "med",
+      "desc": "Table exists; the app does not read it yet (comes with MA + RV)."
+    },
+    {
+      "id": "d1",
+      "title": "Design spec v1 + wireframe v1",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 1. Files: optimo-design-spec-v1.md, optimo-wireframe-v1.html"
+    },
+    {
+      "id": "d2",
+      "title": "User stories v1 + design review",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 7–8. 64 user stories, 65 change verdicts. Files: optimo-user-stories-v1.md, optimo-design-review-v1.md"
+    },
+    {
+      "id": "d3",
+      "title": "Wireframe v2 on real 2026-W45 data",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 9. Uses the OPTIMO exports (menu upload, slot presets, latest entire menu). File: optimo-wireframe-v2-2026-W45-real.html"
+    },
+    {
+      "id": "d4",
+      "title": "Stakeholder draft for the bi-weekly review",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 9. Real app look, reviewer mode, overview + open decisions. File: optimo-redesign-draft-2026-W45-lates.html"
+    },
+    {
+      "id": "d5",
+      "title": "Bi-weekly review — green light to build",
+      "epic": "E1",
+      "sprint": 3,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 9 with Niyanth + Heince. Build order: Recipe Pool first. Data Validation = its own page. GAMP does not read from Optimo. Master/copy storage goes to engineering."
+    },
+    {
+      "id": "d6",
+      "title": "Stakeholder draft v3 with the Oct 9 feedback",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 20–21. COGS waterfall, swap cost per plate, NID SKU proxy, sandbox remove/replace SKU. File: optimo-redesign-draft-2026-W45-v3.html"
+    },
+    {
+      "id": "p1",
+      "title": "Recipe Pool page redesign",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 28. One HF week at a time (current week → 2027-W30, default current + 12, \"Show previous weeks\"). SKU name/code search, \"Ready for menu planning only\", ProteinCut + ProteinGrams, all columns, Avg SIR card removed, faster load (daily refresh ~11:45 UTC)."
+    },
+    {
+      "id": "s29",
+      "title": "Push staging → live (first release)",
+      "epic": "E1",
+      "sprint": 4,
+      "status": "done",
+      "priority": "high",
+      "desc": "Marked done by Afagh."
+    },
+    {
+      "id": "p2",
+      "title": "Push the Oct 28–29 Recipe Pool + pool COGS changes live",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "progress",
+      "priority": "high",
+      "desc": "Built in staging, not pushed yet."
+    },
+    {
+      "id": "n1788533641443",
+      "title": "Build \"Data Validation\" page",
+      "epic": "E1",
+      "sprint": 5,
       "status": "todo",
       "priority": "high",
-      "desc": "Consolidate tabs. Read from product sheet → data table. Fold in Recipe Validation + Data Validation. Retire obsolete family-preference constraints."
+      "desc": "Its own separate page (Oct 9 decision). Next page in the build order."
+    },
+    {
+      "id": "p3",
+      "title": "Upload & Swaps page",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Rebuild of Menu Upload + Shortlist + Swap Log. Swap cost difference is tracked in E3."
+    },
+    {
+      "id": "p5",
+      "title": "Get the master + weekly copy storage decision from engineering",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Blocks MA + RV. Moving away from Snowflake in 2027 (Databricks?)."
+    },
+    {
+      "id": "n1788536519404",
+      "title": "Create a UAT framework",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "med",
+      "desc": "How they're gonna test? functions, questions, responses? break the tool down and see what fixes are needed.\ngiving specific directions to user - and expectations on deadline - Can be meetings booked in advance\nAsk engineers or others for examples"
+    },
+    {
+      "id": "p6",
+      "title": "Review & Final Menu page",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Comparison + Final Menu = GAMP version + swaps (not MPS). Menu Review Collection filter from Slot Breakdown Collection 1/2."
+    },
+    {
+      "id": "s14",
+      "title": "Rebuild Menu Architecture + Recipe Validation",
+      "epic": "E1",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Blocked on p5 (storage). Master table from the 2 sheets → clone per week + version → edit. Versions stay (= GAMP version). Eligibility = include AND NOT exclude. First item to move into the December buffer if storage is late."
+    },
+    {
+      "id": "s25",
+      "title": "End-to-end user testing — menu planning + culinary",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "With Emma, Ray, Carlos, Irene, using the UAT framework. Includes the render test on the menu sign-off room vertical TV (3x3, Jin's dims)."
+    },
+    {
+      "id": "s26",
+      "title": "Bug-fix pass from testing feedback",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Reserve capacity for iteration."
+    },
+    {
+      "id": "s27",
+      "title": "Write user documentation + change-summary",
+      "epic": "E1",
+      "sprint": 7,
+      "status": "todo",
+      "priority": "med",
+      "desc": "For users onboarding to the new app."
+    },
+    {
+      "id": "s28",
+      "title": "Prepare onboarding materials",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Slack posts, walkthrough video, sessions."
+    },
+    {
+      "id": "s30",
+      "title": "User onboarding sessions (MP, culinary, leadership)",
+      "epic": "E1",
+      "sprint": 7,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Live walkthroughs."
+    },
+    {
+      "id": "p8",
+      "title": "Push the redesigned pages live",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Release of everything built in S5–S6."
+    },
+    {
+      "id": "n1788537387648",
+      "title": "Executive Deck build",
+      "epic": "E1",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "med",
+      "desc": ""
+    },
+    {
+      "id": "s31",
+      "title": "Post-launch fixes + adoption monitoring",
+      "epic": "E1",
+      "sprint": 7,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Buffer. Issues from the first 2 weeks live, plus anything that slipped from S6 (MA + RV first)."
+    },
+    {
+      "id": "s32",
+      "title": "Retrospective + 2027 planning kickoff",
+      "epic": "E1",
+      "sprint": 8,
+      "status": "todo",
+      "priority": "med",
+      "desc": "Buffer. What worked, what to change, roadmap for the 2027 backlog."
+    },
+    {
+      "id": "n1788537023546",
+      "title": "Discuss COGS logic with Jessie/Patrick",
+      "epic": "E3",
+      "sprint": 1,
+      "status": "done",
+      "priority": "med",
+      "desc": ""
+    },
+    {
+      "id": "n1792694934833",
+      "title": "Design the Scenario Sandbox for COGS and volume",
+      "epic": "E3",
+      "sprint": 2,
+      "status": "done",
+      "priority": "med",
+      "desc": "Design is in the stakeholder draft (v3 adds remove/replace SKU). Build = c7."
+    },
+    {
+      "id": "c1",
+      "title": "COGS Pool Query (Patrick V2 adapted to every pool recipe)",
+      "epic": "E3",
+      "sprint": 4,
+      "status": "done",
+      "priority": "high",
+      "desc": "Oct 28. Static price only, CAD, all box sizes, DC weights = target-week forecast plate mix per brand core box. File: COGS Pool Query (from Patrick V2).sql"
+    },
+    {
+      "id": "c2",
+      "title": "Pool COGS logic in the app (cost2p)",
+      "epic": "E3",
+      "sprint": 5,
+      "status": "progress",
+      "priority": "high",
+      "desc": "Oct 29, built in staging, not pushed (push = p2). Forecast DC demand mix instead of 65/20/15 (last forecast week if none yet). Multi-week cost averaged, not summed. Duplicate recipes removed. New PriceMissingSkuCount column. W45: HF 9.12 → 9.13, CP 7.35 → 7.34."
+    },
+    {
+      "id": "c4",
+      "title": "Swap cost difference",
+      "epic": "E3",
+      "sprint": 5,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Built into Upload & Swaps (p3). Demand-weighted menu cost per plate vs current + Δ weekly $. Demand = live forecast (menu_services_forecast_enriched, Patrick's offset-0 source)."
+    },
+    {
+      "id": "c5",
+      "title": "Align cost on the rebuilt pages to the pool COGS logic",
+      "epic": "E3",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Done as each page is rebuilt: Upload, Shortlist, Comparison, Review, Final. Cost unit = per plate."
+    },
+    {
+      "id": "c6",
+      "title": "Align cost on the pages that are not rebuilt yet",
+      "epic": "E3",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Menu Analytics, Data Validation discrepancies, Recipe Validation (until MA + RV)."
+    },
+    {
+      "id": "c7",
+      "title": "Scenario Sandbox - part of uploads & Swaps page",
+      "epic": "E3",
+      "sprint": 6,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Adjust volume + cost per slot, see menu COGS; remove/replace-SKU scenario. First to move into the December buffer if S6 is full."
+    },
+    {
+      "id": "c8",
+      "title": "Patrick: COGS page (waterfall T-12→T0 + Spencer comparison T+1)",
+      "epic": "E3",
+      "sprint": 7,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Owner: Patrick. Dependency — timing not known yet. Replaces the \"COGS waterfall in Menu Analytics\" story from Oct 9. Contributed via GitHub (modular model)."
+    },
+    {
+      "id": "c9",
+      "title": "Add Patrick's COGS page to the nav + push it live",
+      "epic": "E3",
+      "sprint": 7,
+      "status": "todo",
+      "priority": "high",
+      "desc": "Owner: Afagh. December buffer because his timing is unknown; move earlier if he is ready."
     },
     {
       "id": "s11",
@@ -100,76 +406,13 @@
       "desc": "Sep 1 ask from Carlos."
     },
     {
-      "id": "s13",
-      "title": "Enhancement: Core vs Surcharge filter in Menu Analysis",
+      "id": "n1792695027400",
+      "title": "Menu Analytics: faster loading",
       "epic": "E2",
-      "sprint": 2,
-      "status": "todo",
-      "priority": "med",
-      "desc": "Sep 1 ask from Carlos."
-    },
-    {
-      "id": "s14",
-      "title": "Rebuild Menu Architecture and Recipe Validation page (non-functional)",
-      "epic": "E1",
-      "sprint": 2,
-      "status": "progress",
-      "priority": "high",
-      "desc": "Niyanth discussion - needs a new data source build to read from product sheet"
-    },
-    {
-      "id": "s15",
-      "title": "Develope \"Build\" module",
-      "epic": "E1",
-      "sprint": 3,
-      "status": "todo",
-      "priority": "high",
-      "desc": "Menu construction workflow — for menu planners."
-    },
-    {
-      "id": "s16",
-      "title": "Onboard Users on new architecture of \"Prepare\" part",
-      "epic": "E1",
-      "sprint": 3,
-      "status": "todo",
-      "priority": "high",
-      "desc": ""
-    },
-    {
-      "id": "s17",
-      "title": "Recipe Pool: filter by static recipe / LTO theme",
-      "epic": "E2",
-      "sprint": 2,
-      "status": "todo",
-      "priority": "med",
-      "desc": "Sep 1 — Carlos: currently exported to Sheets to filter."
-    },
-    {
-      "id": "s19",
-      "title": "Menu Analytics: exact protein macros + granular metrics",
-      "epic": "E2",
-      "sprint": 3,
-      "status": "todo",
-      "priority": "med",
-      "desc": "Aug 27 — Irene requested granular metrics."
-    },
-    {
-      "id": "s20",
-      "title": "Build \"Sign-Off\" module",
-      "epic": "E1",
       "sprint": 4,
-      "status": "todo",
-      "priority": "high",
-      "desc": "Already built - Implement the improvements and new features. Directors / leadership review flow."
-    },
-    {
-      "id": "s21",
-      "title": "Build \"Performance Review\" module (post-shipment)",
-      "epic": "E1",
-      "sprint": 4,
-      "status": "todo",
-      "priority": "high",
-      "desc": "Aug 20 — Niyanth flagged as its own stage; COGS reporting + product analytics hooks."
+      "status": "done",
+      "priority": "med",
+      "desc": "Oct 21. Removed Trends + Supply vs demand tabs and their queries: ~2–5 s less after Refresh, ~50 s less on the first load of the day."
     },
     {
       "id": "s22",
@@ -178,106 +421,97 @@
       "sprint": 4,
       "status": "done",
       "priority": "med",
-      "desc": "Aug 27 — Irene: high-level dashboard for pool health."
+      "desc": "Oct 28 — Pool Dashboard tab (replaces the GAMP Recipe Pool stub): pool cards, protein / cuisine / dish type breakdowns, ingredient search, seasonality risk per SKU."
     },
     {
       "id": "s23",
       "title": "Segment filters + ingredient search for onboarding/offboarding",
       "epic": "E2",
-      "sprint": 4,
+      "sprint": "backlog",
+      "status": "progress",
+      "priority": "med",
+      "desc": "Aug 27 — Irene. Ingredient search done (Pool Dashboard). Segment filter removed until a segment source exists."
+    },
+    {
+      "id": "s19",
+      "title": "Menu Analytics: exact protein macros + granular metrics",
+      "epic": "E2",
+      "sprint": 7,
+      "status": "progress",
+      "priority": "med",
+      "desc": "Aug 27 — Irene. ProteinGrams + ProteinCut now in Recipe Pool; not in Menu Analytics yet (no more MA changes for now)."
+    },
+    {
+      "id": "s8",
+      "title": "Developer-name field on recipe pool",
+      "epic": "E2",
+      "sprint": "backlog",
+      "status": "blocked",
+      "priority": "med",
+      "desc": "Filter is on Recipe Pool but disabled — no data source."
+    },
+    {
+      "id": "s13",
+      "title": "Enhancement: Core vs Surcharge filter in Menu Analysis",
+      "epic": "E2",
+      "sprint": 6,
       "status": "todo",
       "priority": "med",
-      "desc": "Aug 27 — Irene."
+      "desc": "Sep 1 ask from Carlos. On hold — no more MA changes for now (Oct 9)."
+    },
+    {
+      "id": "s17",
+      "title": "Recipe Pool: filter by static recipe / LTO theme",
+      "epic": "E2",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "med",
+      "desc": "Sep 1 — Carlos: currently exported to Sheets to filter."
     },
     {
       "id": "s24",
       "title": "Recipe Pool: performance metrics for new recipes",
       "epic": "E2",
-      "sprint": 4,
+      "sprint": "backlog",
       "status": "todo",
       "priority": "low",
       "desc": "Sep 1 — Carlos."
     },
     {
-      "id": "s25",
-      "title": "End-to-end user testing — menu planning + culinary",
-      "epic": "E1",
-      "sprint": 5,
+      "id": "f1",
+      "title": "Fix hard-coded '2025|2026' in the pool waterfall",
+      "epic": "E4",
+      "sprint": 6,
       "status": "todo",
       "priority": "high",
-      "desc": "Task-based testing with Carlos, Ray, Emma, Irene."
+      "desc": "F-2. \"Planned 2025/26\" pillar breaks in 2027 — fix before January."
     },
     {
-      "id": "s26",
-      "title": "Bug-fix pass from testing feedback",
-      "epic": "E1",
-      "sprint": 5,
-      "status": "todo",
-      "priority": "high",
-      "desc": "Reserve capacity for iteration."
-    },
-    {
-      "id": "s27",
-      "title": "Write user documentation + change-summary",
-      "epic": "E1",
+      "id": "f2",
+      "title": "Fix seasonality score issues",
+      "epic": "E4",
       "sprint": 5,
       "status": "todo",
       "priority": "med",
-      "desc": "For users onboarding to the new app."
+      "desc": "F-4 / F-5. Scores come from other versions and their order does not match the SKU list. Noted on the SkuSeasonalityScores header."
     },
     {
-      "id": "s28",
-      "title": "Prepare onboarding materials",
-      "epic": "E1",
-      "sprint": 5,
-      "status": "todo",
-      "priority": "med",
-      "desc": "Slack posts, walkthrough video, sessions."
-    },
-    {
-      "id": "s29",
-      "title": "Push staging → live (production release)",
-      "epic": "E1",
-      "sprint": 6,
-      "status": "done",
-      "priority": "high",
-      "desc": "Coordinate with data infra / any deploy gates."
-    },
-    {
-      "id": "s30",
-      "title": "User onboarding sessions (MP, culinary, leadership)",
-      "epic": "E1",
-      "sprint": 6,
-      "status": "todo",
-      "priority": "high",
-      "desc": "Live walkthroughs. Segmented by phase per Aug 20 discussion."
-    },
-    {
-      "id": "s31",
-      "title": "Post-launch fixes + adoption monitoring",
-      "epic": "E1",
-      "sprint": 6,
-      "status": "todo",
-      "priority": "high",
-      "desc": "Reserve capacity for issues in the first 2 weeks live."
-    },
-    {
-      "id": "s32",
-      "title": "Retrospective + Q1 2027 planning kickoff",
-      "epic": "E1",
-      "sprint": 6,
-      "status": "todo",
-      "priority": "med",
-      "desc": "What worked, what to change, roadmap for the future-capabilities backlog."
-    },
-    {
-      "id": "b1",
-      "title": "COGS: dedicated page / accurate COGS for menu planning",
-      "epic": "E5",
+      "id": "f3",
+      "title": "Fixes in Patrick's COGS query",
+      "epic": "E4",
       "sprint": "backlog",
       "status": "todo",
-      "priority": "high",
-      "desc": "Called out Sep 1 (Carlos) + Aug 20 (Niyanth). Candidate for Q1 2027."
+      "priority": "med",
+      "desc": "Raise with Patrick: final filter offset_week = 1 only; offset math assumes 52 weeks (2026 has W53); candidate_weeks string math breaks at year end; T0 uses supplier-split rounded units."
+    },
+    {
+      "id": "f4",
+      "title": "weekssincelastplanned is never populated",
+      "epic": "E4",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "low",
+      "desc": "F-1. Pipeline else-branch is commented out (NULL / -1). Flag only."
     },
     {
       "id": "b2",
@@ -304,140 +538,98 @@
       "sprint": "backlog",
       "status": "todo",
       "priority": "med",
-      "desc": "Automated pool health check, complement to s22 dashboard."
+      "desc": "Automated pool health check, complement to the Pool Dashboard (s22)."
     },
     {
-      "title": "Test and improve the new \"Prepare\" part",
-      "desc": "using UAT framework",
-      "epic": "E1",
-      "sprint": 3,
+      "id": "b5",
+      "title": "Tag / data-quality maintenance in Optimo",
+      "epic": "E5",
+      "sprint": "backlog",
       "status": "todo",
       "priority": "med",
-      "id": "n1788533298935"
+      "desc": "Out of scope for the redesign; 2027 candidate (Oct 9)."
     },
     {
-      "title": "Test and Improve \"Build\" part",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 4,
+      "id": "b6",
+      "title": "Collections planning",
+      "epic": "E5",
+      "sprint": "backlog",
+      "status": "todo",
+      "priority": "low",
+      "desc": "Excelsior Sep 28: Google Sheets proof of concept first (Irene), then maybe an Optimo build."
+    },
+    {
+      "title": "GAMP pool health Global",
+      "desc": "Potential plans for 2027 - Looking into their databricks app",
+      "epic": "E5",
+      "sprint": "backlog",
       "status": "todo",
       "priority": "med",
-      "id": "n1788533332712"
+      "id": "n1793369231612"
     },
     {
-      "title": "Build \"data validation\" page",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 4,
+      "title": "Future - Menu Analysis based on Segmentation",
+      "desc": "Potential plans for 2027",
+      "epic": "E5",
+      "sprint": "backlog",
       "status": "todo",
       "priority": "med",
-      "id": "n1788533641443"
-    },
-    {
-      "title": "Discuss the data source for menu architecture with engineering",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 2,
-      "status": "done",
-      "priority": "med",
-      "id": "n1788533685724"
-    },
-    {
-      "title": "Create a UAT framework",
-      "desc": "how they're gonna test? functions, questions, responses? break the tool down and see what fixes are needed. \ngiving specific directions to user - and expectations on deadline - Can be meetings booked in advance\nAsk engineers or others for examples",
-      "epic": "E1",
-      "sprint": 1,
-      "status": "todo",
-      "priority": "med",
-      "id": "n1788536519404"
-    },
-    {
-      "title": "Discuss COGS logic with Jessie/Patrick",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 1,
-      "status": "done",
-      "priority": "med",
-      "id": "n1788537023546"
-    },
-    {
-      "title": "Executive Deck build",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 2,
-      "status": "todo",
-      "priority": "med",
-      "id": "n1788537387648"
-    },
-    {
-      "title": "Build Databricks table for slot breakdown",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 2,
-      "status": "done",
-      "priority": "med",
-      "id": "n1792694884014"
-    },
-    {
-      "title": "Design and include Scenario sandbox for COGS and volume",
-      "desc": "",
-      "epic": "E1",
-      "sprint": 2,
-      "status": "done",
-      "priority": "med",
-      "id": "n1792694934833"
-    },
-    {
-      "title": "increasing efficiency and loading speed",
-      "desc": "removing large data pulls that are not necessary",
-      "epic": "E2",
-      "sprint": 2,
-      "status": "done",
-      "priority": "med",
-      "id": "n1792695027400"
+      "id": "n1793369459537"
     }
   ],
   "meta": {
     "vision": "Optimo becomes the single hub for culinary, recipe & menu planning, and menu review at HelloFresh.",
-    "goal": "Redesign shipped, tested, and pushed from staging to live. Priority feature enhancements delivered. Users onboarded onto the new experience.",
+    "goal": "Redesigned pages and my Excelsior COGS work (pool cost logic, cost aligned on every page, swap cost difference, Scenario Sandbox) built, tested and live by end of November. December is buffer only. Users onboarded.",
     "milestones": [
       {
-        "date": "2026-09-16",
-        "label": "Sprint 1 close — Discovery done, Design done"
+        "date": "2026-09-11",
+        "label": "Heince sign off on the project plan"
       },
       {
-        "date": "2026-09-30",
-        "label": "Sprint 2 close — \"Prepare\" module foundation shipped"
+        "date": "2026-09-28",
+        "label": "Excelsior Phase 2 scoping — Optimo to host the menu-planning COGS work"
       },
       {
-        "date": "2026-10-14",
-        "label": "Sprint 3 close — \"Build\" module shipped"
+        "date": "2026-10-01",
+        "label": "Requirements v1 approved — design started"
       },
       {
-        "date": "2026-10-28",
-        "label": "Sprint 4 close — All 4 modules built (dev-complete)"
-      },
-      {
-        "date": "2026-11-11",
-        "label": "Sprint 5 close — User testing complete, ready-to-ship"
-      },
-      {
-        "date": "2026-11-25",
-        "label": "Sprint 6 close — Live in production, users onboarded"
+        "date": "2026-10-09",
+        "label": "Bi-weekly review (Niyanth + Heince) — green light to build"
       },
       {
         "date": "2026-10-16",
         "label": "Review the requirements"
       },
       {
-        "date": "2026-09-11",
-        "label": "Heince sign off on the project plan"
+        "date": "2026-10-21",
+        "label": "Build started — Recipe Pool first"
+      },
+      {
+        "date": "2026-10-29",
+        "label": "Recipe Pool redesign + pool COGS logic built in staging"
+      },
+      {
+        "date": "2026-11-11",
+        "label": "Sprint 5 close — pool COGS live, Data Validation + Upload & Swaps (with swap cost) built"
+      },
+      {
+        "date": "2026-11-25",
+        "label": "Sprint 6 close — all pages + Excelsior COGS work live, UAT done, users onboarded"
+      },
+      {
+        "date": "2026-12-23",
+        "label": "Buffer close — anything that slipped (MA + RV, Sandbox, Patrick's COGS page)"
       }
     ],
     "metrics": [
       {
-        "label": "4 phased modules",
-        "target": "Prepare / Build / Sign-Off / Performance Review — all shipped"
+        "label": "Redesigned pages live",
+        "target": "Recipe Pool, Data Validation, MA + RV, Upload & Swaps, Review & Final, Scenario Sandbox + nav regroup"
+      },
+      {
+        "label": "Excelsior COGS in Optimo",
+        "target": "Pool cost logic live, cost aligned on every page, swap cost difference + Sandbox live, Patrick's COGS page in the nav"
       },
       {
         "label": "Push to live",
@@ -457,17 +649,21 @@
       },
       {
         "label": "Collaborative dev",
-        "target": "Jesse / Patrick / Tim onboarded if confirmed, contributing under new standards"
+        "target": "Modular model: Patrick (COGS page) and others (e.g. Tom) contribute via GitHub, Afagh owns the app"
       }
     ],
     "risks": [
       {
-        "label": "Developer-name field feasibility unknown",
-        "detail": "If dataset can't support it, scope changes. Mitigation: feasibility spike in Sprint 1 (s8)."
+        "label": "Patrick's COGS page timing unknown",
+        "detail": "Adding it to Optimo is planned in the December buffer. Mitigation: agree the shared cost rules in S5 (c3) so the numbers match whenever it lands."
+      },
+      {
+        "label": "Sprint 6 is heavy",
+        "detail": "Review & Final, cost alignment, Sandbox, UAT, onboarding and a release in two weeks. Mitigation: Sandbox moves to December first — nothing else depends on it."
       },
       {
         "label": "Scope creep from live feedback",
-        "detail": "Post-launch fixes could balloon. Mitigation: reserve Sprint 6 capacity for post-launch only, defer new asks to backlog."
+        "detail": "Post-launch fixes could balloon. Mitigation: December buffer for post-launch only, defer new asks to backlog."
       }
     ],
     "discovery": [
@@ -479,12 +675,12 @@
       {
         "team": "Menu Planning — Ray",
         "status": "done",
-        "note": "Scheduled / to schedule."
+        "note": "Sep 9 — interview done."
       },
       {
         "team": "Menu Planning — Emma",
         "status": "done",
-        "note": "Reconcile with Carlos-relayed feedback."
+        "note": "Sep 9 — interview done; reconciled with Carlos-relayed feedback."
       },
       {
         "team": "Culinary — Irene",
@@ -497,9 +693,14 @@
         "note": "Aug 20 + Sep 1 — phased workflow + Menu Architecture direction."
       },
       {
+        "team": "Excelsior Phase 2 scoping",
+        "status": "done",
+        "note": "Sep 28 — Niyanth, Patrick, Emma, Charlotte, Irene. Optimo hosts the menu-planning COGS work (sandbox, swap cost)."
+      },
+      {
         "team": "Directors / menu review leadership",
-        "status": "todo",
-        "note": "Not yet scheduled. Sign-Off phase depends on this."
+        "status": "done",
+        "note": "Oct 9 bi-weekly with Heince + Niyanth — green light to build."
       }
     ]
   }
