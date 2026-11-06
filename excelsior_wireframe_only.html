@@ -1643,7 +1643,7 @@ function renderDlg(){
    ===================================================================== */
 function setExTab(t){ S.exTab=t; render(); }
 function pageExcelsior(){
-  const tabs = [['sandbox','🧪 Scenario Sandbox'],['heatmaps','🔥 Heat Maps'],['sga','➕ Slot Group Addition']];
+  const tabs = [['heatmaps','🔥 Heat Maps'],['sga','➕ Slot Group Addition']];
   if (!tabs.some(t=>t[0]===S.exTab)) S.exTab = tabs[0][0];
   let h = `<h1>Excelsior Wireframe</h1>`;
   h += stTabs(tabs, S.exTab, 'setExTab', 'stx');
@@ -3177,7 +3177,7 @@ TOUR.forEach(t => {
 });
 
 /* ---------- Excelsior Wireframe only: open that page, hide the rest of the draft ---------- */
-S.page = 'excelsior';
+S.page = 'excelsior'; S.exTab = 'heatmaps';
 const __goFull = go;
 go = function(page, tab){ if (page !== 'excelsior') return; return __goFull(page, tab); };
 (function(){ const st = document.createElement('style'); st.textContent = `
